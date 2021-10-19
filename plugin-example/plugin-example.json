@@ -1,0 +1,40 @@
+{
+  "id": "plugin-example",
+  "version": "0.1.0",
+  "description": "Plugin example for gauge",
+  "install": {
+    "windows": [],
+    "linux": [],
+    "darwin": []
+  },
+  "run": {
+    "windows": [
+      "plugin-example"
+    ],
+    "linux": [
+      "plugin-example"
+    ],
+    "darwin": [
+      "plugin-example"
+    ]
+  },
+  "init": {
+    "windows": [
+      "plugin-example"
+    ],
+    "linux": [
+      "plugin-example"
+    ],
+    "darwin": [
+      "plugin-example"
+    ]
+  },
+  "lib": "libs",
+  "multithreaded": true,
+  "gaugeVersionSupport": {
+    "minimum": "1.0.7",
+    "maximum": ""
+  },
+  "lspLangId": "java",
+  "gRPCSupport": true
+}

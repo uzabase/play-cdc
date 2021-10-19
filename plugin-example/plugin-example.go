@@ -15,7 +15,7 @@ func main() {
 func startJava() {
 	fmt.Println("Starting java...")
 
-	cmd := exec.Command("java", "-jar", "target/mainModule-1.0-SNAPSHOT-jar-with-dependencies.jar")
+	cmd := exec.Command("java", "-jar", "plugin.jar")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
