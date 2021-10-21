@@ -1,0 +1,32 @@
+{
+  "id": "example",
+  "version": "0.1.0",
+  "name": "example",
+  "description": "Example plugin",
+  "install": {
+      "windows": [],
+      "linux": [],
+      "darwin": []
+  },
+  "command": {
+      "windows": [
+          "example"
+      ],
+      "linux": [
+          "example"
+      ],
+      "darwin": [
+          "example"
+      ]
+  },
+  "scope": [
+      "Execution"
+  ],
+  "gaugeVersionSupport": {
+      "minimum": "1.0.7",
+      "maximum": ""
+  },
+  "capabilities": [
+      "grpc_support"
+  ]
+}
