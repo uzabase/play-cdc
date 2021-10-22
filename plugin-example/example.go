@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net"
 	"google.golang.org/grpc"
+
+	"github.com/uzabase/play-cdc/gauge-messages"
 )
 
 type Event interface {}
-
-func handleEvents(e chan Event) {
-	// TODO
-}
 
 type handler struct {
 	server *grpc.Server
@@ -19,14 +17,6 @@ type handler struct {
 
 func NewHandler(s *grpc.Server, e chan Event) *handler {
 	return &handler{server: s, e: e}
-}
-
-type ReporterServer interface {
-	// TODO
-}
-
-func RegisterReporterServer(s *grpc.Server, src ReporterServer) {
-	// TODO
 }
 
 func main() {
@@ -48,7 +38,7 @@ func startAPI(e chan Event) {
 	server := grpc.NewServer(grpc.MaxRecvMsgSize(1024 * 1024 * 1024))
 
 	h := NewHandler(server, e)
-	RegisterReporterServer(server, h)
+	gauge_messages.RegisterReporterServer(server, h)
 
 	fmt.Printf("Listening on port:%d\n", l.Addr().(*net.TCPAddr).Port)
 	server.Serve(l)
