@@ -21,7 +21,7 @@ func NewHandler(s *grpc.Server, e chan Event) *handler {
 
 func main() {
 	e :=make(chan Event)
-	go startAPI(e)
+	startAPI(e)
 }
 
 func startAPI(e chan Event) {
