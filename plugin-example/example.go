@@ -5,7 +5,7 @@ import (
 	"net"
 	"google.golang.org/grpc"
 
-	"github.com/uzabase/play-cdc/gauge-messages"
+	"play-cdc/gauge_messages"
 )
 
 type Event interface {}
@@ -25,6 +25,8 @@ func main() {
 }
 
 func startAPI(e chan Event) {
+	fmt.Println("Starting API")
+
 	address, err := net.ResolveTCPAddr("tcp", "127.0.0.1:0")
 	if err != nil {
 		panic("failed to resolve tcp addr.")
@@ -37,8 +39,8 @@ func startAPI(e chan Event) {
 
 	server := grpc.NewServer(grpc.MaxRecvMsgSize(1024 * 1024 * 1024))
 
-	h := NewHandler(server, e)
-	gauge_messages.RegisterReporterServer(server, h)
+	fmt.Println("Registering Server")
+	gauge_messages.RegisterReporterServer(server, new(gauge_messages.UnimplementedReporterServer))
 
 	fmt.Printf("Listening on port:%d\n", l.Addr().(*net.TCPAddr).Port)
 	server.Serve(l)
