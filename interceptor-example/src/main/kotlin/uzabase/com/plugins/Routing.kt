@@ -12,6 +12,13 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
+
+        get("/notifySpec") {
+            val params = call.parameters
+            val name = params["name"]
+            println(name)
+            call.respondText("Success")
+        }
     }
 
 }

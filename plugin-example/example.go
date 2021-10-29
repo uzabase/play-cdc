@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"net/url"
+	"net/http"
 	"google.golang.org/grpc"
 
 	gm "play-cdc/gauge_messages"
@@ -19,6 +21,44 @@ type handler struct {
 func (h *handler) NotifyExecutionStarting(c context.Context, m *gm.ExecutionStartingRequest) (*gm.Empty, error) {
 	fmt.Println("Received ExecutionStartingRequest")
 	return &gm.Empty{}, nil
+}
+
+func (h *handler) NotifySpecExecutionStarting(c context.Context, m *gm.SpecExecutionStartingRequest) (*gm.Empty, error) {
+    fmt.Println("Received SpecExecutionStartingRequest")
+    return &gm.Empty{}, nil
+}
+
+func (h *handler) NotifyStepExecutionStarting(c context.Context, m *gm.StepExecutionStartingRequest) (*gm.Empty, error) {
+    fmt.Println("Received StepExecutionStarting")
+    fmt.Printf("Step actual text: %v\n", m.CurrentExecutionInfo.CurrentStep.Step.ActualStepText)
+    fmt.Printf("Step parsed text: %v\n", m.CurrentExecutionInfo.CurrentStep.Step.ParsedStepText)
+    for _, p := range m.CurrentExecutionInfo.CurrentStep.Step.Parameters {
+        fmt.Printf("%v, %v, %v", p.ParameterType, p.Value, p.Name)
+    }
+
+    return &gm.Empty{}, nil
+}
+
+func (h *handler) NotifyScenarioExecutionStarting(c context.Context, m *gm.ScenarioExecutionStartingRequest) (*gm.Empty, error) {
+    fmt.Println("Received ScenarioExecutionStartingRequest")
+    fmt.Printf("Current scenario name: %v\n", m.CurrentExecutionInfo.CurrentScenario.Name)
+
+    escapedStep := url.QueryEscape(m.CurrentExecutionInfo.CurrentScenario.Name)
+    uri := fmt.Sprintf("http://localhost:18080/notifySpec?name=%v", escapedStep)
+    fmt.Printf("url: %v", uri)
+
+    resp, err := http.Get(uri)
+    if err != nil {
+        panic(err)
+    }
+
+    if resp.StatusCode == 200 {
+        fmt.Println("Request succeeded")
+    } else {
+        panic(resp.StatusCode)
+    }
+
+    return &gm.Empty{}, nil
 }
 
 func NewHandler(s *grpc.Server) *handler {
