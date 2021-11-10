@@ -9,74 +9,52 @@ class FunctionsTest : FreeSpec() {
     init {
         "タグ名のついたフォルダを生成する" - {
             "コールスタックが単一階層の場合" {
-                var folderName: String? = null
-                SingleStack().callStoreMock { f -> folderName = f }
-                folderName shouldBe "tagName"
+                SingleStack().callGetFolderName() shouldBe "tagName"
             }
 
             "コールスタックが複数階層に渡る場合" {
-                var folderName: String? = null
-                MultipleStacks().callCallStoreMock { f -> folderName = f }
-                folderName shouldBe "tagName"
+                MultipleStacks().callCallGetFolderName() shouldBe "tagName"
             }
 
             "複数タグの場合" {
-                var folderName: String? = null
-                MultipleTagNames().callStoreMock { f -> folderName = f }
-                folderName shouldBe "tagName_otherTagName"
+                MultipleTagNames().callGetFolderName() shouldBe "tagName_otherTagName"
             }
 
             "同名で別シグニチャのメソッドがある場合" {
-                var folderName: String? = null
-                SameName().callStoreMock { f -> folderName = f }
-                folderName shouldBe "tagName"
+                SameName().callGetFolderName() shouldBe "tagName"
             }
 
             "該当するアノテーションがない場合" {
-                NoAnnotation().callStoreMock { throw RuntimeException("should not be called") }
+                NoAnnotation().callGetFolderName() shouldBe null
             }
         }
     }
 
     class SingleStack {
         @BeforeScenario(tags = ["tagName"])
-        fun callStoreMock(writer: (String) -> Unit) {
-            storeMock(writer)
-        }
+        fun callGetFolderName() = getFolderName()
     }
 
     class MultipleStacks {
         @BeforeScenario(tags = ["tagName"])
-        fun callCallStoreMock(writer: (String) -> Unit) {
-            callStoreMock(writer)
-        }
+        fun callCallGetFolderName() = callGetFolderName()
 
-        private fun callStoreMock(writer: (String) -> Unit) {
-            storeMock(writer)
-        }
+        private fun callGetFolderName() = getFolderName()
     }
 
     class MultipleTagNames {
         @BeforeScenario(tags = ["tagName", "otherTagName"])
-        fun callStoreMock(writer: (String) -> Unit) {
-            storeMock(writer)
-        }
+        fun callGetFolderName() = getFolderName()
     }
 
     class SameName {
-        fun callStoreMock() {
-            // do nothing
-        }
+        fun callGetFolderName(dummy: String) = getFolderName()
 
         @BeforeScenario(tags = ["tagName"])
-        fun callStoreMock(writer: (String) -> Unit) {
-            storeMock(writer)
-        }
+        fun callGetFolderName() = getFolderName()
     }
 
     class NoAnnotation {
-        fun callStoreMock(writer: (String) -> Unit) {
-            storeMock(writer)
-        }
+        fun callGetFolderName() = getFolderName()
     }
 }
