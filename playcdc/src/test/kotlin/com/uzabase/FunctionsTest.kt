@@ -4,7 +4,7 @@ import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
-class MainTest : FreeSpec() {
+class FunctionsTest : FreeSpec() {
 
     init {
         "タグ名のついたフォルダを生成する" - {
@@ -20,10 +20,20 @@ class MainTest : FreeSpec() {
                 folderName shouldBe "tagName"
             }
 
+            "複数タグの場合" {
+                var folderName: String? = null
+                MultipleTagNames().callStoreMock { f -> folderName = f }
+                folderName shouldBe "tagName_otherTagName"
+            }
+
             "同名で別シグニチャのメソッドがある場合" {
                 var folderName: String? = null
                 SameName().callStoreMock { f -> folderName = f }
                 folderName shouldBe "tagName"
+            }
+
+            "該当するアノテーションがない場合" {
+                NoAnnotation().callStoreMock { throw RuntimeException("should not be called") }
             }
         }
     }
@@ -46,12 +56,25 @@ class MainTest : FreeSpec() {
         }
     }
 
+    class MultipleTagNames {
+        @BeforeScenario(tags = ["tagName", "otherTagName"])
+        fun callStoreMock(writer: (String) -> Unit) {
+            storeMock(writer)
+        }
+    }
+
     class SameName {
         fun callStoreMock() {
             // do nothing
         }
 
         @BeforeScenario(tags = ["tagName"])
+        fun callStoreMock(writer: (String) -> Unit) {
+            storeMock(writer)
+        }
+    }
+
+    class NoAnnotation {
         fun callStoreMock(writer: (String) -> Unit) {
             storeMock(writer)
         }
