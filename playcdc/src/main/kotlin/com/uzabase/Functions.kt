@@ -9,6 +9,10 @@ interface Writer {
     fun writePath(path: String)
 }
 
+fun forTest(): String? {
+    return getFolderName()
+}
+
 fun storeMock() {
     storeMock(TODO(), TODO())
 }
@@ -16,17 +20,5 @@ fun storeMock() {
 internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
     getFolderName()?.let {
         Path(BASE_PATH).resolve(it).createDirectory()
-    }
-}
-
-internal fun getFolderName(): String? {
-    return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk { frames ->
-        frames.map { f ->
-            val methods = Class.forName(f.className).methods.filterNotNull().filter { it.name == f.methodName }
-            methods.mapNotNull { it.getAnnotation(BeforeScenario::class.java) }.map { it.tags.toList() }.flatten()
-        }
-            .filter { it.isNotEmpty() }
-            .map { it.joinToString("_") }
-            .findFirst().orElse(null)
     }
 }

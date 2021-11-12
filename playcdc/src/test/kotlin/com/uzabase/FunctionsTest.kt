@@ -3,10 +3,24 @@ package com.uzabase
 import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.mockkStatic
+import io.mockk.every
+import io.mockk.junit5.MockKExtension
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(MockKExtension::class)
 class FunctionsTest : FreeSpec() {
 
     init {
+        "test mock" {
+
+            mockkStatic("com.uzabase.FolderKt")
+
+            every { getFolderName() } returns "test!"
+
+            forTest() shouldBe "test!"
+        }
+
         "タグ名のついたフォルダを生成する" - {
             "コールスタックが単一階層の場合" {
                 SingleStack().callGetFolderName() shouldBe "tagName"
