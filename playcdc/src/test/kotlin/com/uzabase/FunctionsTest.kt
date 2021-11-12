@@ -1,74 +1,25 @@
 package com.uzabase
 
-import com.thoughtworks.gauge.BeforeScenario
+import com.github.tomakehurst.wiremock.client.WireMock
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.mockkStatic
-import io.mockk.every
-import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.extension.ExtendWith
+import io.mockk.clearAllMocks
 
-@ExtendWith(MockKExtension::class)
-class FunctionsTest : FreeSpec() {
+class FunctionsTest : FreeSpec({
+    afterTest {
+        clearAllMocks()
+    }
 
-    init {
-        "test mock" {
+    "リクエストパスを記録する" {
+        var result: String? = null
+        val mappingBuilder = WireMock.get("/test")
 
-            mockkStatic("com.uzabase.FolderKt")
-
-            every { getFolderName() } returns "test!"
-
-            forTest() shouldBe "test!"
-        }
-
-        "タグ名のついたフォルダを生成する" - {
-            "コールスタックが単一階層の場合" {
-                SingleStack().callGetFolderName() shouldBe "tagName"
+        storeMock(mappingBuilder, object : Writer {
+            override fun writeRequestPath(requestPath: String) {
+                result = requestPath
             }
+        })
 
-            "コールスタックが複数階層に渡る場合" {
-                MultipleStacks().callCallGetFolderName() shouldBe "tagName"
-            }
-
-            "複数タグの場合" {
-                MultipleTagNames().callGetFolderName() shouldBe "tagName_otherTagName"
-            }
-
-            "同名で別シグニチャのメソッドがある場合" {
-                SameName().callGetFolderName() shouldBe "tagName"
-            }
-
-            "該当するアノテーションがない場合" {
-                NoAnnotation().callGetFolderName() shouldBe null
-            }
-        }
+        result shouldBe "/test"
     }
-
-    class SingleStack {
-        @BeforeScenario(tags = ["tagName"])
-        fun callGetFolderName() = getFolderName()
-    }
-
-    class MultipleStacks {
-        @BeforeScenario(tags = ["tagName"])
-        fun callCallGetFolderName() = callGetFolderName()
-
-        private fun callGetFolderName() = getFolderName()
-    }
-
-    class MultipleTagNames {
-        @BeforeScenario(tags = ["tagName", "otherTagName"])
-        fun callGetFolderName() = getFolderName()
-    }
-
-    class SameName {
-        fun callGetFolderName(dummy: String) = getFolderName()
-
-        @BeforeScenario(tags = ["tagName"])
-        fun callGetFolderName() = getFolderName()
-    }
-
-    class NoAnnotation {
-        fun callGetFolderName() = getFolderName()
-    }
-}
+})

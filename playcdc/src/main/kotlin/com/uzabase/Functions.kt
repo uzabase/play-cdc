@@ -1,24 +1,22 @@
 package com.uzabase
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.thoughtworks.gauge.BeforeScenario
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectory
 
-interface Writer {
-    fun writePath(path: String)
-}
+fun storeMock(mappingBuilder: MappingBuilder) {
+    val folderName = getFolderName()
+    val path = folderName?.let { Path(BASE_PATH).resolve(it) } ?: return
+    path.createDirectory()
 
-fun forTest(): String? {
-    return getFolderName()
-}
-
-fun storeMock() {
-    storeMock(TODO(), TODO())
+    storeMock(mappingBuilder, FileWriter(path))
 }
 
 internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
-    getFolderName()?.let {
-        Path(BASE_PATH).resolve(it).createDirectory()
-    }
+    val url = mappingBuilder.build().request.url
+    writer.writeRequestPath(url)
+}
+
+interface Writer {
+    fun writeRequestPath(requestPath: String)
 }

@@ -10,5 +10,5 @@ fun main() {
 
 @BeforeScenario(tags = ["tagName"])
 fun callStoreMock() {
-    storeMock()
+    storeMock(TODO())
 }
