@@ -19,7 +19,12 @@ internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
 }
 
 fun toRequestJson(mappingBuilder: MappingBuilder): RequestJson {
-    return RequestJson(mappingBuilder.build().request.url)
+    return mappingBuilder.build().request.let {
+        RequestJson(
+            it.url,
+            it.method.value()
+        )
+    }
 }
 
 interface Writer {

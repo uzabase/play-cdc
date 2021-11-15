@@ -10,10 +10,21 @@ class FunctionsTest : FreeSpec({
         clearAllMocks()
     }
 
-    "MappingBuiderをRequestJsonに変換する" - {
+    "MappingBuilderをRequestJsonに変換する" - {
         "URL" {
             val mappingBuilder = WireMock.get("/test")
             toRequestJson(mappingBuilder).url shouldBe "/test"
+        }
+
+        "METHOD" - {
+            "GET" {
+                val mappingBuilder = WireMock.get("/test")
+                toRequestJson(mappingBuilder).method shouldBe "GET"
+            }
+            "POST" {
+                val mappingBuilder = WireMock.post("/test")
+                toRequestJson(mappingBuilder).method shouldBe "POST"
+            }
         }
     }
 })
