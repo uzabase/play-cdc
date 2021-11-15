@@ -1,8 +1,8 @@
 package com.uzabase
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
+import com.github.tomakehurst.wiremock.matching.RequestPattern
 import kotlin.io.path.Path
-import kotlin.io.path.createDirectory
 
 fun storeMock(mappingBuilder: MappingBuilder) {
     val folderName = getFolderName()
@@ -21,11 +21,17 @@ internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
 fun toRequestJson(mappingBuilder: MappingBuilder): RequestJson {
     return mappingBuilder.build().request.let {
         RequestJson(
-            it.url,
+            "${it.url}${queryParameters(it)}",
             it.method.value()
         )
     }
 }
+
+private fun queryParameters(requestPattern: RequestPattern) =
+    requestPattern.queryParameters.run {
+        if (isNotEmpty()) "?" + map { "${it.key}=${it.value.valuePattern.value}" }.joinToString("&")
+        else ""
+    }
 
 interface Writer {
     fun createDirectory()
