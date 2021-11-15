@@ -7,16 +7,22 @@ import kotlin.io.path.createDirectory
 fun storeMock(mappingBuilder: MappingBuilder) {
     val folderName = getFolderName()
     val path = folderName?.let { Path(BASE_PATH).resolve(it) } ?: return
-    path.createDirectory()
 
     storeMock(mappingBuilder, FileWriter(path))
 }
 
 internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
-    val url = mappingBuilder.build().request.url
-    writer.writeRequestPath(url)
+    writer.createDirectory()
+
+    val json = toRequestJson(mappingBuilder)
+    writer.write(json)
+}
+
+fun toRequestJson(mappingBuilder: MappingBuilder): RequestJson {
+    return RequestJson(mappingBuilder.build().request.url)
 }
 
 interface Writer {
-    fun writeRequestPath(requestPath: String)
+    fun createDirectory()
+    fun write(requestJson: RequestJson)
 }

@@ -1,10 +1,19 @@
 package com.uzabase
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.nio.file.Files
 import java.nio.file.Path
 
 class FileWriter(private val folderPath: Path) : Writer {
+    private val mapper = ObjectMapper().writerWithDefaultPrettyPrinter()
 
-    override fun writeRequestPath(requestPath: String) {
-        TODO("Not yet implemented")
+    override fun createDirectory() {
+        Files.createDirectories(folderPath)
+    }
+
+    override fun write(requestJson: RequestJson) {
+        val jsonString = mapper.writeValueAsString(requestJson)
+
+        Files.write(folderPath.resolve("request.json"), jsonString.toByteArray())
     }
 }

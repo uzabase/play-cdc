@@ -1,5 +1,6 @@
 package com.uzabase
 
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.thoughtworks.gauge.BeforeScenario
 
 const val BASE_PATH = "/tmp"
@@ -10,5 +11,5 @@ fun main() {
 
 @BeforeScenario(tags = ["tagName"])
 fun callStoreMock() {
-    storeMock(TODO())
+    storeMock(WireMock.get("/test"))
 }

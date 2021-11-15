@@ -10,16 +10,10 @@ class FunctionsTest : FreeSpec({
         clearAllMocks()
     }
 
-    "リクエストパスを記録する" {
-        var result: String? = null
-        val mappingBuilder = WireMock.get("/test")
-
-        storeMock(mappingBuilder, object : Writer {
-            override fun writeRequestPath(requestPath: String) {
-                result = requestPath
-            }
-        })
-
-        result shouldBe "/test"
+    "MappingBuiderをRequestJsonに変換する" - {
+        "URL" {
+            val mappingBuilder = WireMock.get("/test")
+            toRequestJson(mappingBuilder).url shouldBe "/test"
+        }
     }
 })
