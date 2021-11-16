@@ -1,8 +1,7 @@
 package com.uzabase
 
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock.containing
-import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.equality.beEqualToUsingFields
@@ -46,6 +45,21 @@ class FunctionsTest : FreeSpec({
                 .withHeader("Accept", equalTo("*/*"))
 
             toRequestJson(mappingBuilder).header shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
+        }
+
+        "Body" - {
+            "With body" {
+                val mappingBuilder = WireMock.post("/test")
+                    .withRequestBody(equalToJson("{ \"total_results\": 4 }"))
+
+                toRequestJson(mappingBuilder).body shouldBe "{ \"total_results\": 4 }"
+            }
+
+            "With no body" {
+                val mappingBuilder = WireMock.get("/test")
+
+                toRequestJson(mappingBuilder).body shouldBe null
+            }
         }
     }
 })

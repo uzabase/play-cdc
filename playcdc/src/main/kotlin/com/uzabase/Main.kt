@@ -12,5 +12,6 @@ fun main() {
 
 @BeforeScenario(tags = ["tagName"])
 fun callStoreMock() {
-    storeMock(WireMock.get("/test").withHeader("content-type", equalTo("text/plain")))
+    storeMock(WireMock.get("/test")
+        .withHeader("content-type", equalTo("text/plain")))
 }
