@@ -39,5 +39,13 @@ class FunctionsTest : FreeSpec({
                 ))
             toRequestJson(mappingBuilder).url shouldBe "/test?p1=v1&p2=v2"
         }
+
+        "Header" {
+            val mappingBuilder = WireMock.get("/test")
+                .withHeader("content-type", equalTo("text/plain"))
+                .withHeader("Accept", equalTo("*/*"))
+
+            toRequestJson(mappingBuilder).header shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
+        }
     }
 })

@@ -22,16 +22,20 @@ fun toRequestJson(mappingBuilder: MappingBuilder): RequestJson {
     return mappingBuilder.build().request.let {
         RequestJson(
             "${it.url}${queryParameters(it)}",
-            it.method.value()
+            it.method.value(),
+            headers(it)
         )
     }
 }
 
 private fun queryParameters(requestPattern: RequestPattern) =
-    requestPattern.queryParameters.run {
+    requestPattern.queryParameters?.run {
         if (isNotEmpty()) "?" + map { "${it.key}=${it.value.valuePattern.value}" }.joinToString("&")
         else ""
     }
+
+private fun headers(requestPattern: RequestPattern): Map<String, Any> =
+    requestPattern.headers?.map { it.key to it.value.valuePattern.value }?.toMap() ?: emptyMap()
 
 interface Writer {
     fun createDirectory()
