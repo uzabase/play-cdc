@@ -37,12 +37,14 @@ fun toRequestJson(mappingBuilder: MappingBuilder): RequestJson {
 fun toResponseJson(mappingBuilder: MappingBuilder): ResponseJson {
     return mappingBuilder.build().response.let {
         ResponseJson(
-            it.toHeaders()
+            it.toHeaders(),
+            it.toBody()
         )
     }
 }
 
 private fun ResponseDefinition.toHeaders() = headers?.all()?.associate { it.key() to it.values().first() } ?: emptyMap()
+private fun ResponseDefinition.toBody() = body?.let(::toMap) ?: emptyMap()
 
 private fun RequestPattern.toQueryParameters() =
     queryParameters?.run {
@@ -54,8 +56,10 @@ private fun RequestPattern.toHeaders() = headers?.map { it.key to it.value.value
 
 private fun RequestPattern.toBody(): Map<String,Any> = bodyPatterns
     ?.map { it.value  as String }
-    ?.map { ObjectMapper().readValue(it, Map::class.java) as Map<String, Any> }
+    ?.map(::toMap)
     ?.firstOrNull() ?: emptyMap()
+
+private fun toMap(jsonString: String) = ObjectMapper().readValue(jsonString, Map::class.java) as Map<String, Any>
 
 interface Writer {
     fun createDirectory()

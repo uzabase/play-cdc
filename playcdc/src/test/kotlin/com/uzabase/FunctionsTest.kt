@@ -77,5 +77,30 @@ class FunctionsTest : FreeSpec({
 
             toResponseJson(mappingBuilder).headers shouldBe mapOf("content-type" to "application/json")
         }
+
+        "Body" - {
+            "With body" {
+                val mappingBuilder = post("/test")
+                    .willReturn(aResponse()
+                        .withBody("""{
+                                "total_results": 4,
+                                "results": {
+                                    "key": "value"
+                                }
+                            }""".trimIndent()))
+
+                toResponseJson(mappingBuilder).body shouldBe mapOf(
+                    "total_results" to 4,
+                    "results" to mapOf(
+                        "key" to "value"
+                    ))
+            }
+
+            "With no body" {
+                val mappingBuilder = get("/test")
+
+                toResponseJson(mappingBuilder).body shouldBe emptyMap()
+            }
+        }
     }
 })
