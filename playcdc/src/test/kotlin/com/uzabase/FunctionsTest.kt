@@ -47,15 +47,24 @@ class FunctionsTest : FreeSpec({
         "Body" - {
             "With body" {
                 val mappingBuilder = post("/test")
-                    .withRequestBody(equalToJson("{ \"total_results\": 4 }"))
+                    .withRequestBody(equalToJson("""{
+                            "total_results": 4,
+                            "results": {
+                                "key": "value"
+                            }
+                        }""".trimIndent()))
 
-                toRequestJson(mappingBuilder).body shouldBe "{ \"total_results\": 4 }"
+                toRequestJson(mappingBuilder).body shouldBe mapOf(
+                    "total_results" to 4,
+                    "results" to mapOf(
+                        "key" to "value"
+                    ))
             }
 
             "With no body" {
                 val mappingBuilder = get("/test")
 
-                toRequestJson(mappingBuilder).body shouldBe null
+                toRequestJson(mappingBuilder).body shouldBe emptyMap()
             }
         }
     }

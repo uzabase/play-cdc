@@ -1,5 +1,6 @@
 package com.uzabase
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.http.ResponseDefinition
 import com.github.tomakehurst.wiremock.matching.RequestPattern
@@ -51,7 +52,10 @@ private fun RequestPattern.toQueryParameters() =
 
 private fun RequestPattern.toHeaders() = headers?.map { it.key to it.value.valuePattern.value }?.toMap() ?: emptyMap()
 
-private fun RequestPattern.toBody(): String? = bodyPatterns?.map { it.value as String }?.firstOrNull()
+private fun RequestPattern.toBody(): Map<String,Any> = bodyPatterns
+    ?.map { it.value  as String }
+    ?.map { ObjectMapper().readValue(it, Map::class.java) as Map<String, Any> }
+    ?.firstOrNull() ?: emptyMap()
 
 interface Writer {
     fun createDirectory()
