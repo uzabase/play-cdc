@@ -1,4 +1,4 @@
-package com.uzabase
+package com.uzabase.playcdc.internal
 
 data class ResponseJson(
     val headers: Map<String, String>,

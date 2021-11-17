@@ -1,4 +1,4 @@
-package com.uzabase
+package com.uzabase.playcdc.internal
 
 data class RequestJson(
     val url: String,

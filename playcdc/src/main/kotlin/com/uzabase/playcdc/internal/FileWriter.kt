@@ -1,4 +1,4 @@
-package com.uzabase
+package com.uzabase.playcdc.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.file.Files

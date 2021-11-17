@@ -1,17 +1,9 @@
-package com.uzabase
+package com.uzabase.playcdc.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.http.ResponseDefinition
 import com.github.tomakehurst.wiremock.matching.RequestPattern
-import kotlin.io.path.Path
-
-fun storeMock(mappingBuilder: MappingBuilder) {
-    val folderName = getFolderName()
-    val path = folderName?.let { Path(BASE_PATH).resolve(it) } ?: return
-
-    storeMock(mappingBuilder, FileWriter(path))
-}
 
 internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
     writer.createDirectory()

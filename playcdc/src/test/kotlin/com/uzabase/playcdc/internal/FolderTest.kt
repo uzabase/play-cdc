@@ -1,5 +1,6 @@
+package com.uzabase.playcdc.internal
+
 import com.thoughtworks.gauge.BeforeScenario
-import com.uzabase.*
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
