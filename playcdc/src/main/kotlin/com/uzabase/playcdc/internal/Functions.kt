@@ -51,10 +51,11 @@ private fun RequestPattern.toBody(): Map<String,Any> = bodyPatterns
     ?.map(::toMap)
     ?.firstOrNull() ?: emptyMap()
 
+@Suppress("UNCHECKED_CAST")
 private fun toMap(jsonString: String) = ObjectMapper().readValue(jsonString, Map::class.java) as Map<String, Any>
 
 interface Writer {
     fun createDirectory()
     fun write(requestJson: RequestJson)
-    fun write(requestJson: ResponseJson)
+    fun write(responseJson: ResponseJson)
 }
