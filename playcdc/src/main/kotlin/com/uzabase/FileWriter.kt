@@ -16,4 +16,10 @@ class FileWriter(private val folderPath: Path) : Writer {
 
         Files.write(folderPath.resolve("request.json"), jsonString.toByteArray())
     }
+
+    override fun write(responseJson: ResponseJson) {
+        val jsonString = mapper.writeValueAsString(responseJson)
+
+        Files.write(folderPath.resolve("response.json"), jsonString.toByteArray())
+    }
 }
