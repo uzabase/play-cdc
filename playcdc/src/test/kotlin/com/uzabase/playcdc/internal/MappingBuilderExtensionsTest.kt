@@ -5,48 +5,48 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 
-class FunctionsTest : FreeSpec({
+class MappingBuilderExtensionsTest : FreeSpec({
     afterTest {
         clearAllMocks()
     }
 
     "MappingBuilderをRequestJsonに変換する" - {
         "URL" {
-            val mappingBuilder = get("/test")
-            toRequestJson(mappingBuilder).url shouldBe "/test"
+            val sut = get("/test")
+            sut.toRequestJson().url shouldBe "/test"
         }
 
         "METHOD" - {
             "GET" {
-                val mappingBuilder = get("/test")
-                toRequestJson(mappingBuilder).method shouldBe "GET"
+                val sut = get("/test")
+                sut.toRequestJson().method shouldBe "GET"
             }
             "POST" {
-                val mappingBuilder = post("/test")
-                toRequestJson(mappingBuilder).method shouldBe "POST"
+                val sut = post("/test")
+                sut.toRequestJson().method shouldBe "POST"
             }
         }
 
         "Query Params" {
-            val mappingBuilder = get("/test")
+            val sut = get("/test")
                 .withQueryParams(mapOf(
                     "p1" to equalTo("v1"),
                     "p2" to equalTo("v2")
                 ))
-            toRequestJson(mappingBuilder).url shouldBe "/test?p1=v1&p2=v2"
+            sut.toRequestJson().url shouldBe "/test?p1=v1&p2=v2"
         }
 
         "Headers" {
-            val mappingBuilder = get("/test")
+            val sut = get("/test")
                 .withHeader("content-type", equalTo("text/plain"))
                 .withHeader("Accept", equalTo("*/*"))
 
-            toRequestJson(mappingBuilder).headers shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
+            sut.toRequestJson().headers shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
         }
 
         "Body" - {
             "With body" {
-                val mappingBuilder = post("/test")
+                val sut = post("/test")
                     .withRequestBody(equalToJson("""{
                             "total_results": 4,
                             "results": {
@@ -54,7 +54,7 @@ class FunctionsTest : FreeSpec({
                             }
                         }""".trimIndent()))
 
-                toRequestJson(mappingBuilder).body shouldBe mapOf(
+                sut.toRequestJson().body shouldBe mapOf(
                     "total_results" to 4,
                     "results" to mapOf(
                         "key" to "value"
@@ -62,25 +62,25 @@ class FunctionsTest : FreeSpec({
             }
 
             "With no body" {
-                val mappingBuilder = get("/test")
+                val sut = get("/test")
 
-                toRequestJson(mappingBuilder).body shouldBe emptyMap()
+                sut.toRequestJson().body shouldBe emptyMap()
             }
         }
     }
 
     "MappingBuilderをResponseJsonに変換する" - {
         "Headers" {
-            val mappingBuilder = get("/test")
+            val sut = get("/test")
                 .willReturn(aResponse()
                     .withHeader("content-type", "application/json"))
 
-            toResponseJson(mappingBuilder).headers shouldBe mapOf("content-type" to "application/json")
+            sut.toResponseJson().headers shouldBe mapOf("content-type" to "application/json")
         }
 
         "Body" - {
             "With body" {
-                val mappingBuilder = post("/test")
+                val sut = post("/test")
                     .willReturn(aResponse()
                         .withBody("""{
                                 "total_results": 4,
@@ -89,7 +89,7 @@ class FunctionsTest : FreeSpec({
                                 }
                             }""".trimIndent()))
 
-                toResponseJson(mappingBuilder).body shouldBe mapOf(
+                sut.toResponseJson().body shouldBe mapOf(
                     "total_results" to 4,
                     "results" to mapOf(
                         "key" to "value"
@@ -97,9 +97,9 @@ class FunctionsTest : FreeSpec({
             }
 
             "With no body" {
-                val mappingBuilder = get("/test")
+                val sut = get("/test")
 
-                toResponseJson(mappingBuilder).body shouldBe emptyMap()
+                sut.toResponseJson().body shouldBe emptyMap()
             }
         }
     }

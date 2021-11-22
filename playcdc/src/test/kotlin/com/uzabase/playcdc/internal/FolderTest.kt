@@ -5,53 +5,53 @@ import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
 class FolderTest : FreeSpec({
-    "タグ名のついたフォルダを生成する" - {
+    "タグ名からフォルダを取得する" - {
         "コールスタックが単一階層の場合" {
-            SingleStack().callGetFolderName() shouldBe "tagName"
+            SingleStack().callFindFolderName() shouldBe "tagName"
         }
 
         "コールスタックが複数階層に渡る場合" {
-            MultipleStacks().callCallGetFolderName() shouldBe "tagName"
+            MultipleStacks().callCallFindFolderName() shouldBe "tagName"
         }
 
         "複数タグの場合" {
-            MultipleTagNames().callGetFolderName() shouldBe "tagName_otherTagName"
+            MultipleTagNames().callFindFolderName() shouldBe "tagName_otherTagName"
         }
 
         "同名で別シグニチャのメソッドがある場合" {
-            SameName().callGetFolderName() shouldBe "tagName"
+            SameName().callFindFolderName() shouldBe "tagName"
         }
 
         "該当するアノテーションがない場合" {
-            NoAnnotation().callGetFolderName() shouldBe null
+            NoAnnotation().callFindFolderName() shouldBe null
         }
     }
 })
 
 class SingleStack {
     @BeforeScenario(tags = ["tagName"])
-    fun callGetFolderName() = getFolderName()
+    fun callFindFolderName() = findFolderName()
 }
 
 class MultipleStacks {
     @BeforeScenario(tags = ["tagName"])
-    fun callCallGetFolderName() = callGetFolderName()
+    fun callCallFindFolderName() = callFindFolderName()
 
-    private fun callGetFolderName() = getFolderName()
+    private fun callFindFolderName() = findFolderName()
 }
 
 class MultipleTagNames {
     @BeforeScenario(tags = ["tagName", "otherTagName"])
-    fun callGetFolderName() = getFolderName()
+    fun callFindFolderName() = findFolderName()
 }
 
 class SameName {
-    fun callGetFolderName(dummy: String) = getFolderName()
+    fun callFindFolderName(dummy: String) = findFolderName()
 
     @BeforeScenario(tags = ["tagName"])
-    fun callGetFolderName() = getFolderName()
+    fun callFindFolderName() = findFolderName()
 }
 
 class NoAnnotation {
-    fun callGetFolderName() = getFolderName()
+    fun callFindFolderName() = findFolderName()
 }

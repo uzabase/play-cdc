@@ -2,9 +2,7 @@ package com.uzabase.playcdc.internal
 
 import com.thoughtworks.gauge.BeforeScenario
 
-fun getBasePath(): String = System.getenv("PLAY_CDC_BASE_PATH") ?: "/tmp"
-
-fun getFolderName(): String? = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+fun findFolderName(): String? = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
     .walk { frames ->
         frames.map { f ->
             val methods = Class.forName(f.className).methods.filterNotNull().filter { it.name == f.methodName }
