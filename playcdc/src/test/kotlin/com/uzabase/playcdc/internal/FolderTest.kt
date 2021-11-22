@@ -1,6 +1,7 @@
 package com.uzabase.playcdc.internal
 
 import com.thoughtworks.gauge.BeforeScenario
+import com.thoughtworks.gauge.BeforeSpec
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
@@ -24,6 +25,10 @@ class FolderTest : FreeSpec({
 
         "該当するアノテーションがない場合" {
             NoAnnotation().callFindFolderName() shouldBe null
+        }
+
+        "BeforeScenarioだけでなく、BeforeSpecでも取得できる" {
+            BeforeSpecCase().callFindFolderName() shouldBe "tagName"
         }
     }
 })
@@ -53,5 +58,10 @@ class SameName {
 }
 
 class NoAnnotation {
+    fun callFindFolderName() = findFolderName()
+}
+
+class BeforeSpecCase {
+    @BeforeSpec(tags = ["tagName"])
     fun callFindFolderName() = findFolderName()
 }

@@ -2,6 +2,7 @@ package com.uzabase.playcdc
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.thoughtworks.gauge.BeforeScenario
+import com.thoughtworks.gauge.BeforeSpec
 import io.kotest.core.spec.style.StringSpec
 
 class IntegrationTest : StringSpec({
