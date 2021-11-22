@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.http.ResponseDefinition
 import com.github.tomakehurst.wiremock.matching.RequestPattern
 
 internal fun storeMock(mappingBuilder: MappingBuilder, writer: Writer) {
-    writer.createDirectory()
+    writer.setup()
 
     val request = toRequestJson(mappingBuilder)
     writer.write(request)
@@ -55,7 +55,7 @@ private fun RequestPattern.toBody(): Map<String,Any> = bodyPatterns
 private fun toMap(jsonString: String) = ObjectMapper().readValue(jsonString, Map::class.java) as Map<String, Any>
 
 interface Writer {
-    fun createDirectory()
+    fun setup()
     fun write(requestJson: RequestJson)
     fun write(responseJson: ResponseJson)
 }

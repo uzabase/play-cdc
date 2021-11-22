@@ -7,7 +7,7 @@ import java.nio.file.Path
 class FileWriter(private val folderPath: Path) : Writer {
     private val mapper = ObjectMapper().writerWithDefaultPrettyPrinter()
 
-    override fun createDirectory() {
+    override fun setup() {
         Files.createDirectories(folderPath)
     }
 
