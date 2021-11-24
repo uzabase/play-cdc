@@ -51,7 +51,7 @@ class MultipleTagNames {
 }
 
 class SameName {
-    fun callFindFolderName(dummy: String) = findFolderName()
+    fun callFindFolderName(@Suppress("UNUSED_PARAMETER") dummy: String) = findFolderName()
 
     @BeforeScenario(tags = ["tagName"])
     fun callFindFolderName() = findFolderName()
