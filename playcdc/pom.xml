@@ -41,12 +41,6 @@
       <tag>play-cdc-0.1.1</tag>
     </scm>
 
-    <scm>
-        <connection>scm:git:git://github.com/uzabase/playtest.git</connection>
-        <developerConnection>scm:git:ssh://github.com:uzabase/playtest.git</developerConnection>
-        <url>https://github.com/uzabase/playtest/tree/main</url>
-    </scm>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.6.0-RC2</kotlin.version>
