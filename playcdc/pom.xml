@@ -5,7 +5,7 @@
 
     <groupId>com.uzabase</groupId>
     <artifactId>play-cdc</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -35,7 +35,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/uzabase/play-cdc.git</connection>
+        <connection>scm:git://github.com/uzabase/play-cdc.git</connection>
         <developerConnection>scm:git:ssh://github.com:uzabase/play-cdc.git</developerConnection>
         <url>http://github.com/uzabase/play-cdc/tree/master</url>
       <tag>play-cdc-0.1.1</tag>
@@ -105,6 +105,10 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </distributionManagement>
 
     <build>
