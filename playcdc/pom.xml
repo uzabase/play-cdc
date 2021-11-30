@@ -5,7 +5,7 @@
 
     <groupId>com.uzabase</groupId>
     <artifactId>play-cdc</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -38,7 +38,6 @@
         <connection>scm:git:git://github.com/uzabase/play-cdc.git</connection>
         <developerConnection>scm:git:ssh://github.com:uzabase/play-cdc.git</developerConnection>
         <url>https://github.com/uzabase/play-cdc/tree/main</url>
-      <tag>play-cdc-0.1.1</tag>
     </scm>
 
     <properties>
@@ -190,17 +189,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
             </plugin>
         </plugins>
     </build>
