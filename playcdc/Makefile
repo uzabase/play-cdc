@@ -1,4 +1,6 @@
 release:
-	mvn package
-	mvn verify
+	mvn package verify
+
+deploy:
+	mvn clean deploy
 
