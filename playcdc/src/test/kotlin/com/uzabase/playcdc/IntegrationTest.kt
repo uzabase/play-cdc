@@ -2,7 +2,6 @@ package com.uzabase.playcdc
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.thoughtworks.gauge.BeforeScenario
-import com.thoughtworks.gauge.BeforeSpec
 import io.kotest.core.spec.style.StringSpec
 
 class IntegrationTest : StringSpec({
@@ -20,6 +19,7 @@ fun callStoreMock() {
             .withRequestBody(WireMock.equalTo("""{"key":"value"}"""))
             .willReturn(
                 WireMock.aResponse()
+                    .withStatus(200)
                     .withHeader("content-type", "application/json")
                     .withBody("""{"count":1}""")))
 }

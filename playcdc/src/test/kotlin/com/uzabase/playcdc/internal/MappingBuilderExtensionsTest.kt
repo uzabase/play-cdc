@@ -70,6 +70,13 @@ class MappingBuilderExtensionsTest : FreeSpec({
     }
 
     "MappingBuilderをResponseJsonに変換する" - {
+        "Status code" {
+            val sut = get("/test")
+                .willReturn(aResponse().withStatus(200))
+
+            sut.toResponseJson().status shouldBe 200
+        }
+
         "Headers" {
             val sut = get("/test")
                 .willReturn(aResponse()

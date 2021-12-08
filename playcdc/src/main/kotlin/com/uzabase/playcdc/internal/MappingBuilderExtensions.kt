@@ -18,6 +18,7 @@ fun MappingBuilder.toRequestJson(): RequestJson = build()
 fun MappingBuilder.toResponseJson(): ResponseJson = build()
     .response.let {
         ResponseJson(
+            it.status,
             it.toHeaders(),
             it.toBody()
         )
