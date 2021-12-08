@@ -13,17 +13,17 @@ class MappingBuilderExtensionsTest : FreeSpec({
     "MappingBuilderをRequestJsonに変換する" - {
         "URL" {
             val sut = get("/test")
-            sut.toRequestJson().url shouldBe "/test"
+            sut.toRequest().url shouldBe "/test"
         }
 
         "METHOD" - {
             "GET" {
                 val sut = get("/test")
-                sut.toRequestJson().method shouldBe "GET"
+                sut.toRequest().method shouldBe "GET"
             }
             "POST" {
                 val sut = post("/test")
-                sut.toRequestJson().method shouldBe "POST"
+                sut.toRequest().method shouldBe "POST"
             }
         }
 
@@ -33,7 +33,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
                     "p1" to equalTo("v1"),
                     "p2" to equalTo("v2")
                 ))
-            sut.toRequestJson().url shouldBe "/test?p1=v1&p2=v2"
+            sut.toRequest().url shouldBe "/test?p1=v1&p2=v2"
         }
 
         "Headers" {
@@ -41,7 +41,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
                 .withHeader("content-type", equalTo("text/plain"))
                 .withHeader("Accept", equalTo("*/*"))
 
-            sut.toRequestJson().headers shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
+            sut.toRequest().headers shouldBe mapOf("content-type" to "text/plain", "Accept" to "*/*")
         }
 
         "Body" - {
@@ -54,7 +54,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
                             }
                         }""".trimIndent()))
 
-                sut.toRequestJson().body shouldBe mapOf(
+                sut.toRequest().body shouldBe mapOf(
                     "total_results" to 4,
                     "results" to mapOf(
                         "key" to "value"
@@ -64,7 +64,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
             "With no body" {
                 val sut = get("/test")
 
-                sut.toRequestJson().body shouldBe emptyMap()
+                sut.toRequest().body shouldBe emptyMap()
             }
         }
     }
@@ -74,7 +74,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
             val sut = get("/test")
                 .willReturn(aResponse().withStatus(200))
 
-            sut.toResponseJson().status shouldBe 200
+            sut.toResponse().status shouldBe 200
         }
 
         "Headers" {
@@ -82,7 +82,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
                 .willReturn(aResponse()
                     .withHeader("content-type", "application/json"))
 
-            sut.toResponseJson().headers shouldBe mapOf("content-type" to "application/json")
+            sut.toResponse().headers shouldBe mapOf("content-type" to "application/json")
         }
 
         "Body" - {
@@ -96,7 +96,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
                                 }
                             }""".trimIndent()))
 
-                sut.toResponseJson().body shouldBe mapOf(
+                sut.toResponse().body shouldBe mapOf(
                     "total_results" to 4,
                     "results" to mapOf(
                         "key" to "value"
@@ -106,7 +106,7 @@ class MappingBuilderExtensionsTest : FreeSpec({
             "With no body" {
                 val sut = get("/test")
 
-                sut.toResponseJson().body shouldBe emptyMap()
+                sut.toResponse().body shouldBe emptyMap()
             }
         }
     }

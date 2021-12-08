@@ -11,14 +11,14 @@ class FileWriter(private val folderPath: Path) : Writer {
         Files.createDirectories(folderPath)
     }
 
-    override fun write(requestJson: RequestJson) {
+    override fun write(requestJson: Request) {
         val jsonString = mapper.writeValueAsString(requestJson)
 
         Files.write(folderPath.resolve("request.json"), jsonString.toByteArray())
     }
 
-    override fun write(responseJson: ResponseJson) {
-        val jsonString = mapper.writeValueAsString(responseJson)
+    override fun write(response: Response) {
+        val jsonString = mapper.writeValueAsString(response)
 
         Files.write(folderPath.resolve("response.json"), jsonString.toByteArray())
     }

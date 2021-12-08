@@ -2,6 +2,6 @@ package com.uzabase.playcdc.internal
 
 interface Writer {
     fun setup()
-    fun write(requestJson: RequestJson)
-    fun write(responseJson: ResponseJson)
+    fun write(requestJson: Request)
+    fun write(response: Response)
 }

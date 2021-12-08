@@ -5,8 +5,24 @@ import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.StringSpec
 
 class IntegrationTest : StringSpec({
-    "integration" {
+    "call store mock" {
         callStoreMock()
+    }
+
+    "send request" {
+        val json = """
+            {
+              "url" : "/test?q=hey",
+              "method" : "GET",
+              "headers" : {
+                "content-type" : "text/plain"
+              },
+              "body" : {
+                "key" : "value"
+              }
+            }
+        """.trimIndent()
+        PlayCdc.sendRequest(json)
     }
 })
 

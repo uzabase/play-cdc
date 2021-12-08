@@ -1,13 +1,13 @@
 package com.uzabase.playcdc.internal
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.http.ResponseDefinition
 import com.github.tomakehurst.wiremock.matching.RequestPattern
+import com.uzabase.playcdc.internal.infra.toMap
 
-fun MappingBuilder.toRequestJson(): RequestJson = build()
+fun MappingBuilder.toRequest(): Request = build()
     .request.let {
-        RequestJson(
+        Request(
             "${it.url}${it.toQueryParameters()}",
             it.method.value(),
             it.toHeaders(),
@@ -15,9 +15,9 @@ fun MappingBuilder.toRequestJson(): RequestJson = build()
         )
     }
 
-fun MappingBuilder.toResponseJson(): ResponseJson = build()
+fun MappingBuilder.toResponse(): Response = build()
     .response.let {
-        ResponseJson(
+        Response(
             it.status,
             it.toHeaders(),
             it.toBody()
@@ -39,8 +39,3 @@ private fun RequestPattern.toBody(): Map<String,Any> = bodyPatterns
     ?.map { it.value  as String }
     ?.map(::toMap)
     ?.firstOrNull() ?: emptyMap()
-
-private val MAPPER = ObjectMapper()
-
-@Suppress("UNCHECKED_CAST")
-private fun toMap(jsonString: String) = MAPPER.readValue(jsonString, Map::class.java) as Map<String, Any>
