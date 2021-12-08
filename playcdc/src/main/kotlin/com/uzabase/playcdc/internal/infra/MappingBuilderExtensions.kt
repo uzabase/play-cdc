@@ -1,9 +1,10 @@
-package com.uzabase.playcdc.internal
+package com.uzabase.playcdc.internal.infra
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.http.ResponseDefinition
 import com.github.tomakehurst.wiremock.matching.RequestPattern
-import com.uzabase.playcdc.internal.infra.toMap
+import com.uzabase.playcdc.internal.Request
+import com.uzabase.playcdc.internal.Response
 
 fun MappingBuilder.toRequest(): Request = build()
     .request.let {

@@ -22,7 +22,8 @@ class IntegrationTest : StringSpec({
               }
             }
         """.trimIndent()
-        PlayCdc.sendRequest(json)
+
+        PlayCdc.sendRequest("http://localhost:8080", json)
     }
 })
 

@@ -1,4 +1,4 @@
-package com.uzabase.playcdc.internal
+package com.uzabase.playcdc.internal.infra
 
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.kotest.core.spec.style.FreeSpec

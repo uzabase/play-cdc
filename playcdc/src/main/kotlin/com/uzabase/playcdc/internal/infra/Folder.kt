@@ -1,4 +1,4 @@
-package com.uzabase.playcdc.internal
+package com.uzabase.playcdc.internal.infra
 
 import com.thoughtworks.gauge.BeforeScenario
 import com.thoughtworks.gauge.BeforeSpec

@@ -1,11 +1,11 @@
 package com.uzabase.playcdc
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder
-import com.uzabase.playcdc.internal.*
-import com.uzabase.playcdc.internal.infra.toObject
-import okhttp3.OkHttpClient
+import com.uzabase.playcdc.internal.FileWriter
+import com.uzabase.playcdc.internal.Request
+import com.uzabase.playcdc.internal.Writer
+import com.uzabase.playcdc.internal.infra.*
 import kotlin.io.path.Path
-import okhttp3.Request as OkHttp3Request
 
 object PlayCdc {
     fun storeMock(mappingBuilder: MappingBuilder) {
@@ -16,19 +16,9 @@ object PlayCdc {
         }
     }
 
-    fun sendRequest(requestJson: String) {
-        toObject(requestJson, Request::class.java)
-            .let(::toOkHttp3Request)
-            .let { CLIENT.newCall(it).execute() }
+    fun sendRequest(endpoint: String, requestJson: String) {
+        sendRequest(endpoint, toObject(requestJson, Request::class.java))
     }
-
-    private val CLIENT = OkHttpClient.Builder().build()
-    private const val ENDPOINT = "http://localhost:8080"
-
-    private fun toOkHttp3Request(request: Request) = OkHttp3Request.Builder()
-        .url(ENDPOINT + request.url)
-        .method(request.method, null)
-        .build()
 
     private fun fileWriter(): Writer? = findFolderName()
         ?.let { Path(getBasePath()).resolve(it) }
