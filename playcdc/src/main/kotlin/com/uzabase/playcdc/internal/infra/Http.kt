@@ -17,6 +17,6 @@ fun sendRequest(endpoint: String, request: Request) {
 
 private fun toOkHttp3Request(endpoint: String, request: Request) = okhttp3.Request.Builder()
     .url(endpoint + request.url)
-    .method(request.method, request.body?.toJsonString()?.toRequestBody("text/plain".toMediaType()))
+    .method(request.method, request.body?.toJsonString()?.toRequestBody(null))
     .headers(request.headers.toHeaders())
     .build()
