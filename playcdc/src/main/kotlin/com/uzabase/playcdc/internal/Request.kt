@@ -5,4 +5,6 @@ data class Request(
     val method: String,
     val headers: Map<String, String>,
     val body: Map<String, Any>?
-)
+) {
+    val contentType: String? = headers["content-type"]
+}
