@@ -11,4 +11,6 @@ fun toMap(jsonString: String) = MAPPER.readValue(jsonString, Map::class.java) as
 
 fun <T> toObject(jsonString: String, clazz: Class<T>): T = MAPPER.readValue(jsonString, clazz)
 
+fun Map<String,Any>.toJsonString(): String = MAPPER.writeValueAsString(this)
+
 fun toPrettyString(obj: Any): String = PRETTY_PRINTING_MAPPER.writeValueAsString(obj)
