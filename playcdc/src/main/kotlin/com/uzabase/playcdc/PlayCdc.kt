@@ -9,7 +9,8 @@ import org.amshove.kluent.shouldBeEqualTo
 import kotlin.io.path.Path
 
 data class Response(
-    val status: Int
+    val status: Int,
+    val body: String?
 )
 
 object PlayCdc {
@@ -25,9 +26,14 @@ object PlayCdc {
         return sendRequest(endpoint, toObject(requestJson, Request::class.java))
     }
 
-    fun verifyResponse(responseJson: String, status: Int) {
+    fun verifyResponse(responseJson: String, status: Int, body: String? = null) {
         val response = toObject(responseJson, com.uzabase.playcdc.internal.Response::class.java)
         response.status shouldBeEqualTo status
+        if (body == null) {
+            response.body shouldBeEqualTo emptyMap()
+        } else {
+            response.body shouldBeEqualTo toMap(body)
+        }
     }
 
     private fun fileWriter(): Writer? = findFolderName()

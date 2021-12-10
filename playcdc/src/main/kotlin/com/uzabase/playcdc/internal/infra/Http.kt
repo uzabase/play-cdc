@@ -14,7 +14,7 @@ private val CLIENT = OkHttpClient.Builder().build()
 fun sendRequest(endpoint: String, request: Request): Response {
     return toOkHttp3Request(endpoint, request)
         .let { CLIENT.newCall(it).execute() }
-        .let { Response(it.code) }
+        .let { Response(it.code, it.body?.string()) }
 }
 
 private fun toOkHttp3Request(endpoint: String, request: Request) = okhttp3.Request.Builder()

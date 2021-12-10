@@ -80,6 +80,26 @@ class IntegrationTest : StringSpec({
             {
                 "status": 200,
                 "headers": {},
+                "body": {
+                    "key": "value"
+                }
+            }
+        """.trimIndent()
+
+        val expectedBody = """
+            {
+                "key": "value"
+            }
+        """.trimIndent()
+
+        PlayCdc.verifyResponse(json, 200, expectedBody)
+    }
+
+    "verify response without body" {
+        val json = """
+            {
+                "status": 200,
+                "headers": {},
                 "body": {}
             }
         """.trimIndent()
