@@ -74,6 +74,18 @@ class IntegrationTest : StringSpec({
 
         PlayCdc.sendRequest("http://localhost:8080", json)
     }
+
+    "verify response" {
+        val json = """
+            {
+                "status": 200,
+                "headers": {},
+                "body": {}
+            }
+        """.trimIndent()
+
+        PlayCdc.verifyResponse(json, 200)
+    }
 })
 
 @BeforeScenario(tags = ["tagName"])

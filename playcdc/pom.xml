@@ -109,6 +109,11 @@
             <artifactId>okhttp</artifactId>
             <version>5.0.0-alpha.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.amshove.kluent</groupId>
+            <artifactId>kluent</artifactId>
+            <version>1.68</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>
