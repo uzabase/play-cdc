@@ -5,8 +5,8 @@ import com.uzabase.playcdc.internal.FileWriter
 import com.uzabase.playcdc.internal.Request
 import com.uzabase.playcdc.internal.Writer
 import com.uzabase.playcdc.internal.infra.*
-import org.amshove.kluent.shouldBeEqualTo
 import kotlin.io.path.Path
+import com.uzabase.playcdc.internal.Response as InternalResponse
 
 data class Response(
     val status: Int,
@@ -27,13 +27,7 @@ object PlayCdc {
     }
 
     fun verifyResponse(responseJson: String, status: Int, body: String? = null) {
-        val response = toObject(responseJson, com.uzabase.playcdc.internal.Response::class.java)
-        response.status shouldBeEqualTo status
-        if (body == null) {
-            response.body shouldBeEqualTo emptyMap()
-        } else {
-            response.body shouldBeEqualTo toMap(body)
-        }
+        verifyResponse(toObject(responseJson, InternalResponse::class.java), status, body)
     }
 
     private fun fileWriter(): Writer? = findFolderName()

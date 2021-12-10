@@ -9,71 +9,71 @@ class IntegrationTest : StringSpec({
         callStoreMock()
     }
 
-    "send GET request" {
-        val json = """
-            {
-              "url" : "/test?q=hey",
-              "method" : "GET",
-              "headers" : {
-                "content-type" : "text/plain"
-              },
-              "body" : null
-            }
-        """.trimIndent()
-
-        PlayCdc.sendRequest("http://localhost:8080", json)
-    }
-
-    "send POST request" {
-        val json = """
-            {
-              "url" : "/test?q=hey",
-              "method" : "POST",
-              "headers" : {
-                "content-type" : "text/plain"
-              },
-              "body" : {
-                "key": "value"
-              }
-            }
-        """.trimIndent()
-
-        PlayCdc.sendRequest("http://localhost:8080", json)
-    }
-
-    "send PUT request" {
-        val json = """
-            {
-              "url" : "/test?q=hey",
-              "method" : "PUT",
-              "headers" : {
-                "content-type" : "text/plain"
-              },
-              "body" : {
-                "key": "value"
-              }
-            }
-        """.trimIndent()
-
-        PlayCdc.sendRequest("http://localhost:8080", json)
-    }
-
-    "send DELETE request" {
-        val json = """
-            {
-              "url" : "/test?q=hey",
-              "method" : "DELETE",
-              "headers" : {
-                "content-type" : "text/plain"
-              },
-              "body" : {
-                "key": "value"
-              }
-            }
-        """.trimIndent()
-
-        PlayCdc.sendRequest("http://localhost:8080", json)
-    }
+//    "send GET request" {
+//        val json = """
+//            {
+//              "url" : "/test?q=hey",
+//              "method" : "GET",
+//              "headers" : {
+//                "content-type" : "text/plain"
+//              },
+//              "body" : null
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", json)
+//    }
+//
+//    "send POST request" {
+//        val json = """
+//            {
+//              "url" : "/test?q=hey",
+//              "method" : "POST",
+//              "headers" : {
+//                "content-type" : "text/plain"
+//              },
+//              "body" : {
+//                "key": "value"
+//              }
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", json)
+//    }
+//
+//    "send PUT request" {
+//        val json = """
+//            {
+//              "url" : "/test?q=hey",
+//              "method" : "PUT",
+//              "headers" : {
+//                "content-type" : "text/plain"
+//              },
+//              "body" : {
+//                "key": "value"
+//              }
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", json)
+//    }
+//
+//    "send DELETE request" {
+//        val json = """
+//            {
+//              "url" : "/test?q=hey",
+//              "method" : "DELETE",
+//              "headers" : {
+//                "content-type" : "text/plain"
+//              },
+//              "body" : {
+//                "key": "value"
+//              }
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", json)
+//    }
 
     "verify response" {
         val json = """
@@ -93,18 +93,6 @@ class IntegrationTest : StringSpec({
         """.trimIndent()
 
         PlayCdc.verifyResponse(json, 200, expectedBody)
-    }
-
-    "verify response without body" {
-        val json = """
-            {
-                "status": 200,
-                "headers": {},
-                "body": {}
-            }
-        """.trimIndent()
-
-        PlayCdc.verifyResponse(json, 200)
     }
 })
 
