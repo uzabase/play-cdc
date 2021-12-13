@@ -15,7 +15,11 @@ data class Response(
 
 object PlayCdc {
     fun storeMock(mappingBuilder: MappingBuilder) {
-        fileWriter()?.let {
+        storeMock(mappingBuilder, null)
+    }
+
+    fun storeMock(mappingBuilder: MappingBuilder, folderName: String?) {
+        fileWriter(folderName)?.let {
             it.setup()
             it.write(mappingBuilder.toRequest())
             it.write(mappingBuilder.toResponse())
@@ -30,7 +34,7 @@ object PlayCdc {
         verifyResponse(toObject(responseJson, InternalResponse::class.java), status, body)
     }
 
-    private fun fileWriter(): Writer? = findFolderName()
+    private fun fileWriter(folderName: String? = null): Writer? = (folderName ?: findFolderName())
         ?.let { Path(getBasePath()).resolve(it) }
         ?.let(::FileWriter)
 

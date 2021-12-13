@@ -4,9 +4,24 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.StringSpec
 
+private val mappingBuilder = WireMock.get("/test")
+    .withHeader("content-type", WireMock.equalTo("text/plain"))
+    .withQueryParam("q", WireMock.equalTo("hey"))
+    .withRequestBody(WireMock.equalTo("""{"key":"value"}"""))
+    .willReturn(
+        WireMock.aResponse()
+            .withStatus(200)
+            .withHeader("content-type", "application/json")
+            .withBody("""{"count":1}""")
+    )
+
 class IntegrationTest : StringSpec({
     "call store mock" {
         callStoreMock()
+    }
+
+    "store mock" {
+        PlayCdc.storeMock(mappingBuilder, "company_api")
     }
 
 //    "send GET request" {
@@ -98,14 +113,5 @@ class IntegrationTest : StringSpec({
 
 @BeforeScenario(tags = ["tagName"])
 fun callStoreMock() {
-    PlayCdc.storeMock(
-        WireMock.get("/test")
-            .withHeader("content-type", WireMock.equalTo("text/plain"))
-            .withQueryParam("q", WireMock.equalTo("hey"))
-            .withRequestBody(WireMock.equalTo("""{"key":"value"}"""))
-            .willReturn(
-                WireMock.aResponse()
-                    .withStatus(200)
-                    .withHeader("content-type", "application/json")
-                    .withBody("""{"count":1}""")))
+    PlayCdc.storeMock(mappingBuilder)
 }
