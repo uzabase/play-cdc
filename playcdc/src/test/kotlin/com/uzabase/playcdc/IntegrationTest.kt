@@ -24,26 +24,26 @@ class IntegrationTest : StringSpec({
         PlayCdc.storeMock(mappingBuilder, "company_api")
     }
 
-    "send request" {
-        val json = """
-            {
-              "request": {
-                "url": "/test?q=hey",
-                "method": "GET",
-                "headers": {
-                  "content-type": "text/plain"
-                }
-              },
-              "response": {
-                "status": 200,
-                "headers": {},
-                "jsonBody": {}
-              }
-            }
-        """.trimIndent()
-
-        PlayCdc.sendRequest("http://localhost:8080", json)
-    }
+//    "send request" {
+//        val json = """
+//            {
+//              "request": {
+//                "url": "/test?q=hey",
+//                "method": "GET",
+//                "headers": {
+//                  "content-type": "text/plain"
+//                }
+//              },
+//              "response": {
+//                "status": 200,
+//                "headers": {},
+//                "jsonBody": {}
+//              }
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", json)
+//    }
 
     "verify response" {
         val json = """
