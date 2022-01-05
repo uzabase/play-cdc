@@ -1,6 +1,6 @@
 package com.uzabase.playcdc.internal.infra
 
-import com.uzabase.playcdc.internal.Request
+import com.uzabase.playcdc.internal.legacy.Request
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 

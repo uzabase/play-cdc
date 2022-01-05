@@ -1,4 +1,4 @@
-package com.uzabase.playcdc.internal
+package com.uzabase.playcdc.internal.legacy
 
 data class Response(
     val status: Int,

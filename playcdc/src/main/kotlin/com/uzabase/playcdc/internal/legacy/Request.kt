@@ -1,4 +1,4 @@
-package com.uzabase.playcdc.internal
+package com.uzabase.playcdc.internal.legacy
 
 data class Request(
     val url: String,

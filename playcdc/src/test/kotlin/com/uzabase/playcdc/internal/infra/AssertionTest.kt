@@ -1,6 +1,6 @@
 package com.uzabase.playcdc.internal.infra
 
-import com.uzabase.playcdc.internal.Response
+import com.uzabase.playcdc.internal.legacy.Response
 import io.kotest.core.spec.style.FreeSpec
 
 class AssertionTest : FreeSpec({

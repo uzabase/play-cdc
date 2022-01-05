@@ -1,9 +1,10 @@
 package com.uzabase.playcdc.internal.infra
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
-private val MAPPER = jacksonObjectMapper()
+private val MAPPER = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 private val PRETTY_PRINTING_MAPPER = ObjectMapper().writerWithDefaultPrettyPrinter()
 
 @Suppress("UNCHECKED_CAST")

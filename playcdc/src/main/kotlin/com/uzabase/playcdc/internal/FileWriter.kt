@@ -1,6 +1,8 @@
 package com.uzabase.playcdc.internal
 
 import com.uzabase.playcdc.internal.infra.toPrettyString
+import com.uzabase.playcdc.internal.legacy.Request
+import com.uzabase.playcdc.internal.legacy.Response
 import java.nio.file.Files
 import java.nio.file.Path
 

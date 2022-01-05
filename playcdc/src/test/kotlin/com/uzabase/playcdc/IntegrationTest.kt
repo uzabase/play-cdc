@@ -24,71 +24,24 @@ class IntegrationTest : StringSpec({
         PlayCdc.storeMock(mappingBuilder, "company_api")
     }
 
-//    "send GET request" {
-//        val json = """
-//            {
-//              "url" : "/test?q=hey",
-//              "method" : "GET",
-//              "headers" : {
-//                "content-type" : "text/plain"
-//              },
-//              "body" : null
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", json)
-//    }
-//
-//    "send POST request" {
-//        val json = """
-//            {
-//              "url" : "/test?q=hey",
-//              "method" : "POST",
-//              "headers" : {
-//                "content-type" : "text/plain"
-//              },
-//              "body" : {
-//                "key": "value"
-//              }
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", json)
-//    }
-//
-//    "send PUT request" {
-//        val json = """
-//            {
-//              "url" : "/test?q=hey",
-//              "method" : "PUT",
-//              "headers" : {
-//                "content-type" : "text/plain"
-//              },
-//              "body" : {
-//                "key": "value"
-//              }
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", json)
-//    }
-//
-//    "send DELETE request" {
-//        val json = """
-//            {
-//              "url" : "/test?q=hey",
-//              "method" : "DELETE",
-//              "headers" : {
-//                "content-type" : "text/plain"
-//              },
-//              "body" : {
-//                "key": "value"
-//              }
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", json)
-//    }
+    "send request" {
+        val json = """
+            {
+              "request": {
+                "url": "/test?q=hey",
+                "method": "GET",
+                "headers": {
+                  "content-type": "text/plain"
+                }
+              },
+              "response": {
+                "status": 200
+              }
+            }
+        """.trimIndent()
+
+        PlayCdc.sendRequest("http://localhost:8080", json)
+    }
 
     "verify response" {
         val json = """
