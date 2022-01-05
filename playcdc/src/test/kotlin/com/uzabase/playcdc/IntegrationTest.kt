@@ -35,7 +35,9 @@ class IntegrationTest : StringSpec({
                 }
               },
               "response": {
-                "status": 200
+                "status": 200,
+                "headers": {},
+                "jsonBody": {}
               }
             }
         """.trimIndent()
@@ -46,11 +48,20 @@ class IntegrationTest : StringSpec({
     "verify response" {
         val json = """
             {
+              "request": {
+                "url": "/test?q=hey",
+                "method": "GET",
+                "headers": {
+                  "content-type": "text/plain"
+                }
+              },
+              "response": {
                 "status": 200,
                 "headers": {},
-                "body": {
+                "jsonBody": {
                     "key": "value"
                 }
+              }
             }
         """.trimIndent()
 

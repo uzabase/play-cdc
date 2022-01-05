@@ -11,5 +11,7 @@ data class Request(
 )
 
 data class Response(
-    val status: Int
+    val status: Int,
+    val headers: Map<String, String>,
+    val jsonBody: Map<String, Any>
 )
