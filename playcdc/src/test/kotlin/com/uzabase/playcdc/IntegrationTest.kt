@@ -35,9 +35,7 @@ class IntegrationTest : StringSpec({
 //                }
 //              },
 //              "response": {
-//                "status": 200,
-//                "headers": {},
-//                "jsonBody": {}
+//                "status": 200
 //              }
 //            }
 //        """.trimIndent()
@@ -56,9 +54,7 @@ class IntegrationTest : StringSpec({
 //                }
 //              },
 //              "response": {
-//                "status": 200,
-//                "headers": {},
-//                "jsonBody": {}
+//                "status": 200
 //              }
 //            }
 //        """.trimIndent()
@@ -84,7 +80,9 @@ class IntegrationTest : StringSpec({
               },
               "response": {
                 "status": 200,
-                "headers": {},
+                "headers": {
+                  "content-type": "application/json"
+                },
                 "jsonBody": {
                     "key": "value"
                 }
@@ -98,7 +96,9 @@ class IntegrationTest : StringSpec({
             }
         """.trimIndent()
 
-        PlayCdc.verifyResponse(json, 200, expectedBody)
+        val expectedHeaders = mapOf("content-type" to "application/json")
+
+        PlayCdc.verifyResponse(json, 200, expectedBody, expectedHeaders)
     }
 })
 

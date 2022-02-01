@@ -29,8 +29,8 @@ object PlayCdc {
         return sendRequest(endpoint, toObject(contractJson, Contract::class.java).request, body)
     }
 
-    fun verifyResponse(contractJson: String, status: Int, body: String? = null) {
-        verifyResponse(toObject(contractJson, Contract::class.java).response, status, body)
+    fun verifyResponse(contractJson: String, status: Int, body: String? = null, headers: Map<String, String>? = null) {
+        verifyResponse(toObject(contractJson, Contract::class.java).response, status, body, headers)
     }
 
     private fun fileWriter(folderName: String? = null): Writer? = (folderName ?: findFolderName())
