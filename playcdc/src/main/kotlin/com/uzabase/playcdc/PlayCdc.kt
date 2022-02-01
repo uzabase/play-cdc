@@ -25,8 +25,8 @@ object PlayCdc {
         }
     }
 
-    fun sendRequest(endpoint: String, contractJson: String): Response {
-        return sendRequest(endpoint, toObject(contractJson, Contract::class.java).request)
+    fun sendRequest(endpoint: String, contractJson: String, body: String? = null): Response {
+        return sendRequest(endpoint, toObject(contractJson, Contract::class.java).request, body)
     }
 
     fun verifyResponse(contractJson: String, status: Int, body: String? = null) {

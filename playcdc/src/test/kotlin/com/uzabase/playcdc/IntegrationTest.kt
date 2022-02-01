@@ -44,6 +44,33 @@ class IntegrationTest : StringSpec({
 //
 //        PlayCdc.sendRequest("http://localhost:8080", json)
 //    }
+//
+//    "send request with body" {
+//        val contract = """
+//            {
+//              "request": {
+//                "url": "/test?q=hey",
+//                "method": "PUT",
+//                "headers": {
+//                  "content-type": "application/json"
+//                }
+//              },
+//              "response": {
+//                "status": 200,
+//                "headers": {},
+//                "jsonBody": {}
+//              }
+//            }
+//        """.trimIndent()
+//
+//        val body = """
+//            {
+//              "key": "value"
+//            }
+//        """.trimIndent()
+//
+//        PlayCdc.sendRequest("http://localhost:8080", contract, body)
+//    }
 
     "verify response" {
         val json = """
