@@ -1,6 +1,6 @@
 package com.uzabase.playcdc.internal.infra
 
-import com.uzabase.playcdc.internal.Response
+import com.uzabase.playcdc.internal.Contract
 import io.kotest.core.spec.style.FreeSpec
 import org.junit.jupiter.api.assertThrows
 
@@ -8,7 +8,7 @@ class AssertionTest : FreeSpec({
     "verify response" - {
         "status" - {
             "passes" {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     null,
                     null
@@ -18,7 +18,7 @@ class AssertionTest : FreeSpec({
             }
 
             "fails" {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     null,
                     null
@@ -30,7 +30,7 @@ class AssertionTest : FreeSpec({
 
         "with body" - {
             "passes" {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     null,
                     mapOf(
@@ -66,7 +66,7 @@ class AssertionTest : FreeSpec({
             }
 
             "fails" - {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     null,
                     mapOf(
@@ -86,7 +86,7 @@ class AssertionTest : FreeSpec({
 
         "with headers" - {
             "passes" {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     mapOf(
                         "key1" to "value1",
@@ -102,7 +102,7 @@ class AssertionTest : FreeSpec({
             }
 
             "fails" {
-                val response = Response(
+                val response = Contract.Response(
                     200,
                     mapOf(
                         "key" to "value"

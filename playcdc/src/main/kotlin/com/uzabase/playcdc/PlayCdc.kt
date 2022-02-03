@@ -9,14 +9,17 @@ import kotlin.io.path.Path
 
 data class Response(
     val status: Int,
-    val body: String?
+    val body: String?,
+    val headers: Map<String, String>
 )
 
 object PlayCdc {
+    @Deprecated("to be removed")
     fun storeMock(mappingBuilder: MappingBuilder) {
         storeMock(mappingBuilder, null)
     }
 
+    @Deprecated("to be removed")
     fun storeMock(mappingBuilder: MappingBuilder, folderName: String?) {
         fileWriter(folderName)?.let {
             it.setup()

@@ -1,8 +1,8 @@
 package com.uzabase.playcdc.internal.infra
 
-import com.uzabase.playcdc.internal.Response
+import com.uzabase.playcdc.internal.Contract
 
-fun verifyResponse(response: Response, status: Int, body: String?, headers: Map<String, String>?) {
+fun verifyResponse(response: Contract.Response, status: Int, body: String?, headers: Map<String, String>?) {
     if (response.status != status) {
         throw AssertionError(
             "Statues were not equal.\n" +

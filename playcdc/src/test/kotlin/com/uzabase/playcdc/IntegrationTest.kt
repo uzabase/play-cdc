@@ -1,6 +1,8 @@
 package com.uzabase.playcdc
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.StringSpec
 
@@ -16,6 +18,18 @@ private val mappingBuilder = WireMock.get("/test")
     )
 
 class IntegrationTest : StringSpec({
+
+    lateinit var wiremock: WireMockServer
+
+    beforeSpec {
+        wiremock = WireMockServer(wireMockConfig().port(8080))
+        wiremock.start()
+    }
+
+    afterSpec {
+        wiremock.stop()
+    }
+
     "call store mock" {
         callStoreMock()
     }
@@ -24,49 +38,52 @@ class IntegrationTest : StringSpec({
         PlayCdc.storeMock(mappingBuilder, "company_api")
     }
 
-//    "send request" {
-//        val json = """
-//            {
-//              "request": {
-//                "url": "/test?q=hey",
-//                "method": "GET",
-//                "headers": {
-//                  "content-type": "text/plain"
-//                }
-//              },
-//              "response": {
-//                "status": 200
-//              }
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", json)
-//    }
-//
-//    "send request with body" {
-//        val contract = """
-//            {
-//              "request": {
-//                "url": "/test?q=hey",
-//                "method": "PUT",
-//                "headers": {
-//                  "content-type": "application/json"
-//                }
-//              },
-//              "response": {
-//                "status": 200
-//              }
-//            }
-//        """.trimIndent()
-//
-//        val body = """
-//            {
-//              "key": "value"
-//            }
-//        """.trimIndent()
-//
-//        PlayCdc.sendRequest("http://localhost:8080", contract, body)
-//    }
+    "send request" {
+        val contract = """
+            {
+              "request": {
+                "url": "/test?q=hey",
+                "method": "GET",
+                "headers": {
+                  "content-type": "text/plain"
+                }
+              },
+              "response": {
+                "status": 200
+              }
+            }
+        """.trimIndent()
+
+        val (status, body, headers) = PlayCdc.sendRequest("http://localhost:8080", contract)
+        println(status)
+        println(body)
+        println(headers)
+    }
+
+    "send request with body" {
+        val contract = """
+            {
+              "request": {
+                "url": "/test?q=hey",
+                "method": "PUT",
+                "headers": {
+                  "content-type": "application/json"
+                }
+              },
+              "response": {
+                "status": 200
+              }
+            }
+        """.trimIndent()
+
+        val body = """
+            {
+              "key": "value"
+            }
+        """.trimIndent()
+
+        PlayCdc.sendRequest("http://localhost:8080", contract, body)
+    }
 
     "verify response" {
         val json = """
