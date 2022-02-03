@@ -10,7 +10,7 @@ fun verifyResponse(response: Contract.Response, status: Int, body: String?, head
                     "  Actual: $status")
     }
 
-    if (response.jsonBody != body?.let(::toMap)) {
+    if (response.jsonBody != body?.ifEmpty { null }?.let(::toMap)) {
         throw AssertionError(
             "Bodies were not equal.\n" +
                     "Expected: ${response.jsonBody}\n" +

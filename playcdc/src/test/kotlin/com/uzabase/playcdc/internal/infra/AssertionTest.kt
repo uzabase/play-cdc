@@ -29,7 +29,7 @@ class AssertionTest : FreeSpec({
         }
 
         "with body" - {
-            "passes" {
+            "passes when bodies are equal" {
                 val response = Contract.Response(
                     200,
                     null,
@@ -65,7 +65,19 @@ class AssertionTest : FreeSpec({
                 verifyResponse(response, 200, body, null)
             }
 
-            "fails" - {
+            "passes when contract's body is null and actual body is empty" {
+                val response = Contract.Response(
+                    200,
+                    null,
+                    null
+                )
+
+                val body = ""
+
+                verifyResponse(response, 200, body, null)
+            }
+
+            "fails when bodies are not equal" - {
                 val response = Contract.Response(
                     200,
                     null,
@@ -80,7 +92,7 @@ class AssertionTest : FreeSpec({
                     }
                 """.trimIndent()
 
-                assertThrows<AssertionError> { verifyResponse(response, 200, body, emptyMap()) }
+                assertThrows<AssertionError> { verifyResponse(response, 200, body, null) }
             }
         }
 
