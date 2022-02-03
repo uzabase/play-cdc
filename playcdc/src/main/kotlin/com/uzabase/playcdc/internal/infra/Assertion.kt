@@ -17,10 +17,14 @@ fun verifyResponse(response: Contract.Response, status: Int, body: String?, head
                     "  Actual: ${body?.let(::toMap)}")
     }
 
-    if (response.headers != headers) {
+    if (!actualHeadersContainContractsHeaders(response, headers)) {
         throw AssertionError(
-            "Headers were not equal.\n" +
-                "Expected: ${response.headers}\n" +
-                "  Actual: $headers")
+            "Actual headers doesn't contain expected headers.\n" +
+                    "Expected: ${response.headers}\n" +
+                    "  Actual: $headers"
+        )
     }
 }
+
+private fun actualHeadersContainContractsHeaders(response: Contract.Response, headers: Map<String, String>?) =
+    (response.headers == null) || (headers != null && headers.entries.containsAll(response.headers.entries))

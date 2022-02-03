@@ -85,12 +85,11 @@ class AssertionTest : FreeSpec({
         }
 
         "with headers" - {
-            "passes" {
+            "passes when actual headers contains contract's headers" {
                 val response = Contract.Response(
                     200,
                     mapOf(
-                        "key1" to "value1",
-                        "key2" to "value2"
+                        "key1" to "value1"
                     ),
                     null
                 )
@@ -101,7 +100,20 @@ class AssertionTest : FreeSpec({
                 ))
             }
 
-            "fails" {
+            "passes when contract's headers is null" {
+                val response = Contract.Response(
+                    200,
+                    null,
+                    null
+                )
+
+                verifyResponse(response, 200, null, mapOf(
+                    "key1" to "value1",
+                    "key2" to "value2"
+                ))
+            }
+
+            "fails when actual headers doesn't contain contract's headers" {
                 val response = Contract.Response(
                     200,
                     mapOf(
@@ -114,6 +126,20 @@ class AssertionTest : FreeSpec({
                     verifyResponse(response, 200, null, mapOf(
                         "key" to "another value"
                     ))
+                }
+            }
+
+            "fails when contract's headers is not null and actual headers is null" {
+                val response = Contract.Response(
+                    200,
+                    mapOf(
+                        "key1" to "value1"
+                    ),
+                    null
+                )
+
+                assertThrows<AssertionError> {
+                    verifyResponse(response, 200, null, null)
                 }
             }
         }

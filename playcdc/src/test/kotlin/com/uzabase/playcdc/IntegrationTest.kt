@@ -107,15 +107,18 @@ class IntegrationTest : StringSpec({
             }
         """.trimIndent()
 
-        val expectedBody = """
+        val actualBody = """
             {
                 "key": "value"
             }
         """.trimIndent()
 
-        val expectedHeaders = mapOf("content-type" to "application/json")
+        val actualHeaders = mapOf(
+            "content-type" to "application/json",
+            "content-length" to "18"
+        )
 
-        PlayCdc.verifyResponse(json, 200, expectedBody, expectedHeaders)
+        PlayCdc.verifyResponse(json, 200, actualBody, actualHeaders)
     }
 })
 
