@@ -45,7 +45,9 @@ class IntegrationTest : StringSpec({
                 "url": "/test?q=hey",
                 "method": "GET",
                 "headers": {
-                  "content-type": "text/plain"
+                  "content-type": {
+                    "equalTo": "application/json"
+                  }
                 }
               },
               "response": {
@@ -67,7 +69,9 @@ class IntegrationTest : StringSpec({
                 "url": "/test?q=hey",
                 "method": "PUT",
                 "headers": {
-                  "content-type": "application/json"
+                  "content-type": {
+                    "equalTo": "application/json"
+                  }
                 }
               },
               "response": {

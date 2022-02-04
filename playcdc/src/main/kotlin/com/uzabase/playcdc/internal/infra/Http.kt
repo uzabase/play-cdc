@@ -34,9 +34,9 @@ private fun okhttp3.Request.Builder.headers(request: Contract.Request) =
     if (request.headers == null) this
     else this.headers(toOkHttpHeaders(request.headers))
 
-private fun toOkHttpHeaders(headers: Map<String, String>) = headers
+internal fun toOkHttpHeaders(headers: Map<String, Map<String, String>>) = headers
     .entries
-    .map { (key, value) -> listOf(key, value) }
+    .map { (key, value) -> listOf(key, value.values.first()) }
     .flatten()
     .toTypedArray()
     .let(::headersOf)
