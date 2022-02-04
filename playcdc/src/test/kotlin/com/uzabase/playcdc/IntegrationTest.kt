@@ -96,7 +96,9 @@ class IntegrationTest : StringSpec({
                 "url": "/test?q=hey",
                 "method": "GET",
                 "headers": {
-                  "content-type": "text/plain"
+                  "content-type": {
+                    "equalTo": "text/plain"
+                  }
                 }
               },
               "response": {
