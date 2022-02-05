@@ -1,11 +1,9 @@
 package com.uzabase.playcdc
 
-import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.uzabase.playcdc.internal.Contract
-import com.uzabase.playcdc.internal.FileWriter
-import com.uzabase.playcdc.internal.Writer
-import com.uzabase.playcdc.internal.infra.*
-import kotlin.io.path.Path
+import com.uzabase.playcdc.internal.infra.sendRequest
+import com.uzabase.playcdc.internal.infra.toObject
+import com.uzabase.playcdc.internal.infra.verifyResponse
 
 data class Response(
     val status: Int,
@@ -14,20 +12,6 @@ data class Response(
 )
 
 object PlayCdc {
-    @Deprecated("to be removed")
-    fun storeMock(mappingBuilder: MappingBuilder) {
-        storeMock(mappingBuilder, null)
-    }
-
-    @Deprecated("to be removed")
-    fun storeMock(mappingBuilder: MappingBuilder, folderName: String?) {
-        fileWriter(folderName)?.let {
-            it.setup()
-            it.write(mappingBuilder.toRequest())
-            it.write(mappingBuilder.toResponse())
-        }
-    }
-
     fun sendRequest(endpoint: String, contractJson: String, body: String? = null): Response {
         return sendRequest(endpoint, toObject(contractJson, Contract::class.java).request, body)
     }
@@ -35,10 +19,4 @@ object PlayCdc {
     fun verifyResponse(contractJson: String, status: Int, body: String? = null, headers: Map<String, String>? = null) {
         verifyResponse(toObject(contractJson, Contract::class.java).response, status, body, headers)
     }
-
-    private fun fileWriter(folderName: String? = null): Writer? = (folderName ?: findFolderName())
-        ?.let { Path(getBasePath()).resolve(it) }
-        ?.let(::FileWriter)
-
-    private fun getBasePath(): String = System.getenv("PLAY_CDC_BASE_PATH") ?: "/tmp"
 }

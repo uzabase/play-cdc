@@ -1,21 +1,8 @@
 package com.uzabase.playcdc
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import com.thoughtworks.gauge.BeforeScenario
 import io.kotest.core.spec.style.StringSpec
-
-private val mappingBuilder = WireMock.get("/test")
-    .withHeader("content-type", WireMock.equalTo("text/plain"))
-    .withQueryParam("q", WireMock.equalTo("hey"))
-    .withRequestBody(WireMock.equalTo("""{"key":"value"}"""))
-    .willReturn(
-        WireMock.aResponse()
-            .withStatus(200)
-            .withHeader("content-type", "application/json")
-            .withBody("""{"count":1}""")
-    )
 
 class IntegrationTest : StringSpec({
 
@@ -28,14 +15,6 @@ class IntegrationTest : StringSpec({
 
     afterSpec {
         wiremock.stop()
-    }
-
-    "call store mock" {
-        callStoreMock()
-    }
-
-    "store mock" {
-        PlayCdc.storeMock(mappingBuilder, "company_api")
     }
 
     "send request" {
@@ -127,8 +106,3 @@ class IntegrationTest : StringSpec({
         PlayCdc.verifyResponse(json, 200, actualBody, actualHeaders)
     }
 })
-
-@BeforeScenario(tags = ["tagName"])
-fun callStoreMock() {
-    PlayCdc.storeMock(mappingBuilder)
-}

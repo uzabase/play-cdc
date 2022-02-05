@@ -1,8 +1,8 @@
 package com.uzabase.playcdc.internal.infra
 
 import com.uzabase.playcdc.internal.Contract
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
-import org.junit.jupiter.api.assertThrows
 
 class AssertionTest : FreeSpec({
     "verify response" - {
@@ -24,7 +24,7 @@ class AssertionTest : FreeSpec({
                     null
                 )
 
-                assertThrows<AssertionError> { verifyResponse(response, 201, null, null) }
+                shouldThrow<AssertionError> { verifyResponse(response, 201, null, null) }
             }
         }
 
@@ -92,7 +92,7 @@ class AssertionTest : FreeSpec({
                     }
                 """.trimIndent()
 
-                assertThrows<AssertionError> { verifyResponse(response, 200, body, null) }
+                shouldThrow<AssertionError> { verifyResponse(response, 200, body, null) }
             }
         }
 
@@ -134,7 +134,7 @@ class AssertionTest : FreeSpec({
                     null
                 )
 
-                assertThrows<AssertionError> {
+                shouldThrow<AssertionError> {
                     verifyResponse(response, 200, null, mapOf(
                         "key" to "another value"
                     ))
@@ -150,9 +150,7 @@ class AssertionTest : FreeSpec({
                     null
                 )
 
-                assertThrows<AssertionError> {
-                    verifyResponse(response, 200, null, null)
-                }
+                shouldThrow<AssertionError> { verifyResponse(response, 200, null, null) }
             }
         }
     }
