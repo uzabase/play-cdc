@@ -1,6 +1,7 @@
 package com.uzabase.playcdc
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import io.kotest.core.spec.style.StringSpec
 
@@ -11,6 +12,10 @@ class IntegrationTest : StringSpec({
     beforeSpec {
         wiremock = WireMockServer(wireMockConfig().port(8080))
         wiremock.start()
+    }
+
+    afterEach {
+        wiremock.resetAll()
     }
 
     afterSpec {
@@ -35,10 +40,11 @@ class IntegrationTest : StringSpec({
             }
         """.trimIndent()
 
-        val (status, body, headers) = PlayCdc.sendRequest("http://localhost:8080", contract)
-        println(status)
-        println(body)
-        println(headers)
+        PlayCdc.sendRequest("http://localhost:8080", contract)
+
+        wiremock.verify(getRequestedFor(urlPathEqualTo("/test"))
+            .withQueryParam("q", equalTo("hey"))
+            .withHeader("content-type", equalTo("application/json")))
     }
 
     "send request with body" {
@@ -66,6 +72,11 @@ class IntegrationTest : StringSpec({
         """.trimIndent()
 
         PlayCdc.sendRequest("http://localhost:8080", contract, body)
+
+        wiremock.verify(putRequestedFor(urlPathEqualTo("/test"))
+            .withQueryParam("q", equalTo("hey"))
+            .withHeader("content-type", equalTo("application/json"))
+            .withRequestBody(equalToJson(body)))
     }
 
     "verify response" {

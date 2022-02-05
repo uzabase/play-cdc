@@ -2,41 +2,45 @@ package com.uzabase.playcdc.internal.infra
 
 import com.uzabase.playcdc.Response
 import com.uzabase.playcdc.internal.Contract
-import okhttp3.Headers.Companion.headersOf
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.internal.EMPTY_REQUEST
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpHeaders
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
-private val CLIENT = OkHttpClient.Builder().build()
+private val CLIENT = HttpClient.newHttpClient()
 
 fun sendRequest(endpoint: String, request: Contract.Request, body: String?): Response {
-    return toOkHttp3Request(endpoint, request, body)
-        .let { CLIENT.newCall(it).execute() }
-        .let { Response(it.code, it.body?.string(), it.headers.toMap()) }
+    return toHttpRequest(endpoint, request, body)
+        .let { CLIENT.send(it, HttpResponse.BodyHandlers.ofString()) }
+        .let { Response(it.statusCode(), it.body(), it.headers().toMap()) }
 }
 
-private fun toOkHttp3Request(endpoint: String, request: Contract.Request, body: String?) = okhttp3.Request.Builder()
-    .url(endpoint + request.url)
-    .method(request, body)
-    .headers(request)
-    .build()
+private fun toHttpRequest(endpoint: String, request: Contract.Request, body: String?) =
+    HttpRequest.newBuilder(URI.create(endpoint + request.url))
+            .method(request, body)
+            .headers(request)
+            .build()
 
-private fun okhttp3.Request.Builder.method(request: Contract.Request, body: String?) =
-    method(request.method, requestBody(body, request.method))
+private fun HttpRequest.Builder.method(request: Contract.Request, body: String?) =
+    method(request.method, bodyPublisher(body, request.method))
 
-private fun requestBody(body: String?, method: String) =
-    body?.toRequestBody() ?: when (method) {
-        "GET" -> null
-        else -> EMPTY_REQUEST
+private fun bodyPublisher(body: String?, method: String): HttpRequest.BodyPublisher =
+    when (method) {
+        "GET" -> HttpRequest.BodyPublishers.noBody()
+        else -> body
+            ?.let { HttpRequest.BodyPublishers.ofString(it) }
+            ?: HttpRequest.BodyPublishers.noBody()
     }
 
-private fun okhttp3.Request.Builder.headers(request: Contract.Request) =
+private fun HttpRequest.Builder.headers(request: Contract.Request) =
     if (request.headers == null) this
-    else this.headers(toOkHttpHeaders(request.headers))
+    else headers(*toArray(request.headers))
 
-internal fun toOkHttpHeaders(headers: Map<String, Map<String, String>>) = headers
+internal fun toArray(headers: Map<String, Map<String, String>>) = headers
     .entries
     .map { (key, value) -> listOf(key, value.values.first()) }
     .flatten()
     .toTypedArray()
-    .let(::headersOf)
+
+private fun HttpHeaders.toMap() = map().map { (key, value) -> key to value.first() }.toMap()
