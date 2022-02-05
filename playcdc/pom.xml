@@ -45,9 +45,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.6.10</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotest.version>4.6.3</kotest.version>
-        <mockk.version>1.12.0</mockk.version>
-        <jackson.version>2.13.0</jackson.version>
+        <kotest.version>5.1.0</kotest.version>
+        <mockk.version>1.12.2</mockk.version>
+        <jackson.version>2.13.1</jackson.version>
         <dokka.version>1.5.31</dokka.version>
     </properties>
 
