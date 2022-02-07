@@ -5,10 +5,17 @@ data class Contract(
     val response: Response
 ) {
     data class Request(
-        val url: String,
+        val url: String?,
+        val urlPath: String?,
         val method: String,
         val headers: Map<String, Map<String, String>>?
-    )
+    ) {
+        init {
+            if (url == null && urlPath == null) {
+                throw RuntimeException("Either `url` or `urlPath` is required")
+            }
+        }
+    }
 
     data class Response(
         val status: Int,

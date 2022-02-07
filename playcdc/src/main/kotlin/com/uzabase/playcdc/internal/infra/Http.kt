@@ -17,7 +17,7 @@ fun sendRequest(endpoint: String, request: Contract.Request, body: String?): Res
 }
 
 private fun toHttpRequest(endpoint: String, request: Contract.Request, body: String?) =
-    HttpRequest.newBuilder(URI.create(endpoint + request.url))
+    HttpRequest.newBuilder(URI.create(endpoint + (request.url ?: request.urlPath)))
             .method(request, body)
             .headers(request)
             .build()
