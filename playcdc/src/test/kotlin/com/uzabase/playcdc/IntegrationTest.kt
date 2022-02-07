@@ -26,6 +26,7 @@ class IntegrationTest : StringSpec({
         val contract = """
             {
               "request": {
+                "url": "/test?q=hey",
                 "method": "GET",
                 "headers": {
                   "content-type": {
