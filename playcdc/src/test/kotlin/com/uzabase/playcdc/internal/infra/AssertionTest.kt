@@ -112,6 +112,20 @@ class AssertionTest : FreeSpec({
                 ))
             }
 
+            "passes even when case of key is different between actual and contract's" {
+                val response = Contract.Response(
+                    200,
+                    mapOf(
+                        "KEY1" to "value1"
+                    ),
+                    null
+                )
+
+                verifyResponse(response, 200, null, mapOf(
+                    "key1" to "value1",
+                ))
+            }
+
             "passes when contract's headers is null" {
                 val response = Contract.Response(
                     200,
