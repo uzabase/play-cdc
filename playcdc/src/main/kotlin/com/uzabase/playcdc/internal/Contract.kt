@@ -7,6 +7,7 @@ data class Contract(
     data class Request(
         val url: String?,
         val urlPath: String?,
+        val queryParameters: Map<String, Map<String, String>>?,
         val method: String,
         val headers: Map<String, Map<String, String>>?
     ) {

@@ -17,10 +17,19 @@ fun sendRequest(endpoint: String, request: Contract.Request, body: String?): Res
 }
 
 private fun toHttpRequest(endpoint: String, request: Contract.Request, body: String?) =
-    HttpRequest.newBuilder(URI.create(endpoint + (request.url ?: request.urlPath)))
+    HttpRequest.newBuilder(URI.create(buildUri(endpoint, request)))
             .method(request, body)
             .headers(request)
             .build()
+
+private fun buildUri(endpoint: String, request: Contract.Request) =
+    endpoint + (request.url ?: request.urlPath) + queryParameters(request)
+
+internal fun queryParameters(request: Contract.Request) =
+    request.queryParameters?.entries
+        ?.joinToString("&") { (key, value) -> "$key=${value["equalTo"]}" }
+        ?.let { "?$it" }
+        ?: ""
 
 private fun HttpRequest.Builder.method(request: Contract.Request, body: String?) =
     method(request.method, bodyPublisher(body, request.method))
@@ -39,7 +48,7 @@ private fun HttpRequest.Builder.headers(request: Contract.Request) =
 
 internal fun toArray(headers: Map<String, Map<String, String>>) = headers
     .entries
-    .map { (key, value) -> listOf(key, value.values.first()) }
+    .map { (key, value) -> listOf(key, value["equalTo"]) }
     .flatten()
     .toTypedArray()
 

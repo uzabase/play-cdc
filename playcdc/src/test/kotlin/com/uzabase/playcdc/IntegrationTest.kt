@@ -22,7 +22,7 @@ class IntegrationTest : StringSpec({
         wiremock.stop()
     }
 
-    "send request" {
+    "send request by url" {
         val contract = """
             {
               "request": {
@@ -47,11 +47,16 @@ class IntegrationTest : StringSpec({
             .withHeader("content-type", equalTo("application/json")))
     }
 
-    "send request by `urlPath`" {
+    "send request by urlPath and queryParameters" {
         val contract = """
             {
               "request": {
                 "urlPath": "/test",
+                "queryParameters": {
+                  "q": {
+                    "equalTo": "hey"
+                  }
+                },
                 "method": "GET"
               },
               "response": {
@@ -61,7 +66,8 @@ class IntegrationTest : StringSpec({
         """.trimIndent()
         PlayCdc.sendRequest("http://localhost:8080", contract)
 
-        wiremock.verify(getRequestedFor(urlPathEqualTo("/test")))
+        wiremock.verify(getRequestedFor(urlPathEqualTo("/test"))
+            .withQueryParam("q", equalTo("hey")))
     }
 
     "send request with body" {

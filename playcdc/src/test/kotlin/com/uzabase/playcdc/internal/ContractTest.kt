@@ -12,6 +12,7 @@ class ContractTest : StringSpec({
       Request(
         url = null,
         urlPath = null,
+        queryParameters = null,
         method = "GET",
         headers = null
       )
