@@ -28,11 +28,11 @@ fun verifyResponse(response: Contract.Response, status: Int, body: String?, head
 
 private fun actualHeadersContainContractsHeaders(response: Contract.Response, headers: Map<String, String>?) =
     (response.headers == null) ||
-            (headers != null && actualHeadersContainContractsHeadersKeyCaseInsensitive(headers, response.headers))
+            (headers != null && actualHeadersContainContractsHeaders(headers, response.headers))
 
-private fun actualHeadersContainContractsHeadersKeyCaseInsensitive(actual: Map<String, String>, expected: Map<String, String>) =
+private fun actualHeadersContainContractsHeaders(actual: Map<String, String>, expected: Map<String, String>) =
     expected.entries.all { (expectedKey, expectedValue) ->
         actual.entries.any { (actualKey, actualValue) ->
-            actualKey.equals(expectedKey, true) && actualValue == expectedValue
+            actualKey.equals(expectedKey, ignoreCase = true) && actualValue == expectedValue
         }
     }
