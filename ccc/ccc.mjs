@@ -30,10 +30,11 @@ const toObject = (dir, paths) => {
   return obj
 }
 
-const appendSource = async (d) => {
+const appendSource = async (d, target) => {
   const sourceDir = await toLinkedDir(path.resolve(d['dir'], first(d['files'])));
   const sourceFiles = fs.readdirSync(path.resolve(d['dir'], sourceDir));
 
+  d['relativeDir'] = d['dir'].replace(target, '')
   d['sourceDir'] = sourceDir
   d['sourceFiles'] = sourceFiles
   d['nonLinkedSourceFiles'] = difference(sourceFiles, d['files'])
@@ -52,33 +53,41 @@ if (args.length != 1) {
 const target = args[0]
 
 // execute
-const found = await $`find ${target} -type l -name '*.json'`
+const found = (await $`find ${target} -type l -name '*.json'`).stdout
 
-const symlinkPaths = found.stdout.split(/\n/).filter(isNotEmpty)
+const symlinkPaths = found.split(/\n/).filter(isNotEmpty)
 const symlinkDirs = groupBy(symlinkPaths, (p) => path.dirname(p))
 
 const objects = await Promise.all(
   Object.entries(symlinkDirs)
     .map(([dir, paths]) => toObject(dir, paths))
-    .map(appendSource)
+    .map((d) => appendSource(d, target))
   )
 
-console.log(JSON.stringify(objects, null, 2))
-
-console.log(Array.from(objects.map((o) => o.dir)))
-
-const dir = await question('Choose dir for consumer (use tab): ', {
-  choices: objects.map((o) => o.dir)
+const relativeDirs = objects.filter((o) => o.nonLinkedSourceFiles.length > 0).map((o) => o.relativeDir)
+console.log(relativeDirs)
+const relativeDir = await question('Choose dir for consumer from the above list (use tab): ', {
+  choices: relativeDirs
 })
+const dir = target + relativeDir
 
 cd(dir)
 
 const targetObject = objects.find((o) => o.dir === dir)
 
-const file = await question('Choose file to simlink (use tab): ', {
+console.log(targetObject.nonLinkedSourceFiles)
+const file = await question('Choose file to simlink from the above list (use tab): ', {
   choices: targetObject.nonLinkedSourceFiles
 })
 
 const fileRelativePath = `${targetObject.sourceDir}/${file}`
 
-await $`ln -s ${fileRelativePath}`
+const {exitCode} = await $`ln -s ${fileRelativePath}`
+console.log('')
+
+if (exitCode === 0) {
+  console.log('Linked:')
+  console.log((await $`ls -l ${dir}/${file}`).stdout)
+} else {
+  console.log('Failed.')
+}
