@@ -57,8 +57,28 @@ const found = await $`find ${target} -type l -name '*.json'`
 const symlinkPaths = found.stdout.split(/\n/).filter(isNotEmpty)
 const symlinkDirs = groupBy(symlinkPaths, (p) => path.dirname(p))
 
-const objects = Object.entries(symlinkDirs)
-  .map(([dir, paths]) => toObject(dir, paths))
-  .map(appendSource)
+const objects = await Promise.all(
+  Object.entries(symlinkDirs)
+    .map(([dir, paths]) => toObject(dir, paths))
+    .map(appendSource)
+  )
 
-console.log(JSON.stringify(await Promise.all(objects), null, 2))
+console.log(JSON.stringify(objects, null, 2))
+
+console.log(Array.from(objects.map((o) => o.dir)))
+
+const dir = await question('Choose dir for consumer (use tab): ', {
+  choices: objects.map((o) => o.dir)
+})
+
+cd(dir)
+
+const targetObject = objects.find((o) => o.dir === dir)
+
+const file = await question('Choose file to simlink (use tab): ', {
+  choices: targetObject.nonLinkedSourceFiles
+})
+
+const fileRelativePath = `${targetObject.sourceDir}/${file}`
+
+await $`ln -s ${fileRelativePath}`
