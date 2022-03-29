@@ -65,6 +65,50 @@ class AssertionTest : FreeSpec({
                 verifyResponse(response, 200, body, null)
             }
 
+            "passes when actual body contains contract's body" - {
+                "single level" {
+                    val response = Contract.Response(
+                        200,
+                        null,
+                        mapOf(
+                            "key1" to "value1"
+                        )
+                    )
+
+                    val body = """
+                        {
+                            "key1": "value1",
+                            "key2": "value2"
+                        }
+                    """.trimIndent()
+
+                    verifyResponse(response, 200, body, null)
+                }
+
+                "multi level" {
+                    val response = Contract.Response(
+                        200,
+                        null,
+                        mapOf(
+                            "key1" to mapOf(
+                                "key2" to "value2"
+                            )
+                        )
+                    )
+
+                    val body = """
+                        {
+                            "key1": {
+                              "key2": "value2",
+                              "key3": "value3"
+                            }
+                        }
+                    """.trimIndent()
+
+                    verifyResponse(response, 200, body, null)
+                }
+            }
+
             "passes when contract's body is null and actual body is empty" {
                 val response = Contract.Response(
                     200,
@@ -88,7 +132,27 @@ class AssertionTest : FreeSpec({
 
                 val body = """
                     {
-                        "key":  "another value"
+                        "key": "another value"
+                    }
+                """.trimIndent()
+
+                shouldThrow<AssertionError> { verifyResponse(response, 200, body, null) }
+            }
+
+            "fails when keys match but contents unmatch " - {
+                val response = Contract.Response(
+                    200,
+                    null,
+                    mapOf(
+                        "key" to "value"
+                    )
+                )
+
+                val body = """
+                    {
+                        "key": {
+                          "anotherKey": "value"
+                        }
                     }
                 """.trimIndent()
 
