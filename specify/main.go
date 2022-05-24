@@ -2,8 +2,12 @@ package main
 
 import (
 	"fmt"
+	"specify/domain"
+	"specify/repository"
 )
 
 func main() {
-	fmt.Println("Hello world!")
+	contract := repository.FindContract("example.json")
+	spec := domain.GenerateSpec(contract)
+	fmt.Println(spec)
 }

@@ -2,3 +2,5 @@ target
 out
 .idea
 *.iml
+.vscode
+
