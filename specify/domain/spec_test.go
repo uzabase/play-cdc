@@ -7,22 +7,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGenerateSpec(t *testing.T) {
-	contract := domain.Contract{
-		domain.Request{
-			"/test",
-			"GET",
-		},
-		domain.Response{
-			200,
-			nil,
+func TestString(t *testing.T) {
+	sut := domain.Scenario{
+		"heading",
+		[]domain.Step{
+			"step1",
+			"step2",
 		},
 	}
-	actual := domain.GenerateSpec(contract)
 
-	expected := `## GET /test
-* URL"/test"にGETリクエストを送る
-* レスポンスステータスコードが"200"である
+	actual := sut.String()
+
+	expected := `## heading
+* step1
+* step2
 `
 	assert.Equal(t, expected, actual)
 }

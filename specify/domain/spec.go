@@ -5,15 +5,25 @@ import (
 	"strings"
 )
 
-func GenerateSpec(contract Contract) string {
-	request := contract.Request
-	response := contract.Response
+type Scenario struct {
+	Heading string
+	Steps []Step
+}
 
-	var spec strings.Builder
+type Step string
 
-	spec.WriteString(fmt.Sprintf("## %s %s\n", request.Method, request.UrlPath))
-	spec.WriteString(fmt.Sprintf("* URL\"%s\"に%sリクエストを送る\n", request.UrlPath, request.Method))
-	spec.WriteString(fmt.Sprintf("* レスポンスステータスコードが\"%d\"である\n", response.Status))
+func (s Step) String() string {
+	return string(s)
+}
 
-	return spec.String()
+func (s Scenario) String() string {
+	var b strings.Builder
+
+	b.WriteString(fmt.Sprintf("## %s\n", s.Heading))
+
+	for _, step := range s.Steps {
+		b.WriteString(fmt.Sprintf("* %s\n", step.String()))
+	}
+
+	return b.String()
 }
