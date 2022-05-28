@@ -7,28 +7,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var sut domain.Contract = domain.Contract{
-	domain.Request{
-		"/test",
-		"GET",
-	},
-	domain.Response{
-		200,
-		map[string]any{
-			"stringKey": "stringValue",
-			"integerKey": float64(123),
-			"floatKey": 123.456,
-			"booleanKey": true,
-			"objectKey": map[string]any{
-				"stringKey": "objectStringValue",
-			},
-			"arrayKey": []any{
-				map[string]any{
-					"stringKey": "arrayObjectStringValue",
+var sut = createSut("GET")
+
+func createSut(method string) domain.Contract {
+	return domain.Contract{
+		domain.Request{
+			"/test",
+			method,
+		},
+		domain.Response{
+			200,
+			map[string]any{
+				"stringKey": "stringValue",
+				"integerKey": float64(123),
+				"floatKey": 123.456,
+				"booleanKey": true,
+				"objectKey": map[string]any{
+					"stringKey": "objectStringValue",
+				},
+				"arrayKey": []any{
+					map[string]any{
+						"stringKey": "arrayObjectStringValue",
+					},
 				},
 			},
 		},
-	},
+	}
 }
 
 func TestToScenario_シナリオ名(t *testing.T) {
@@ -37,10 +41,28 @@ func TestToScenario_シナリオ名(t *testing.T) {
 	assert.Equal(t, `GET /test`, actual.Heading)
 }
 
-func TestToScenario_リクエスト(t *testing.T) {
-	actual := sut.ToScenario()
+func TestToScenario_GETリクエスト(t *testing.T) {
+	actual := createSut("GET").ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
+}
+
+func TestToScenario_POSTリクエスト(t *testing.T) {
+	actual := createSut("POST").ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPOSTリクエストを送る`))
+}
+
+func TestToScenario_PUTリクエスト(t *testing.T) {
+	actual := createSut("PUT").ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPUTリクエストを送る`))
+}
+
+func TestToScenario_DELETEリクエスト(t *testing.T) {
+	actual := createSut("DELETE").ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にDELETEリクエストを送る`))
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {
