@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -78,9 +79,19 @@ func toAssertions(v any, keyChain KeyChain) []Step {
 	case string:
 		step := fmt.Sprintf(`レスポンスのJSONの"$.%s"が文字列の"%s"である`, keyChain.toPath(), v)
 		steps = []Step{Step(step)}
+	case float64:
+		steps = []Step{Step(toNumberStep(v, keyChain))}
 	default:
 		fmt.Printf("Warning: toAssertions - I don't know about type %T!\n", v)
 	}
 
 	return steps
+}
+
+func toNumberStep(n float64, keyChain KeyChain) string {
+	if n == math.Trunc(n) {
+		return fmt.Sprintf(`レスポンスのJSONの"$.%s"が整数の"%d"である`, keyChain.toPath(), int64(n))
+	} else {
+		return fmt.Sprintf(`レスポンスのJSONの"$.%s"が小数の"%g"である`, keyChain.toPath(), n)
+	}
 }

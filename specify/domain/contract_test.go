@@ -16,6 +16,8 @@ var sut domain.Contract = domain.Contract{
 		200,
 		map[string]any{
 			"stringKey": "stringValue",
+			"integerKey": float64(123),
+			"floatKey": 123.456,
 			"objectKey": map[string]any{
 				"stringKey": "objectStringValue",
 			},
@@ -50,6 +52,18 @@ func TestToScenario_文字列のアサーション(t *testing.T) {
 	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.stringKey"が文字列の"stringValue"である`))
+}
+
+func TestToScenario_整数のアサーション(t *testing.T) {
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.integerKey"が整数の"123"である`))
+}
+
+func TestToScenario_小数のアサーション(t *testing.T) {
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.floatKey"が小数の"123.456"である`))
 }
 
 func TestToScenario_オブジェクトに含まれる値のアサーション(t *testing.T) {
