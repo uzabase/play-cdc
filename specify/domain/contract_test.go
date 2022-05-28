@@ -14,10 +14,15 @@ var sut domain.Contract = domain.Contract{
 	},
 	domain.Response{
 		200,
-		domain.JSON{
+		map[string]any{
 			"stringKey": "stringValue",
-			"objectKey": domain.JSON{
+			"objectKey": map[string]any{
 				"stringKey": "objectStringValue",
+			},
+			"arrayKey": []any{
+				map[string]any{
+					"stringKey": "arrayObjectStringValue",
+				},
 			},
 		},
 	},
@@ -47,8 +52,14 @@ func TestToScenario_文字列のアサーション(t *testing.T) {
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.stringKey"が文字列の"stringValue"である`))
 }
 
-func TestToScenario_オブジェクトに含まれる文字列のアサーション(t *testing.T) {
+func TestToScenario_オブジェクトに含まれる値のアサーション(t *testing.T) {
 	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.objectKey.stringKey"が文字列の"objectStringValue"である`))
+}
+
+func TestToScenario_配列に含まれるオブジェクトに含まれる値のアサーション(t *testing.T) {
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[0].stringKey"が文字列の"arrayObjectStringValue"である`))
 }

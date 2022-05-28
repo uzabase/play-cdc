@@ -16,12 +16,9 @@ type Request struct {
 }
 
 type Response struct {
-	Status   int  `json:"status"`
-	JsonBody JSON `json:"jsonBody"`
+	Status   int        `json:"status"`
+	JsonBody map[string]any `json:"jsonBody"`
 }
-
-type JSON map[string]interface{}
-type JSONArray []interface{}
 
 func (c Contract) ToScenario() Scenario {
 	request := c.Request
@@ -43,7 +40,7 @@ func (c Contract) toSteps() []Step {
 		Step(statusCode),
 	}
 
-	return append(steps, c.Response.JsonBody.toAssertions([]string{})...)
+	return append(steps, objectToAssertions(c.Response.JsonBody, []string{})...)
 }
 
 type KeyChain []string
@@ -52,32 +49,32 @@ func (k KeyChain) toPath() string {
 	return strings.Join(k, ".")
 }
 
-func (j JSON) toAssertions(keyChain KeyChain) []Step {
+func objectToAssertions(object map[string]any, keyChain KeyChain) []Step {
 	var assertions []Step
-	for k, v := range j {
+	for k, v := range object {
 		keyChain := append(keyChain, k)
 		assertions = append(assertions, toAssertions(v, keyChain)...)
 	}
 	return assertions
 }
 
-func (j JSONArray) toAssertions(keyChain KeyChain) []Step {
+func arrayToAssertions(array []any, keyChain KeyChain) []Step {
 	var assertions []Step
-	for i, v := range j {
-		keyChain[len(keyChain) - 1] += fmt.Sprintf("[%d]", i)
+	for i, v := range array {
+		keyChain[len(keyChain)-1] += fmt.Sprintf("[%d]", i)
 		assertions = append(assertions, toAssertions(v, keyChain)...)
 	}
 	return assertions
 }
 
-func toAssertions(v interface{}, keyChain KeyChain) []Step {
+func toAssertions(v any, keyChain KeyChain) []Step {
 	var steps []Step
 
 	switch v := v.(type) {
-	case map[string]interface{}:
-		steps = JSON(v).toAssertions(keyChain)
-	case []interface{}:
-		steps = JSONArray(v).toAssertions(keyChain)
+	case map[string]any:
+		steps = objectToAssertions(v, keyChain)
+	case []any:
+		steps = arrayToAssertions(v, keyChain)
 	case string:
 		step := fmt.Sprintf(`レスポンスのJSONの"$.%s"が文字列の"%s"である`, keyChain.toPath(), v)
 		steps = []Step{Step(step)}
