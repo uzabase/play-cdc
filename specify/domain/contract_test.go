@@ -7,25 +7,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var sut = createDefaultSut("GET")
-
-func createDefaultSut(method string) *domain.Contract {
-	return createSut(method, "", "/test")
+type SutParams struct {
+	method  string
+	url     string
+	urlPath string
 }
 
-func createSut(method string, url string, urlPath string) *domain.Contract {
+var sut = createSut(SutParams{
+	method:  "GET",
+	urlPath: "/test",
+})
+
+func createSut(params SutParams) *domain.Contract {
 	return &domain.Contract{
 		Request: domain.Request{
-			Url: url,
-			UrlPath: urlPath,
-			Method: method,
+			Url:     params.url,
+			UrlPath: params.urlPath,
+			Method:  params.method,
 		},
 		Response: domain.Response{
 			Status: 200,
 			JsonBody: map[string]any{
-				"stringKey": "stringValue",
+				"stringKey":  "stringValue",
 				"integerKey": float64(123),
-				"floatKey": 123.456,
+				"floatKey":   123.456,
 				"booleanKey": true,
 				"objectKey": map[string]any{
 					"stringKey": "objectStringValue",
@@ -41,49 +46,89 @@ func createSut(method string, url string, urlPath string) *domain.Contract {
 }
 
 func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
-	actual := createSut("GET", "", "/test").ToScenario()
+	sut := createSut(SutParams{
+		method:  "GET",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Equal(t, `GET /test`, actual.Heading)
 }
 
 func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
-	actual := createSut("GET", "/test", "").ToScenario()
+	sut := createSut(SutParams{
+		method:  "GET",
+		url: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Equal(t, `GET /test`, actual.Heading)
 }
 
 func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
-	actual := createSut("GET", "", "/test").ToScenario()
+	sut := createSut(SutParams{
+		method:  "GET",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
 }
 
 func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
-	actual := createSut("GET", "/test", "").ToScenario()
+	sut := createSut(SutParams{
+		method:  "GET",
+		url: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
 }
 
 func TestToScenario_GETリクエスト(t *testing.T) {
-	actual := createDefaultSut("GET").ToScenario()
+	sut := createSut(SutParams{
+		method:  "GET",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
 }
 
 func TestToScenario_POSTリクエスト(t *testing.T) {
-	actual := createDefaultSut("POST").ToScenario()
+	sut := createSut(SutParams{
+		method:  "POST",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPOSTリクエストを送る`))
 }
 
 func TestToScenario_PUTリクエスト(t *testing.T) {
-	actual := createDefaultSut("PUT").ToScenario()
+	sut := createSut(SutParams{
+		method:  "PUT",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPUTリクエストを送る`))
 }
 
 func TestToScenario_DELETEリクエスト(t *testing.T) {
-	actual := createDefaultSut("DELETE").ToScenario()
+	sut := createSut(SutParams{
+		method:  "DELETE",
+		urlPath: "/test",
+	})
+
+	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にDELETEリクエストを送る`))
 }

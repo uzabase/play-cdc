@@ -12,9 +12,9 @@ type Contract struct {
 }
 
 type Request struct {
+	Method  string `json:"method"`
 	Url string `json:"url"`
 	UrlPath string `json:"urlPath"`
-	Method  string `json:"method"`
 }
 
 type Response struct {
