@@ -53,11 +53,16 @@ func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
 	sut := createSut(SutParams{
 		method:  "GET",
 		urlPath: "/test",
+		queryParams: domain.QueryParams{
+			"query": {
+				"equalTo": "value",
+			},
+		},
 	})
 
 	actual := sut.ToScenario()
 
-	assert.Equal(t, `GET /test`, actual.Heading)
+	assert.Equal(t, domain.Heading(`GET /test?query=value`), actual.Heading)
 }
 
 func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
@@ -68,7 +73,7 @@ func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 
 	actual := sut.ToScenario()
 
-	assert.Equal(t, `GET /test`, actual.Heading)
+	assert.Equal(t, domain.Heading(`GET /test`), actual.Heading)
 }
 
 func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {

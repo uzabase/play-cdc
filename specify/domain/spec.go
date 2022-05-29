@@ -6,9 +6,11 @@ import (
 )
 
 type Scenario struct {
-	Heading string
+	Heading Heading
 	Steps []Step
 }
+
+type Heading string
 
 type Step string
 
