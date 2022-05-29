@@ -21,7 +21,7 @@ type Response struct {
 	JsonBody map[string]any `json:"jsonBody"`
 }
 
-func (c Contract) ToScenario() Scenario {
+func (c *Contract) ToScenario() Scenario {
 	request := c.Request
 
 	spec := Scenario{
@@ -32,7 +32,7 @@ func (c Contract) ToScenario() Scenario {
 	return spec
 }
 
-func (c Contract) toSteps() []Step {
+func (c *Contract) toSteps() []Step {
 	request := fmt.Sprintf("URL\"%s\"に%sリクエストを送る", c.Request.UrlPath, c.Request.Method)
 	statusCode := fmt.Sprintf("レスポンスステータスコードが\"%d\"である", c.Response.Status)
 

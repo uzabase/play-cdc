@@ -6,7 +6,7 @@ import (
 	"specify/domain"
 )
 
-func FindContract(path string) domain.Contract {
+func FindContract(path string) *domain.Contract {
 	byteArray, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
@@ -18,5 +18,5 @@ func FindContract(path string) domain.Contract {
 		panic(err)
 	}
 
-	return contract
+	return &contract
 }

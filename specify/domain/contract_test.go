@@ -9,8 +9,8 @@ import (
 
 var sut = createSut("GET")
 
-func createSut(method string) domain.Contract {
-	return domain.Contract{
+func createSut(method string) *domain.Contract {
+	return &domain.Contract{
 		domain.Request{
 			"/test",
 			method,
