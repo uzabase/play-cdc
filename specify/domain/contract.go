@@ -25,8 +25,8 @@ func (c *Contract) ToScenario() *Scenario {
 	request := c.Request
 
 	return &Scenario{
-		fmt.Sprintf("%s %s", request.Method, request.UrlPath),
-		c.toSteps(),
+		Heading: fmt.Sprintf("%s %s", request.Method, request.UrlPath),
+		Steps: c.toSteps(),
 	}
 }
 

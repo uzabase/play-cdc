@@ -9,8 +9,8 @@ import (
 
 func TestString(t *testing.T) {
 	sut := domain.Scenario{
-		"heading",
-		[]domain.Step{
+		Heading: "heading",
+		Steps: []domain.Step{
 			"step1",
 			"step2",
 		},

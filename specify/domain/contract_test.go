@@ -11,13 +11,13 @@ var sut = createSut("GET")
 
 func createSut(method string) *domain.Contract {
 	return &domain.Contract{
-		domain.Request{
-			"/test",
-			method,
+		Request: domain.Request{
+			UrlPath: "/test",
+			Method: method,
 		},
-		domain.Response{
-			200,
-			map[string]any{
+		Response: domain.Response{
+			Status: 200,
+			JsonBody: map[string]any{
 				"stringKey": "stringValue",
 				"integerKey": float64(123),
 				"floatKey": 123.456,
