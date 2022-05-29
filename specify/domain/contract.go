@@ -15,6 +15,23 @@ type Request struct {
 	Method  string `json:"method"`
 	Url string `json:"url"`
 	UrlPath string `json:"urlPath"`
+	Headers Headers `json:"headers"`
+}
+
+type Headers map[string]HeaderMather
+
+type HeaderMather map[string]string
+
+func (h Headers) String() string {
+	var result []string
+	for k, v := range h {
+		result = append(result, fmt.Sprintf(`%s: %s`, k, v))
+	}
+	return strings.Join(result, ` \r\n `)
+}
+
+func (hm HeaderMather) String() string {
+	return hm["equalTo"]
 }
 
 type Response struct {
@@ -39,15 +56,23 @@ func (r *Request) toUrl() string {
 }
 
 func (c *Contract) toSteps() []Step {
-	request := fmt.Sprintf("URL\"%s\"に%sリクエストを送る", c.Request.toUrl(), c.Request.Method)
-	statusCode := fmt.Sprintf("レスポンスステータスコードが\"%d\"である", c.Response.Status)
-
 	steps := []Step{
-		Step(request),
-		Step(statusCode),
+		Step(c.Request.toRequestStep()),
+		Step(c.Response.toStatusCodeStep()),
 	}
 
 	return append(steps, objectToAssertions(c.Response.JsonBody, []string{})...)
+}
+
+func (r *Request) toRequestStep() string {
+	if (len(r.Headers) > 0) {
+		return fmt.Sprintf(`URL"%s"にヘッダー"%s"で%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
+	}
+	return fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
+}
+
+func (r *Response) toStatusCodeStep() string {
+	return fmt.Sprintf(`レスポンスステータスコードが"%d"である`, r.Status)
 }
 
 type KeyChain []string
