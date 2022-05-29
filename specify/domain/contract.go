@@ -21,15 +21,13 @@ type Response struct {
 	JsonBody map[string]any `json:"jsonBody"`
 }
 
-func (c *Contract) ToScenario() Scenario {
+func (c *Contract) ToScenario() *Scenario {
 	request := c.Request
 
-	spec := Scenario{
+	return &Scenario{
 		fmt.Sprintf("%s %s", request.Method, request.UrlPath),
 		c.toSteps(),
 	}
-
-	return spec
 }
 
 func (c *Contract) toSteps() []Step {
