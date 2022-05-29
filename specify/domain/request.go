@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -51,6 +52,8 @@ func (h QueryParams) String() string {
 		queryParams = append(queryParams, fmt.Sprintf(`%s=%s`, k, v))
 	}
 
+	sort.Slice(queryParams, func(i, j int) bool { return queryParams[i] < queryParams[j]})
+
 	return "?" + strings.Join(queryParams, "&")
 }
 
@@ -63,6 +66,8 @@ func (h Headers) String() string {
 	for k, v := range h {
 		headers = append(headers, fmt.Sprintf(`%s: %s`, k, v))
 	}
+
+	sort.Slice(headers, func(i, j int) bool { return headers[i] < headers[j]})
 
 	return strings.Join(headers, ` \r\n `)
 }

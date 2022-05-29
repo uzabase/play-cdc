@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"math"
+	"sort"
 	"strings"
 )
 
@@ -31,6 +32,8 @@ func objectToAssertions(object map[string]any, keyChain KeyChain) []Step {
 		keyChain := append(keyChain, k)
 		assertions = append(assertions, toAssertions(v, keyChain)...)
 	}
+
+	sort.Slice(assertions, func(i, j int) bool { return assertions[i] < assertions[j]})
 	return assertions
 }
 
