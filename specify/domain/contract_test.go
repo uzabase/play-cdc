@@ -11,6 +11,7 @@ type SutParams struct {
 	method  string
 	url     string
 	urlPath string
+	queryParams domain.QueryParams
 	headers domain.Headers
 }
 
@@ -25,6 +26,7 @@ func createSut(params SutParams) *domain.Contract {
 			Url:     params.url,
 			UrlPath: params.urlPath,
 			Method:  params.method,
+			QueryParams: params.queryParams,
 			Headers: params.headers,
 		},
 		Response: domain.Response{
@@ -135,25 +137,28 @@ func TestToScenario_DELETEリクエスト(t *testing.T) {
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にDELETEリクエストを送る`))
 }
 
-func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
+func TestToScenario_クエリパラメータを含むリクエスト(t *testing.T) {
 	sut := createSut(SutParams{
-		method:  "PUT",
+		method:  "GET",
 		urlPath: "/test",
-		headers: domain.Headers{
-			"content-type": {
-				"equalTo": "application/json",
+		queryParams: domain.QueryParams{
+			"q1": {
+				"equalTo": "v1",
+			},
+			"q2": {
+				"equalTo": "v2",
 			},
 		},
 	})
 
 	actual := sut.ToScenario()
 
-	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json"でPUTリクエストを送る`))
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test?q1=v1&q2=v2"にGETリクエストを送る`))
 }
 
-func TestToScenario_複数のヘッダを含むリクエスト(t *testing.T) {
+func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 	sut := createSut(SutParams{
-		method:  "POST",
+		method:  "PUT",
 		urlPath: "/test",
 		headers: domain.Headers{
 			"content-type": {
@@ -167,7 +172,7 @@ func TestToScenario_複数のヘッダを含むリクエスト(t *testing.T) {
 
 	actual := sut.ToScenario()
 
-	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json \r\n options: 123, 456"でPOSTリクエストを送る`))
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json \r\n options: 123, 456"でPUTリクエストを送る`))
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {

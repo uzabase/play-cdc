@@ -15,12 +15,40 @@ type Request struct {
 	Method  string `json:"method"`
 	Url string `json:"url"`
 	UrlPath string `json:"urlPath"`
+	QueryParams QueryParams `json:"queryParameters"`
 	Headers Headers `json:"headers"`
 }
+
+func (r *Request) toUrl() string {
+	if (len(r.Url) > 0) {
+		return r.Url
+	}
+	return r.UrlPath + r.QueryParams.String()
+}
+
+type QueryParams map[string]QueryParamMatcher
+
+type QueryParamMatcher map[string]string
 
 type Headers map[string]HeaderMather
 
 type HeaderMather map[string]string
+
+func (h QueryParams) String() string {
+	if (len(h) == 0) {
+		return ""
+	}
+
+	var result []string
+	for k, v := range h {
+		result = append(result, fmt.Sprintf(`%s=%s`, k, v))
+	}
+	return "?" + strings.Join(result, "&")
+}
+
+func (m QueryParamMatcher) String() string {
+	return m["equalTo"]
+}
 
 func (h Headers) String() string {
 	var result []string
@@ -30,8 +58,8 @@ func (h Headers) String() string {
 	return strings.Join(result, ` \r\n `)
 }
 
-func (hm HeaderMather) String() string {
-	return hm["equalTo"]
+func (m HeaderMather) String() string {
+	return m["equalTo"]
 }
 
 type Response struct {
@@ -46,13 +74,6 @@ func (c *Contract) ToScenario() *Scenario {
 		Heading: fmt.Sprintf("%s %s", request.Method, request.toUrl()),
 		Steps: c.toSteps(),
 	}
-}
-
-func (r *Request) toUrl() string {
-	if (len(r.Url) > 0) {
-		return r.Url
-	}
-	return r.UrlPath
 }
 
 func (c *Contract) toSteps() []Step {
