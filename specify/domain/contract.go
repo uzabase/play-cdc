@@ -12,7 +12,7 @@ type Contract struct {
 func (c *Contract) ToScenario() *Scenario {
 	return &Scenario{
 		Heading: c.toHeading(),
-		Steps: c.toSteps(),
+		Steps:   c.toSteps(),
 	}
 }
 
@@ -26,5 +26,7 @@ func (c *Contract) toSteps() []Step {
 		c.Response.toStatusCodeStep(),
 	}
 
-	return append(steps, c.Response.toAssertions()...)
+	steps = append(steps, c.Response.toHeaderAssertions()...)
+	steps = append(steps, c.Response.toBodyAssertions()...)
+	return steps
 }

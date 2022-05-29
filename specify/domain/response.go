@@ -8,17 +8,31 @@ import (
 )
 
 type Response struct {
-	Status   int        `json:"status"`
-	JsonBody map[string]any `json:"jsonBody"`
+	Status   int             `json:"status"`
+	Headers  ResponseHeaders `json:"headers"`
+	JsonBody map[string]any  `json:"jsonBody"`
 }
 
 func (r *Response) toStatusCodeStep() Step {
 	return Step(fmt.Sprintf(`レスポンスステータスコードが"%d"である`, r.Status))
 }
 
-func (r *Response) toAssertions() []Step {
+func (r *Response) toHeaderAssertions() []Step {
+	var assertions []Step
+	for k, v := range r.Headers {
+		assertions = append(assertions, Step(fmt.Sprintf(`レスポンスヘッダーに"%s"が存在し、その値が"%s"である`, k, v)))
+	}
+
+	sort.Slice(assertions, func(i, j int) bool { return assertions[i] < assertions[j] })
+
+	return assertions
+}
+
+func (r *Response) toBodyAssertions() []Step {
 	return objectToAssertions(r.JsonBody, []string{})
 }
+
+type ResponseHeaders map[string]string
 
 type KeyChain []string
 
@@ -33,7 +47,7 @@ func objectToAssertions(object map[string]any, keyChain KeyChain) []Step {
 		assertions = append(assertions, toAssertions(v, keyChain)...)
 	}
 
-	sort.Slice(assertions, func(i, j int) bool { return assertions[i] < assertions[j]})
+	sort.Slice(assertions, func(i, j int) bool { return assertions[i] < assertions[j] })
 	return assertions
 }
 

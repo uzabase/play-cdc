@@ -8,11 +8,11 @@ import (
 )
 
 type SutParams struct {
-	method  string
-	url     string
-	urlPath string
+	method      string
+	url         string
+	urlPath     string
 	queryParams domain.QueryParams
-	headers domain.Headers
+	headers     domain.RequestHeaders
 }
 
 var sut = createSut(SutParams{
@@ -23,14 +23,18 @@ var sut = createSut(SutParams{
 func createSut(params SutParams) *domain.Contract {
 	return &domain.Contract{
 		Request: domain.Request{
-			Url:     params.url,
-			UrlPath: params.urlPath,
-			Method:  params.method,
+			Url:         params.url,
+			UrlPath:     params.urlPath,
+			Method:      params.method,
 			QueryParams: params.queryParams,
-			Headers: params.headers,
+			Headers:     params.headers,
 		},
 		Response: domain.Response{
 			Status: 200,
+			Headers: domain.ResponseHeaders{
+				"header1": "value1",
+				"header2": "value2",
+			},
 			JsonBody: map[string]any{
 				"stringKey":  "stringValue",
 				"integerKey": float64(123),
@@ -67,8 +71,8 @@ func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
 
 func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 	sut := createSut(SutParams{
-		method:  "GET",
-		url: "/test",
+		method: "GET",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario()
@@ -89,8 +93,8 @@ func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
 
 func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
 	sut := createSut(SutParams{
-		method:  "GET",
-		url: "/test",
+		method: "GET",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario()
@@ -165,7 +169,7 @@ func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 	sut := createSut(SutParams{
 		method:  "PUT",
 		urlPath: "/test",
-		headers: domain.Headers{
+		headers: domain.RequestHeaders{
 			"content-type": {
 				"equalTo": "application/json",
 			},
@@ -184,6 +188,13 @@ func TestToScenario_レスポンスステータスコード(t *testing.T) {
 	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスステータスコードが"200"である`))
+}
+
+func TestToScenario_レスポンスヘッダー(t *testing.T) {
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスヘッダーに"header1"が存在し、その値が"value1"である`))
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスヘッダーに"header2"が存在し、その値が"value2"である`))
 }
 
 func TestToScenario_文字列のアサーション(t *testing.T) {
@@ -225,18 +236,18 @@ func TestToScenario_配列に含まれるオブジェクトに含まれる値の
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:     "/test",
-			Method:  "GET",
+			Url:    "/test",
+			Method: "GET",
 		},
 		Response: domain.Response{
 			Status: 200,
 			JsonBody: map[string]any{
-				"c":  "c value",
-				"b":  "b value",
+				"c": "c value",
+				"b": "b value",
 				"a": map[string]any{
 					"x": "a.x value",
 				},
-				"abc":  "abc value",
+				"abc": "abc value",
 			},
 		},
 	}

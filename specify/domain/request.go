@@ -7,16 +7,16 @@ import (
 )
 
 type Request struct {
-	Method  string `json:"method"`
-	Url string `json:"url"`
-	UrlPath string `json:"urlPath"`
-	QueryParams QueryParams `json:"queryParameters"`
-	Headers Headers `json:"headers"`
+	Method      string         `json:"method"`
+	Url         string         `json:"url"`
+	UrlPath     string         `json:"urlPath"`
+	QueryParams QueryParams    `json:"queryParameters"`
+	Headers     RequestHeaders `json:"headers"`
 }
 
 func (r *Request) toRequestStep() Step {
 	var request string
-	if (len(r.Headers) > 0) {
+	if len(r.Headers) > 0 {
 		request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
 	} else {
 		request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
@@ -26,7 +26,7 @@ func (r *Request) toRequestStep() Step {
 
 func (r *Request) toUrl() Step {
 	var url string
-	if (len(r.Url) > 0) {
+	if len(r.Url) > 0 {
 		url = r.Url
 	} else {
 		url = r.UrlPath + r.QueryParams.String()
@@ -38,12 +38,12 @@ type QueryParams map[string]QueryParamMatcher
 
 type QueryParamMatcher map[string]string
 
-type Headers map[string]HeaderMather
+type RequestHeaders map[string]HeaderMather
 
 type HeaderMather map[string]string
 
 func (h QueryParams) String() string {
-	if (len(h) == 0) {
+	if len(h) == 0 {
 		return ""
 	}
 
@@ -52,7 +52,7 @@ func (h QueryParams) String() string {
 		queryParams = append(queryParams, fmt.Sprintf(`%s=%s`, k, v))
 	}
 
-	sort.Slice(queryParams, func(i, j int) bool { return queryParams[i] < queryParams[j]})
+	sort.Slice(queryParams, func(i, j int) bool { return queryParams[i] < queryParams[j] })
 
 	return "?" + strings.Join(queryParams, "&")
 }
@@ -61,13 +61,13 @@ func (m QueryParamMatcher) String() string {
 	return m["equalTo"]
 }
 
-func (h Headers) String() string {
+func (h RequestHeaders) String() string {
 	var headers []string
 	for k, v := range h {
 		headers = append(headers, fmt.Sprintf(`%s: %s`, k, v))
 	}
 
-	sort.Slice(headers, func(i, j int) bool { return headers[i] < headers[j]})
+	sort.Slice(headers, func(i, j int) bool { return headers[i] < headers[j] })
 
 	return strings.Join(headers, ` \r\n `)
 }
