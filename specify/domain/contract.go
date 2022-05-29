@@ -12,6 +12,7 @@ type Contract struct {
 }
 
 type Request struct {
+	Url string `json:"url"`
 	UrlPath string `json:"urlPath"`
 	Method  string `json:"method"`
 }
@@ -25,13 +26,20 @@ func (c *Contract) ToScenario() *Scenario {
 	request := c.Request
 
 	return &Scenario{
-		Heading: fmt.Sprintf("%s %s", request.Method, request.UrlPath),
+		Heading: fmt.Sprintf("%s %s", request.Method, request.toUrl()),
 		Steps: c.toSteps(),
 	}
 }
 
+func (r *Request) toUrl() string {
+	if (len(r.Url) > 0) {
+		return r.Url
+	}
+	return r.UrlPath
+}
+
 func (c *Contract) toSteps() []Step {
-	request := fmt.Sprintf("URL\"%s\"に%sリクエストを送る", c.Request.UrlPath, c.Request.Method)
+	request := fmt.Sprintf("URL\"%s\"に%sリクエストを送る", c.Request.toUrl(), c.Request.Method)
 	statusCode := fmt.Sprintf("レスポンスステータスコードが\"%d\"である", c.Response.Status)
 
 	steps := []Step{

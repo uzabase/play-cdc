@@ -7,12 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var sut = createSut("GET")
+var sut = createDefaultSut("GET")
 
-func createSut(method string) *domain.Contract {
+func createDefaultSut(method string) *domain.Contract {
+	return createSut(method, "", "/test")
+}
+
+func createSut(method string, url string, urlPath string) *domain.Contract {
 	return &domain.Contract{
 		Request: domain.Request{
-			UrlPath: "/test",
+			Url: url,
+			UrlPath: urlPath,
 			Method: method,
 		},
 		Response: domain.Response{
@@ -35,32 +40,50 @@ func createSut(method string) *domain.Contract {
 	}
 }
 
-func TestToScenario_シナリオ名(t *testing.T) {
-	actual := sut.ToScenario()
+func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
+	actual := createSut("GET", "", "/test").ToScenario()
 
 	assert.Equal(t, `GET /test`, actual.Heading)
 }
 
+func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
+	actual := createSut("GET", "/test", "").ToScenario()
+
+	assert.Equal(t, `GET /test`, actual.Heading)
+}
+
+func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
+	actual := createSut("GET", "", "/test").ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
+}
+
+func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
+	actual := createSut("GET", "/test", "").ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
+}
+
 func TestToScenario_GETリクエスト(t *testing.T) {
-	actual := createSut("GET").ToScenario()
+	actual := createDefaultSut("GET").ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
 }
 
 func TestToScenario_POSTリクエスト(t *testing.T) {
-	actual := createSut("POST").ToScenario()
+	actual := createDefaultSut("POST").ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPOSTリクエストを送る`))
 }
 
 func TestToScenario_PUTリクエスト(t *testing.T) {
-	actual := createSut("PUT").ToScenario()
+	actual := createDefaultSut("PUT").ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にPUTリクエストを送る`))
 }
 
 func TestToScenario_DELETEリクエスト(t *testing.T) {
-	actual := createSut("DELETE").ToScenario()
+	actual := createDefaultSut("DELETE").ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にDELETEリクエストを送る`))
 }
