@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
-	contract := repository.FindContract("example.json")
-	scenario := contract.ToScenario()
-	fmt.Println(scenario)
+	contracts := repository.FindExecutedContracts()
+
+	for _, contract := range contracts {
+		scenario := contract.ToScenario()
+		fmt.Println(scenario)
+	}
 }
