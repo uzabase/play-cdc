@@ -16,8 +16,8 @@ func (c *Contract) ToScenario() *Scenario {
 	}
 }
 
-func (c *Contract) toHeading() Heading {
-	return Heading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
+func (c *Contract) toHeading() ScenarioHeading {
+	return ScenarioHeading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
 }
 
 func (c *Contract) toSteps() []Step {

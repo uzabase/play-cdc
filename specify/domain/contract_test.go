@@ -66,7 +66,7 @@ func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
 
 	actual := sut.ToScenario()
 
-	assert.Equal(t, domain.Heading(`GET /test?query=value`), actual.Heading)
+	assert.Equal(t, domain.ScenarioHeading(`GET /test?query=value`), actual.Heading)
 }
 
 func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
@@ -77,7 +77,7 @@ func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 
 	actual := sut.ToScenario()
 
-	assert.Equal(t, domain.Heading(`GET /test`), actual.Heading)
+	assert.Equal(t, domain.ScenarioHeading(`GET /test`), actual.Heading)
 }
 
 func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {

@@ -5,12 +5,41 @@ import (
 	"strings"
 )
 
-type Scenario struct {
-	Heading Heading
-	Steps []Step
+type Spec struct {
+	Heading SpecHeading
+	Scenarios []*Scenario
 }
 
-type Heading string
+type SpecHeading string
+
+func NewSpec(heading string, scenarios []*Scenario) *Spec {
+	return &Spec{
+		Heading: SpecHeading(heading),
+		Scenarios: scenarios,
+	}
+}
+
+func (s *Spec) String() string {
+	var b strings.Builder
+
+	b.WriteString(fmt.Sprintf("# %s\n", s.Heading))
+	b.WriteString("\n")
+
+	scenarios := make([]string, len(s.Scenarios))
+	for i, scenario := range s.Scenarios {
+	  scenarios[i] = scenario.String()
+	}
+	b.WriteString(strings.Join(scenarios, "\n"))
+
+	return b.String()
+}
+
+type Scenario struct {
+	Heading ScenarioHeading
+	Steps   []Step
+}
+
+type ScenarioHeading string
 
 type Step string
 
