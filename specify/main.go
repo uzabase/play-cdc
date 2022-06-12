@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"specify/domain"
 	"specify/repository"
 )
@@ -12,7 +13,11 @@ const (
 )
 
 func main() {
-	contracts := repository.FindExecutedContracts(wiremockEndpoint)
+	contracts, err := repository.FindExecutedContracts(wiremockEndpoint)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
 	scenarios := make([]*domain.Scenario, len(contracts))
 	for i, contract := range contracts {
