@@ -8,7 +8,7 @@ import (
 )
 
 func FindExecutedContracts(endpoint string) []domain.Contract {
-	req, err := http.NewRequest("GET", endpoint + "/__admin/requests", nil)
+	req, err := http.NewRequest("GET", endpoint+"/__admin/requests", nil)
 	if err != nil {
 		panic(err)
 	}

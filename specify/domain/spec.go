@@ -6,7 +6,7 @@ import (
 )
 
 type Spec struct {
-	Heading SpecHeading
+	Heading   SpecHeading
 	Scenarios []*Scenario
 }
 
@@ -14,7 +14,7 @@ type SpecHeading string
 
 func NewSpec(heading string, scenarios []*Scenario) *Spec {
 	return &Spec{
-		Heading: SpecHeading(heading),
+		Heading:   SpecHeading(heading),
 		Scenarios: scenarios,
 	}
 }
@@ -27,7 +27,7 @@ func (s *Spec) String() string {
 
 	scenarios := make([]string, len(s.Scenarios))
 	for i, scenario := range s.Scenarios {
-	  scenarios[i] = scenario.String()
+		scenarios[i] = scenario.String()
 	}
 	b.WriteString(strings.Join(scenarios, "\n"))
 

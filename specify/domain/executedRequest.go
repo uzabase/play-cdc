@@ -5,6 +5,6 @@ type ExecutedRequests struct {
 }
 
 type ExecutedRequest struct {
-	WasMatched bool `json:"wasMatched"`
+	WasMatched  bool     `json:"wasMatched"`
 	StubMapping Contract `json:"stubMapping"`
 }
