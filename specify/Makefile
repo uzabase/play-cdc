@@ -6,3 +6,9 @@ run:
 
 clean:
 	rm -rf out
+
+fmt:
+	go fmt ./...
+
+test:
+	go test ./...
