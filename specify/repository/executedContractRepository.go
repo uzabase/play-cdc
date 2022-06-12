@@ -7,8 +7,8 @@ import (
 	"specify/domain"
 )
 
-func FindExecutedContracts() []domain.Contract {
-	req, err := http.NewRequest("GET", "http://localhost:8080/__admin/requests", nil)
+func FindExecutedContracts(endpoint string) []domain.Contract {
+	req, err := http.NewRequest("GET", endpoint + "/__admin/requests", nil)
 	if err != nil {
 		panic(err)
 	}
