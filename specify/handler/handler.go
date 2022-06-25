@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	gm "specify/gauge_messages"
+	"specify/usecase"
 )
 
 func Start() {
@@ -80,5 +81,7 @@ func (h *handler) NotifyStepExecutionEnding(c context.Context, m *gm.StepExecuti
 
 func (h *handler) NotifySuiteResult(c context.Context, m *gm.SuiteExecutionResult) (*gm.Empty, error) {
 	fmt.Println("Received SuiteExecutionResult")
+
+	usecase.PrintSpec()
 	return &gm.Empty{}, nil
 }
