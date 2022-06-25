@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"specify/domain"
+	"specify/handler"
 	"specify/repository"
 )
 
@@ -13,10 +13,11 @@ const (
 )
 
 func main() {
+	handler.Start()
+
 	contracts, err := repository.FindExecutedContracts(wiremockEndpoint)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	scenarios := make([]*domain.Scenario, len(contracts))
