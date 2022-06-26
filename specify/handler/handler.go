@@ -82,6 +82,10 @@ func (h *handler) NotifyStepExecutionEnding(c context.Context, m *gm.StepExecuti
 func (h *handler) NotifySuiteResult(c context.Context, m *gm.SuiteExecutionResult) (*gm.Empty, error) {
 	fmt.Println("Received SuiteExecutionResult")
 
+	if (m.SuiteResult.Failed) {
+		return &gm.Empty{}, nil
+	}
+
 	usecase.PrintSpec()
 	return &gm.Empty{}, nil
 }
