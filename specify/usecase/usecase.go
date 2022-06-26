@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	wiremockEndpoint = "http://localhost:8080"
+	wiremockEndpoint = "http://localhost:16000"
 	specName         = "Example"
 )
 
