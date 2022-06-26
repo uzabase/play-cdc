@@ -10,11 +10,12 @@ const (
 )
 
 func GenerateSpec() {
-	contracts, err := repository.FindExecutedContracts(wiremockEndpoint)
+	requests, err := repository.FindExecutedRequests(wiremockEndpoint)
 	if err != nil {
 		panic(err)
 	}
 
+	contracts := requests.ToContracts()
 	spec := contracts.ToSpec(specName)
 
 	repository.SaveSpec(spec)
