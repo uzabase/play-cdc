@@ -8,7 +8,7 @@ import (
 	"specify/domain"
 )
 
-func FindExecutedContracts(endpoint string) ([]domain.Contract, error) {
+func FindExecutedContracts(endpoint string) (domain.Contracts, error) {
 	req, err := http.NewRequest("GET", endpoint+"/__admin/requests", nil)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create a request for endpoint(%s): %w", endpoint, err)
@@ -31,10 +31,10 @@ func FindExecutedContracts(endpoint string) ([]domain.Contract, error) {
 		return nil, fmt.Errorf("Failed to unmarshal json read from endpoint(%s): %w", endpoint, err)
 	}
 
-	var result []domain.Contract
+	var result []*domain.Contract
 	for _, r := range executedRequests.Requests {
 		if r.WasMatched {
-			result = append(result, r.StubMapping)
+			result = append(result, &r.StubMapping)
 		}
 	}
 

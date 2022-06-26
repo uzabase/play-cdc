@@ -4,6 +4,18 @@ import (
 	"fmt"
 )
 
+type Contracts []*Contract
+
+func (c Contracts) ToSpec(specName string) *Spec {
+	scenarios := make([]*Scenario, len(c))
+
+	for i, contract := range c {
+		scenarios[i] = contract.ToScenario()
+	}
+
+	return NewSpec(specName, scenarios)
+}
+
 type Contract struct {
 	Request  Request  `json:"request"`
 	Response Response `json:"response"`

@@ -3,10 +3,11 @@ package handler
 import (
 	"context"
 	"fmt"
-	"google.golang.org/grpc"
 	"net"
 	gm "specify/gauge_messages"
 	"specify/usecase"
+
+	"google.golang.org/grpc"
 )
 
 func Start() {
@@ -82,10 +83,10 @@ func (h *handler) NotifyStepExecutionEnding(c context.Context, m *gm.StepExecuti
 func (h *handler) NotifySuiteResult(c context.Context, m *gm.SuiteExecutionResult) (*gm.Empty, error) {
 	fmt.Println("Received SuiteExecutionResult")
 
-	if (m.SuiteResult.Failed) {
+	if m.SuiteResult.Failed {
 		return &gm.Empty{}, nil
 	}
 
-	usecase.PrintSpec()
+	usecase.GenerateSpec()
 	return &gm.Empty{}, nil
 }

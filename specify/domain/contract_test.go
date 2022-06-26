@@ -15,12 +15,12 @@ type SutParams struct {
 	headers     domain.RequestHeaders
 }
 
-var sut = createSut(SutParams{
+var contract = createContract(SutParams{
 	method:  "GET",
 	urlPath: "/test",
 })
 
-func createSut(params SutParams) *domain.Contract {
+func createContract(params SutParams) *domain.Contract {
 	return &domain.Contract{
 		Request: domain.Request{
 			Url:         params.url,
@@ -53,8 +53,17 @@ func createSut(params SutParams) *domain.Contract {
 	}
 }
 
+func TestToSpec(t *testing.T) {
+	sut := domain.Contracts{contract, contract}
+
+	actual := sut.ToSpec("Spec name")
+
+	assert.Equal(t, domain.SpecHeading("Spec name"), actual.Heading)
+	assert.Len(t, actual.Scenarios, 2)
+}
+
 func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "GET",
 		urlPath: "/test",
 		queryParams: domain.QueryParams{
@@ -70,7 +79,7 @@ func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
 }
 
 func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method: "GET",
 		url:    "/test",
 	})
@@ -81,7 +90,7 @@ func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 }
 
 func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "GET",
 		urlPath: "/test",
 	})
@@ -92,7 +101,7 @@ func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
 }
 
 func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method: "GET",
 		url:    "/test",
 	})
@@ -103,7 +112,7 @@ func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
 }
 
 func TestToScenario_GETリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "GET",
 		urlPath: "/test",
 	})
@@ -114,7 +123,7 @@ func TestToScenario_GETリクエスト(t *testing.T) {
 }
 
 func TestToScenario_POSTリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "POST",
 		urlPath: "/test",
 	})
@@ -125,7 +134,7 @@ func TestToScenario_POSTリクエスト(t *testing.T) {
 }
 
 func TestToScenario_PUTリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "PUT",
 		urlPath: "/test",
 	})
@@ -136,7 +145,7 @@ func TestToScenario_PUTリクエスト(t *testing.T) {
 }
 
 func TestToScenario_DELETEリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "DELETE",
 		urlPath: "/test",
 	})
@@ -147,7 +156,7 @@ func TestToScenario_DELETEリクエスト(t *testing.T) {
 }
 
 func TestToScenario_クエリパラメータを含むリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "GET",
 		urlPath: "/test",
 		queryParams: domain.QueryParams{
@@ -166,7 +175,7 @@ func TestToScenario_クエリパラメータを含むリクエスト(t *testing.
 }
 
 func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
-	sut := createSut(SutParams{
+	sut := createContract(SutParams{
 		method:  "PUT",
 		urlPath: "/test",
 		headers: domain.RequestHeaders{
@@ -185,50 +194,50 @@ func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスステータスコードが"200"である`))
 }
 
 func TestToScenario_レスポンスヘッダー(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスヘッダーに"header1"が存在し、その値が"value1"である`))
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスヘッダーに"header2"が存在し、その値が"value2"である`))
 }
 
 func TestToScenario_文字列のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.stringKey"が文字列の"stringValue"である`))
 }
 
 func TestToScenario_整数のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.integerKey"が整数の"123"である`))
 }
 
 func TestToScenario_小数のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.floatKey"が小数の"123.456"である`))
 }
 
 func TestToScenario_真偽値のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.booleanKey"が真偽値の"true"である`))
 }
 
 func TestToScenario_オブジェクトに含まれる値のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.objectKey.stringKey"が文字列の"objectStringValue"である`))
 }
 
 func TestToScenario_配列に含まれるオブジェクトに含まれる値のアサーション(t *testing.T) {
-	actual := sut.ToScenario()
+	actual := contract.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[0].stringKey"が文字列の"arrayObjectStringValue"である`))
 }
