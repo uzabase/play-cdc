@@ -5,13 +5,13 @@ type ExecutedRequests struct {
 }
 
 type ExecutedRequest struct {
-	WasMatched  bool     `json:"wasMatched"`
+	WasMatched  bool        `json:"wasMatched"`
 	StubMapping StubMapping `json:"stubMapping"`
 }
 
 type StubMapping struct {
-	Id string `json:"id"`
-	Request Request `json:"request"`
+	Id       string   `json:"id"`
+	Request  Request  `json:"request"`
 	Response Response `json:"response"`
 }
 
@@ -30,7 +30,7 @@ func (er *ExecutedRequests) ToContracts() Contracts {
 		}
 
 		result = append(result, &Contract{
-			Request: s.Request,
+			Request:  s.Request,
 			Response: s.Response,
 		})
 		added[s.Id] = struct{}{}

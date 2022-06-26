@@ -16,7 +16,9 @@ func GenerateSpec() {
 	}
 
 	contracts := requests.ToContracts()
+
 	spec := contracts.ToSpec(specName)
+	spec.SortScenarios()
 
 	repository.SaveSpec(spec)
 }

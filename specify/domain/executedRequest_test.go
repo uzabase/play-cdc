@@ -61,7 +61,7 @@ func TestToContracts_契約はStubMappingのIdでユニークにする(t *testin
 		},
 	}
 
-	actual := sut.ToContracts();
+	actual := sut.ToContracts()
 
 	assert.Len(t, actual, 1)
 }

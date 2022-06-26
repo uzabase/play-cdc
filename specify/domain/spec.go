@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -17,6 +18,12 @@ func NewSpec(heading string, scenarios []*Scenario) *Spec {
 		Heading:   SpecHeading(heading),
 		Scenarios: scenarios,
 	}
+}
+
+func (s *Spec) SortScenarios() {
+	sort.Slice(s.Scenarios, func(i, j int) bool {
+		return s.Scenarios[i].Heading < s.Scenarios[j].Heading
+	})
 }
 
 func (s *Spec) String() string {
