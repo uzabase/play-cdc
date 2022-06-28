@@ -1,0 +1,32 @@
+{
+  "id": "specify",
+  "version": "0.1.0",
+  "name": "specify",
+  "description": "Specify - generates spec files from WireMock recordings",
+  "install": {
+      "windows": [],
+      "linux": [],
+      "darwin": []
+  },
+  "command": {
+      "windows": [
+          "specify"
+      ],
+      "linux": [
+          "specify"
+      ],
+      "darwin": [
+          "specify"
+      ]
+  },
+  "scope": [
+      "Execution"
+  ],
+  "gaugeVersionSupport": {
+      "minimum": "1.0.7",
+      "maximum": ""
+  },
+  "capabilities": [
+      "grpc_support"
+  ]
+}
