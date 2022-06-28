@@ -4,21 +4,16 @@ import (
 	"specify/repository"
 )
 
-const (
-	wiremockEndpoint = "http://localhost:16000"
-	specName         = "Example"
-)
-
 func GenerateSpec() {
-	requests, err := repository.FindExecutedRequests(wiremockEndpoint)
+	requests, err := repository.FindExecutedRequests(repository.WiremockEndpoint())
 	if err != nil {
 		panic(err)
 	}
 
 	contracts := requests.ToContracts()
 
-	spec := contracts.ToSpec(specName)
+	spec := contracts.ToSpec(repository.APIName())
 	spec.SortScenarios()
 
-	repository.SaveSpec(spec)
+	repository.SaveSpec(spec, repository.SpecPath())
 }
