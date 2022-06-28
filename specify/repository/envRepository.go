@@ -1,15 +1,34 @@
 package repository
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
-func WiremockEndpoint() string {
-	return os.Getenv("wiremock_endpoint")
+type Env struct {
+	APIEndpoint string
+	APIName     string
+	SpecPath    string
 }
 
-func APIName() string {
-	return os.Getenv("api_name")
-}
+func GetEnvs() []Env {
+	var result []Env
 
-func SpecPath() string {
-	return os.Getenv("spec_path")
+	for i := 1; ; i++ {
+		apiEndpoint := os.Getenv(fmt.Sprintf("api_endpoint_%d", i))
+		apiName := os.Getenv(fmt.Sprintf("api_name_%d", i))
+		specPath := os.Getenv(fmt.Sprintf("spec_path_%d", i))
+
+		if apiEndpoint == "" || apiName == "" || specPath == "" {
+			break
+		}
+
+		result = append(result, Env{
+			APIEndpoint: apiEndpoint,
+			APIName:     apiName,
+			SpecPath:    specPath,
+		})
+	}
+
+	return result
 }
