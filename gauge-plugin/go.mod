@@ -1,4 +1,4 @@
-module specify
+module play-cdc
 
 go 1.18
 

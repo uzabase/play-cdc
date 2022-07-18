@@ -1,8 +1,8 @@
 {
-  "id": "specify",
+  "id": "play-cdc",
   "version": "0.1.0",
-  "name": "specify",
-  "description": "Specify - generates spec files from WireMock recordings",
+  "name": "play-cdc",
+  "description": "Play CDC - generates spec files from WireMock recordings",
   "install": {
       "windows": [],
       "linux": [],
@@ -10,13 +10,13 @@
   },
   "command": {
       "windows": [
-          "specify"
+          "play-cdc"
       ],
       "linux": [
-          "specify"
+          "play-cdc"
       ],
       "darwin": [
-          "specify"
+          "specplay-cdcify"
       ]
   },
   "scope": [

@@ -1,11 +1,12 @@
 build:
-	go build -o out/specify
+	mkdir -p out
+	go build -o out/play-cdc
 
 install: build
-	chmod +x out/specify
-	mkdir -p ~/.gauge/plugins/specify/0.1.0
-	mv out/specify ~/.gauge/plugins/specify/0.1.0
-	cp plugin.json ~/.gauge/plugins/specify/0.1.0
+	chmod +x out/play-cdc
+	mkdir -p ~/.gauge/plugins/play-cdc/0.1.0
+	mv out/play-cdc ~/.gauge/plugins/play-cdc/0.1.0
+	cp plugin.json ~/.gauge/plugins/play-cdc/0.1.0
 
 clean:
 	rm -rf out

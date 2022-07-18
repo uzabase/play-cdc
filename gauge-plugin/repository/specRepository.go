@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 	"os"
-	"specify/domain"
+	"play-cdc/domain"
 )
 
 func SaveSpec(spec *domain.Spec, path string) error {

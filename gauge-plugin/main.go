@@ -1,7 +1,7 @@
 package main
 
 import (
-	"specify/handler"
+	"play-cdc/handler"
 )
 
 func main() {

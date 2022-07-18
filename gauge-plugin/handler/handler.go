@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net"
-	gm "specify/gauge_messages"
-	"specify/usecase"
+	gm "play-cdc/gauge_messages"
+	"play-cdc/usecase"
 
 	"google.golang.org/grpc"
 )

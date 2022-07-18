@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"specify/repository"
+	"play-cdc/repository"
 )
 
 func GenerateSpec() {

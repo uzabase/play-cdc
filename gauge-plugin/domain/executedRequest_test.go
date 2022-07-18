@@ -1,7 +1,7 @@
 package domain_test
 
 import (
-	"specify/domain"
+	"play-cdc/domain"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

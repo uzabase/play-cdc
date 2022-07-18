@@ -1,4 +1,4 @@
-# Specify (beta)
+# Play CDC (beta)
 
 ## Install
 

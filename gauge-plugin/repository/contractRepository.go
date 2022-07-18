@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"specify/domain"
+	"play-cdc/domain"
 )
 
 func FindExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
