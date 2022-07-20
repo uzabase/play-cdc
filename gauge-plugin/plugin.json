@@ -16,7 +16,7 @@
           "play-cdc"
       ],
       "darwin": [
-          "specplay-cdcify"
+          "play-cdc"
       ]
   },
   "scope": [
