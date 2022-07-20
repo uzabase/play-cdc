@@ -190,7 +190,7 @@ func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 
 	actual := sut.ToScenario()
 
-	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json \r\n options: 123, 456"でPUTリクエストを送る`))
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json \r\n options: 123, 456"で、PUTリクエストを送る`))
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {

@@ -17,7 +17,7 @@ type Request struct {
 func (r *Request) toRequestStep() Step {
 	var request string
 	if len(r.Headers) > 0 {
-		request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
+		request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
 	} else {
 		request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
 	}
