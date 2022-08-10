@@ -5,8 +5,13 @@ type ExecutedRequests struct {
 }
 
 type ExecutedRequest struct {
+	Request     Request     `json:"request"`
 	WasMatched  bool        `json:"wasMatched"`
 	StubMapping StubMapping `json:"stubMapping"`
+}
+
+type Request struct {
+	Body string `json:"body"`
 }
 
 type StubMapping struct {
