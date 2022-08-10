@@ -22,14 +22,14 @@ var contract = createContract(SutParams{
 
 func createContract(params SutParams) *domain.Contract {
 	return &domain.Contract{
-		Request: domain.Request{
+		Request: domain.StubRequest{
 			Url:         params.url,
 			UrlPath:     params.urlPath,
 			Method:      params.method,
 			QueryParams: params.queryParams,
 			Headers:     params.headers,
 		},
-		Response: domain.Response{
+		Response: domain.StubResponse{
 			Status: 200,
 			Headers: domain.ResponseHeaders{
 				"header1": "value1",
@@ -244,11 +244,11 @@ func TestToScenario_配列に含まれるオブジェクトに含まれる値の
 
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
 	sut := &domain.Contract{
-		Request: domain.Request{
+		Request: domain.StubRequest{
 			Url:    "/test",
 			Method: "GET",
 		},
-		Response: domain.Response{
+		Response: domain.StubResponse{
 			Status: 200,
 			JsonBody: map[string]any{
 				"c": "c value",

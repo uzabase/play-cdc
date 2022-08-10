@@ -17,8 +17,8 @@ func (c Contracts) ToSpec(specName string) *Spec {
 }
 
 type Contract struct {
-	Request  Request  `json:"request"`
-	Response Response `json:"response"`
+	Request  StubRequest  `json:"request"`
+	Response StubResponse `json:"response"`
 }
 
 func (c *Contract) ToScenario() *Scenario {

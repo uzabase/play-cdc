@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type Request struct {
+type StubRequest struct {
 	Method      string         `json:"method"`
 	Url         string         `json:"url"`
 	UrlPath     string         `json:"urlPath"`
@@ -14,7 +14,7 @@ type Request struct {
 	Headers     RequestHeaders `json:"headers"`
 }
 
-func (r *Request) toRequestStep() Step {
+func (r *StubRequest) toRequestStep() Step {
 	var request string
 	if len(r.Headers) > 0 {
 		request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
@@ -24,7 +24,7 @@ func (r *Request) toRequestStep() Step {
 	return Step(request)
 }
 
-func (r *Request) toUrl() Step {
+func (r *StubRequest) toUrl() Step {
 	var url string
 	if len(r.Url) > 0 {
 		url = r.Url

@@ -14,7 +14,7 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 				WasMatched: true,
 				StubMapping: domain.StubMapping{
 					Id: "id1",
-					Request: domain.Request{
+					Request: domain.StubRequest{
 						Url: "/url1",
 					},
 				},
@@ -23,7 +23,7 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 				WasMatched: false,
 				StubMapping: domain.StubMapping{
 					Id: "id2",
-					Request: domain.Request{
+					Request: domain.StubRequest{
 						Url: "/url2",
 					},
 				},
@@ -35,7 +35,7 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 
 	expected := domain.Contracts{
 		&domain.Contract{
-			Request: domain.Request{
+			Request: domain.StubRequest{
 				Url: "/url1",
 			},
 		},

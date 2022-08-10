@@ -10,9 +10,9 @@ type ExecutedRequest struct {
 }
 
 type StubMapping struct {
-	Id       string   `json:"id"`
-	Request  Request  `json:"request"`
-	Response Response `json:"response"`
+	Id       string       `json:"id"`
+	Request  StubRequest  `json:"request"`
+	Response StubResponse `json:"response"`
 }
 
 func (er *ExecutedRequests) ToContracts() Contracts {

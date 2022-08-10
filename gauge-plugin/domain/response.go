@@ -7,17 +7,17 @@ import (
 	"strings"
 )
 
-type Response struct {
+type StubResponse struct {
 	Status   int             `json:"status"`
 	Headers  ResponseHeaders `json:"headers"`
 	JsonBody map[string]any  `json:"jsonBody"`
 }
 
-func (r *Response) toStatusCodeStep() Step {
+func (r *StubResponse) toStatusCodeStep() Step {
 	return Step(fmt.Sprintf(`レスポンスステータスコードが"%d"である`, r.Status))
 }
 
-func (r *Response) toHeaderAssertions() []Step {
+func (r *StubResponse) toHeaderAssertions() []Step {
 	var assertions []Step
 	for k, v := range r.Headers {
 		assertions = append(assertions, Step(fmt.Sprintf(`レスポンスヘッダーに"%s"が存在し、その値が"%s"である`, k, v)))
@@ -28,7 +28,7 @@ func (r *Response) toHeaderAssertions() []Step {
 	return assertions
 }
 
-func (r *Response) toBodyAssertions() []Step {
+func (r *StubResponse) toBodyAssertions() []Step {
 	return objectToAssertions(r.JsonBody, []string{})
 }
 
