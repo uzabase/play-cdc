@@ -22,7 +22,7 @@ var contract = createContract(SutParams{
 
 func createContract(params SutParams) *domain.Contract {
 	return &domain.Contract{
-		Request: domain.StubRequest{
+		Request: domain.Request{
 			Url:         params.url,
 			UrlPath:     params.urlPath,
 			Method:      params.method,
@@ -244,7 +244,7 @@ func TestToScenario_配列に含まれるオブジェクトに含まれる値の
 
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
 	sut := &domain.Contract{
-		Request: domain.StubRequest{
+		Request: domain.Request{
 			Url:    "/test",
 			Method: "GET",
 		},
