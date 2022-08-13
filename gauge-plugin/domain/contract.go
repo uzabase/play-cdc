@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -9,14 +10,18 @@ import (
 
 type Contracts []*Contract
 
-func (c Contracts) ToSpec(specName string) *Spec {
+func (c Contracts) ToSpec(consumerName string, providerName string) *Spec {
 	scenarios := make([]*Scenario, len(c))
 
 	for i, contract := range c {
-		scenarios[i] = contract.ToScenario()
+		scenarios[i] = contract.ToScenario(consumerName)
 	}
 
-	return NewSpec(specName, scenarios)
+	return NewSpec(toSpecHeading(consumerName, providerName), scenarios)
+}
+
+func toSpecHeading(consumerName string, providerName string) string {
+	return fmt.Sprintf("%sが依存している%sの仕様", consumerName, providerName)
 }
 
 type Contract struct {
@@ -33,10 +38,10 @@ type Request struct {
 	Body        string
 }
 
-func (c *Contract) ToScenario() *Scenario {
+func (c *Contract) ToScenario(consumerName string) *Scenario {
 	return &Scenario{
 		Heading: c.toHeading(),
-		Steps:   c.toSteps(),
+		Steps:   c.toSteps(consumerName),
 	}
 }
 
@@ -44,9 +49,9 @@ func (c *Contract) toHeading() ScenarioHeading {
 	return ScenarioHeading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
 }
 
-func (c *Contract) toSteps() []Step {
+func (c *Contract) toSteps(consumerName string) []Step {
 	steps := []Step{
-		c.Request.toRequestStep(),
+		c.Request.toRequestStep(consumerName),
 		c.Response.toStatusCodeStep(),
 	}
 
@@ -55,22 +60,26 @@ func (c *Contract) toSteps() []Step {
 	return steps
 }
 
-func (r *Request) toRequestStep() Step {
+func (r *Request) toRequestStep(consumerName string) Step {
 	var request string
 	if len(r.Headers) > 0 {
 		if r.IsBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.ToBodyFileName(), r.Headers, r.Method)
+			request = fmt.Sprintf(`URL"%s"にボディ"file:%s"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Headers, r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
 		}
 	} else {
 		if r.IsBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s"で、%sリクエストを送る`, r.toUrl(), r.ToBodyFileName(), r.Method)
+			request = fmt.Sprintf(`URL"%s"にボディ"file:%s"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
 		}
 	}
 	return Step(request)
+}
+
+func (r *Request) bodyFilePath(consumerName string) string {
+	return filepath.Join(RequestBodiesRelativePath(consumerName), r.ToBodyFileName())
 }
 
 func (r *Request) IsBodyAvailable() bool {
@@ -90,7 +99,7 @@ func (r *Request) toUrl() string {
 func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
 	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
-	return replaced + ".json"
+	return fmt.Sprintf("%s_%s.json", strings.ToLower(r.Method), replaced)
 }
 
 type QueryParams map[string]QueryParamMatcher

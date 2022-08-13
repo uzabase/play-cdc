@@ -3,44 +3,56 @@ package repository
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
 
-type Env struct {
-	APIEndpoint string
-	APIName     string
-	OutputPath  string
+type ProviderEnv struct {
+	ProviderEndpoint string
+	ProviderName     string
 }
 
-func GetEnvs() []Env {
-	var result []Env
+func GetProviderEnvs() []ProviderEnv {
+	var result []ProviderEnv
 
 	for i := 1; ; i++ {
-		apiEndpointKey := fmt.Sprintf("cdc_api_endpoint_%d", i)
-		apiNameKey := fmt.Sprintf("cdc_api_name_%d", i)
-		outputPathKey := fmt.Sprintf("cdc_output_path_%d", i)
+		providerEndpointKey := fmt.Sprintf("cdc_provider_endpoint_%d", i)
+		providerNameKey := fmt.Sprintf("cdc_provider_name_%d", i)
 
-		apiEndpoint := os.Getenv(apiEndpointKey)
-		apiName := os.Getenv(apiNameKey)
-		outputPath := os.Getenv(outputPathKey)
+		providerEndpoint := os.Getenv(providerEndpointKey)
+		providerName := os.Getenv(providerNameKey)
 
-		if apiEndpoint == "" && apiName == "" && outputPath == "" {
+		if providerEndpoint == "" && providerName == "" {
 			break
 		}
 
-		if apiEndpoint == "" || apiName == "" || outputPath == "" {
+		if providerEndpoint == "" || providerName == "" {
 			fmt.Println("Warning: properties are inconsistent.")
-			fmt.Printf("%s=%s\n", apiEndpointKey, apiEndpoint)
-			fmt.Printf("%s=%s\n", apiNameKey, apiName)
-			fmt.Printf("%s=%s\n", outputPathKey, outputPath)
+			fmt.Printf("%s=%s\n", providerEndpointKey, providerEndpoint)
+			fmt.Printf("%s=%s\n", providerNameKey, providerName)
 			break
 		}
 
-		result = append(result, Env{
-			APIEndpoint: apiEndpoint,
-			APIName:     apiName,
-			OutputPath:  outputPath,
+		result = append(result, ProviderEnv{
+			ProviderEndpoint: providerEndpoint,
+			ProviderName:     providerName,
 		})
 	}
 
 	return result
+}
+
+func GetOutputBasePath() string {
+	return os.Getenv("cdc_output_base_path")
+}
+
+func GetConsumerName() string {
+	return os.Getenv("cdc_consumer_name")
+}
+
+func IsDebug() bool {
+	debug, err := strconv.ParseBool(os.Getenv("cdc_debug"))
+	if err != nil {
+		return false
+	}
+	return debug
 }

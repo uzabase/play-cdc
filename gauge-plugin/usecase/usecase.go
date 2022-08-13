@@ -1,27 +1,38 @@
 package usecase
 
 import (
-	"path/filepath"
+	"play-cdc/domain"
 	"play-cdc/repository"
 )
 
 func GenerateSpec() {
-	for _, e := range repository.GetEnvs() {
-		requests, err := repository.FindExecutedRequests(e.APIEndpoint)
+	for _, e := range repository.GetProviderEnvs() {
+		requests, err := repository.FindExecutedRequests(e.ProviderEndpoint)
 		if err != nil {
 			panic(err)
 		}
 
 		contracts := requests.ToContracts()
 
-		spec := contracts.ToSpec(e.APIName)
+		consumerName := repository.GetConsumerName()
+		if consumerName == "" {
+			panic("Error: consumer name is empty!")
+		}
+
+		spec := contracts.ToSpec(consumerName, e.ProviderName)
 		spec.SortScenarios()
 
-		err = repository.SaveSpec(spec, filepath.Join(e.OutputPath, "contract.spec"))
+		outputBasePath := repository.GetOutputBasePath()
+		if outputBasePath == "" {
+			panic("Error: output base path is empty!")
+		}
+		outputPath := domain.OutputPath(outputBasePath, e.ProviderName)
+
+		err = repository.SaveSpec(spec, domain.SpecFilePath(outputPath, consumerName))
 		if err != nil {
 			panic(err)
 		}
 
-		repository.SaveRequestBodies(contracts, e.OutputPath)
+		repository.SaveRequestBodies(contracts, domain.RequestBodiesPath(outputPath, consumerName))
 	}
 }

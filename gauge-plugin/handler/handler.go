@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"os"
 	gm "play-cdc/gauge_messages"
+	"play-cdc/repository"
 	"play-cdc/usecase"
-	"strconv"
 
 	"google.golang.org/grpc"
 )
@@ -34,11 +33,7 @@ func Start() {
 }
 
 func debug() bool {
-	debug, err := strconv.ParseBool(os.Getenv("cdc_debug"))
-	if err != nil {
-		return false
-	}
-	return debug
+	return repository.IsDebug()
 }
 
 type handler struct {
