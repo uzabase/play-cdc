@@ -21,3 +21,7 @@ $ make install
 1. スペック（シナリオ）を実行する。
   - なお、WireMockのリクエスト履歴はExecution hooksなどで予めクリア（削除）しておくこと。
 2. すべてのシナリオが成功した場合、設定しておいた出力先パスに成立した契約を記述したspecファイルが出力される。
+
+### デバッグモード
+
+`env/default/playcdc.properties`に`cdc_debug=true`を設定すると、デバッグ用のログを出力できます。

@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	gm "play-cdc/gauge_messages"
 	"play-cdc/usecase"
+	"strconv"
 
 	"google.golang.org/grpc"
 )
@@ -31,6 +33,14 @@ func Start() {
 	server.Serve(listener)
 }
 
+func debug() bool {
+	debug, err := strconv.ParseBool(os.Getenv("cdc_debug"))
+	if err != nil {
+		return false
+	}
+	return debug
+}
+
 type handler struct {
 	*gm.UnimplementedReporterServer
 	server *grpc.Server
@@ -41,47 +51,65 @@ func newHandler(s *grpc.Server) *handler {
 }
 
 func (h *handler) NotifyExecutionStarting(c context.Context, m *gm.ExecutionStartingRequest) (*gm.Empty, error) {
-	fmt.Println("Received ExecutionStartingRequest")
+	if debug() {
+		fmt.Println("Received ExecutionStartingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifyExecutionEnding(c context.Context, m *gm.ExecutionEndingRequest) (*gm.Empty, error) {
-	fmt.Println("Received ExecutionEndingRequest")
+	if debug() {
+		fmt.Println("Received ExecutionEndingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifySpecExecutionStarting(c context.Context, m *gm.SpecExecutionStartingRequest) (*gm.Empty, error) {
-	fmt.Println("Received SpecExecutionStartingRequest")
+	if debug() {
+		fmt.Println("Received SpecExecutionStartingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifySpecExecutionEnding(c context.Context, m *gm.SpecExecutionEndingRequest) (*gm.Empty, error) {
-	fmt.Println("Received SpecExecutionEndingRequest")
+	if debug() {
+		fmt.Println("Received SpecExecutionEndingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifyScenarioExecutionStarting(c context.Context, m *gm.ScenarioExecutionStartingRequest) (*gm.Empty, error) {
-	fmt.Println("Received ScenarioExecutionStartingRequest")
+	if debug() {
+		fmt.Println("Received ScenarioExecutionStartingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifyScenarioExecutionEnding(c context.Context, m *gm.ScenarioExecutionEndingRequest) (*gm.Empty, error) {
-	fmt.Println("Received ScenarioExecutionEndingRequest")
+	if debug() {
+		fmt.Println("Received ScenarioExecutionEndingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifyStepExecutionStarting(c context.Context, m *gm.StepExecutionStartingRequest) (*gm.Empty, error) {
-	fmt.Println("Received StepExecutionStartingRequest")
+	if debug() {
+		fmt.Println("Received StepExecutionStartingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifyStepExecutionEnding(c context.Context, m *gm.StepExecutionEndingRequest) (*gm.Empty, error) {
-	fmt.Println("Received StepExecutionEndingRequest")
+	if debug() {
+		fmt.Println("Received StepExecutionEndingRequest")
+	}
 	return &gm.Empty{}, nil
 }
 
 func (h *handler) NotifySuiteResult(c context.Context, m *gm.SuiteExecutionResult) (*gm.Empty, error) {
-	fmt.Println("Received SuiteExecutionResult")
+	if debug() {
+		fmt.Println("Received SuiteExecutionResult")
+	}
 
 	if m.SuiteResult.Failed {
 		return &gm.Empty{}, nil
