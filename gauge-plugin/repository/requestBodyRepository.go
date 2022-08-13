@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -31,9 +33,26 @@ func writeToFile(path string, request domain.Request) error {
 	}
 	defer f.Close()
 
-	if _, err = f.WriteString(request.Body); err != nil {
+	pp, err := prettyPrintJson([]byte(request.Body))
+	if err != nil {
+		return fmt.Errorf("Error: failed to pretty print json(%s): %w", request.Body, err)
+	}
+
+	if _, err = f.Write(pp); err != nil {
 		return fmt.Errorf("Error: failed to write to a file(%s): %w", filePath, err)
 	}
 
 	return nil
+}
+
+func prettyPrintJson(body []byte) ([]byte, error) {
+	decoder := json.NewDecoder(bytes.NewReader(body))
+	decoder.UseNumber()
+
+	var res map[string]interface{}
+	if err := decoder.Decode(&res); err != nil {
+		return nil, err
+	}
+
+	return json.MarshalIndent(res, "", "  ")
 }
