@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -57,21 +58,38 @@ func (c *Contract) toSteps() []Step {
 func (r *Request) toRequestStep() Step {
 	var request string
 	if len(r.Headers) > 0 {
-		request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
+		if r.isBodyAvailable() {
+			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s.json"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.toBodyFileName(), r.Headers, r.Method)
+		} else {
+			request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
+		}
 	} else {
-		request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
+		if r.isBodyAvailable() {
+			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s.json"で、%sリクエストを送る`, r.toUrl(), r.toBodyFileName(), r.Method)
+		} else {
+			request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
+		}
 	}
 	return Step(request)
 }
 
-func (r *Request) toUrl() Step {
+func (r *Request) isBodyAvailable() bool {
+	return len(r.Body) > 0 && (r.Method == "POST" || r.Method == "PUT")
+}
+
+func (r *Request) toUrl() string {
 	var url string
 	if len(r.Url) > 0 {
 		url = r.Url
 	} else {
 		url = r.UrlPath + r.QueryParams.String()
 	}
-	return Step(url)
+	return url
+}
+
+func (r *Request) toBodyFileName() string {
+	re := regexp.MustCompile("[/|?|=|&]")
+	return re.ReplaceAllString(r.toUrl()[1:], "_")
 }
 
 type QueryParams map[string]QueryParamMatcher

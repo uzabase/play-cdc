@@ -13,6 +13,7 @@ type SutParams struct {
 	urlPath     string
 	queryParams domain.QueryParams
 	headers     domain.RequestHeaders
+	body		string
 }
 
 var contract = createContract(SutParams{
@@ -28,6 +29,7 @@ func createContract(params SutParams) *domain.Contract {
 			Method:      params.method,
 			QueryParams: params.queryParams,
 			Headers:     params.headers,
+			Body:        params.body,
 		},
 		Response: domain.StubResponse{
 			Status: 200,
@@ -191,6 +193,88 @@ func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 	actual := sut.ToScenario()
 
 	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にヘッダー"content-type: application/json \r\n options: 123, 456"で、PUTリクエストを送る`))
+}
+
+func TestToScenario_ボディを含むPOSTリクエスト(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "POST",
+		urlPath: "/test",
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にボディ"file:fixtures/test.json"で、POSTリクエストを送る`))
+}
+
+func TestToScenario_ボディを含むPUTリクエスト(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "PUT",
+		urlPath: "/test",
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にボディ"file:fixtures/test.json"で、PUTリクエストを送る`))
+}
+
+func TestToScenario_POSTとPUTリクエスト以外にはボディを含められない(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "GET",
+		urlPath: "/test",
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
+}
+
+func TestToScenario_ヘッダとボディを含むPOSTリクエスト(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "POST",
+		urlPath: "/test",
+		headers: domain.RequestHeaders{
+			"content-type": {
+				"equalTo": "application/json",
+			},
+		},
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にボディ"file:fixtures/test.json"、ヘッダー"content-type: application/json"で、POSTリクエストを送る`))
+}
+
+func TestToScenario_ヘッダとボディを含むPUTリクエスト(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "PUT",
+		urlPath: "/test",
+		headers: domain.RequestHeaders{
+			"content-type": {
+				"equalTo": "application/json",
+			},
+		},
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にボディ"file:fixtures/test.json"、ヘッダー"content-type: application/json"で、PUTリクエストを送る`))
+}
+
+func TestToScenario_ボディを含む複雑なURLのPUTリクエスト(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "PUT",
+		url: "/v1/companies/12345678?lang=ja&currency=JPY",
+		body: "body",
+	})
+
+	actual := sut.ToScenario()
+
+	assert.Contains(t, actual.Steps, domain.Step(`URL"/v1/companies/12345678?lang=ja&currency=JPY"にボディ"file:fixtures/v1_companies_12345678_lang_ja_currency_JPY.json"で、PUTリクエストを送る`))
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {
