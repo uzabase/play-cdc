@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"path/filepath"
 	"play-cdc/repository"
 )
 
@@ -16,6 +17,6 @@ func GenerateSpec() {
 		spec := contracts.ToSpec(e.APIName)
 		spec.SortScenarios()
 
-		repository.SaveSpec(spec, e.SpecPath)
+		repository.SaveSpec(spec, filepath.Join(e.OutputPath, "contract.spec"))
 	}
 }

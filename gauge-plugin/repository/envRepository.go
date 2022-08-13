@@ -8,7 +8,7 @@ import (
 type Env struct {
 	APIEndpoint string
 	APIName     string
-	SpecPath    string
+	OutputPath  string
 }
 
 func GetEnvs() []Env {
@@ -17,16 +17,16 @@ func GetEnvs() []Env {
 	for i := 1; ; i++ {
 		apiEndpoint := os.Getenv(fmt.Sprintf("cdc_api_endpoint_%d", i))
 		apiName := os.Getenv(fmt.Sprintf("cdc_api_name_%d", i))
-		specPath := os.Getenv(fmt.Sprintf("cdc_spec_path_%d", i))
+		outputPath := os.Getenv(fmt.Sprintf("cdc_output_path_%d", i))
 
-		if apiEndpoint == "" || apiName == "" || specPath == "" {
+		if apiEndpoint == "" || apiName == "" || outputPath == "" {
 			break
 		}
 
 		result = append(result, Env{
 			APIEndpoint: apiEndpoint,
 			APIName:     apiName,
-			SpecPath:    specPath,
+			OutputPath:  outputPath,
 		})
 	}
 

@@ -14,7 +14,7 @@ $ make install
 2. `env/default/playcdc.properties`ファイルを作り、WireMockでスタブしているAPIそれぞれについて、以下3つのプロパティを設定する。（`[n]`は1以上の整数）
   - `cdc_api_endpoint_[n]`: WireMockのエンドポイント
   - `cdc_api_name_[n]`: スタブしているAPIの名前
-  - `cdc_spec_path_[n]`: specファイルの出力先パス
+  - `cdc_output_path_[n]`: 契約の出力先パス（ディレクトリ）
 
 ### 実行
 
