@@ -17,6 +17,11 @@ func GenerateSpec() {
 		spec := contracts.ToSpec(e.APIName)
 		spec.SortScenarios()
 
-		repository.SaveSpec(spec, filepath.Join(e.OutputPath, "contract.spec"))
+		err = repository.SaveSpec(spec, filepath.Join(e.OutputPath, "contract.spec"))
+		if err != nil {
+			panic(err)
+		}
+
+		repository.SaveRequestBodies(contracts, e.OutputPath)
 	}
 }

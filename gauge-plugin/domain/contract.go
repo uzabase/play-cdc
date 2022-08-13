@@ -58,14 +58,14 @@ func (c *Contract) toSteps() []Step {
 func (r *Request) toRequestStep() Step {
 	var request string
 	if len(r.Headers) > 0 {
-		if r.isBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s.json"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.toBodyFileName(), r.Headers, r.Method)
+		if r.IsBodyAvailable() {
+			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.ToBodyFileName(), r.Headers, r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
 		}
 	} else {
-		if r.isBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s.json"で、%sリクエストを送る`, r.toUrl(), r.toBodyFileName(), r.Method)
+		if r.IsBodyAvailable() {
+			request = fmt.Sprintf(`URL"%s"にボディ"file:fixtures/%s"で、%sリクエストを送る`, r.toUrl(), r.ToBodyFileName(), r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
 		}
@@ -73,7 +73,7 @@ func (r *Request) toRequestStep() Step {
 	return Step(request)
 }
 
-func (r *Request) isBodyAvailable() bool {
+func (r *Request) IsBodyAvailable() bool {
 	return len(r.Body) > 0 && (r.Method == "POST" || r.Method == "PUT")
 }
 
@@ -87,9 +87,10 @@ func (r *Request) toUrl() string {
 	return url
 }
 
-func (r *Request) toBodyFileName() string {
+func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
-	return re.ReplaceAllString(r.toUrl()[1:], "_")
+	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
+	return replaced + ".json"
 }
 
 type QueryParams map[string]QueryParamMatcher
