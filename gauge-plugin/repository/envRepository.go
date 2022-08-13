@@ -15,11 +15,23 @@ func GetEnvs() []Env {
 	var result []Env
 
 	for i := 1; ; i++ {
-		apiEndpoint := os.Getenv(fmt.Sprintf("cdc_api_endpoint_%d", i))
-		apiName := os.Getenv(fmt.Sprintf("cdc_api_name_%d", i))
-		outputPath := os.Getenv(fmt.Sprintf("cdc_output_path_%d", i))
+		apiEndpointKey := fmt.Sprintf("cdc_api_endpoint_%d", i)
+		apiNameKey := fmt.Sprintf("cdc_api_name_%d", i)
+		outputPathKey := fmt.Sprintf("cdc_output_path_%d", i)
+
+		apiEndpoint := os.Getenv(apiEndpointKey)
+		apiName := os.Getenv(apiNameKey)
+		outputPath := os.Getenv(outputPathKey)
+
+		if apiEndpoint == "" && apiName == "" && outputPath == "" {
+			break
+		}
 
 		if apiEndpoint == "" || apiName == "" || outputPath == "" {
+			fmt.Println("Warning: properties are inconsistent.")
+			fmt.Printf("%s=%s\n", apiEndpointKey, apiEndpoint)
+			fmt.Printf("%s=%s\n", apiNameKey, apiName)
+			fmt.Printf("%s=%s\n", outputPathKey, outputPath)
 			break
 		}
 
