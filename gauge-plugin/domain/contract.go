@@ -64,13 +64,13 @@ func (r *Request) toRequestStep(consumerName string) Step {
 	var request string
 	if len(r.Headers) > 0 {
 		if r.IsBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:%s"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Headers, r.Method)
+			request = fmt.Sprintf(`URL"%s"にボディ"<file:%s>"、ヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Headers, r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"にヘッダー"%s"で、%sリクエストを送る`, r.toUrl(), r.Headers, r.Method)
 		}
 	} else {
 		if r.IsBodyAvailable() {
-			request = fmt.Sprintf(`URL"%s"にボディ"file:%s"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Method)
+			request = fmt.Sprintf(`URL"%s"にボディ"<file:%s>"で、%sリクエストを送る`, r.toUrl(), r.bodyFilePath(consumerName), r.Method)
 		} else {
 			request = fmt.Sprintf(`URL"%s"に%sリクエストを送る`, r.toUrl(), r.Method)
 		}
