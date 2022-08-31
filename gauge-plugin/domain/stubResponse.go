@@ -54,8 +54,11 @@ func objectToAssertions(object map[string]any, keyChain KeyChain) []Step {
 func arrayToAssertions(array []any, keyChain KeyChain) []Step {
 	var assertions []Step
 	for i, v := range array {
-		keyChain[len(keyChain)-1] += fmt.Sprintf("[%d]", i)
-		assertions = append(assertions, toAssertions(v, keyChain)...)
+		copiedKeyChain := make(KeyChain, len(keyChain))
+		copy(copiedKeyChain, keyChain)
+
+		copiedKeyChain[len(keyChain)-1] += fmt.Sprintf("[%d]", i)
+		assertions = append(assertions, toAssertions(v, copiedKeyChain)...)
 	}
 	return assertions
 }

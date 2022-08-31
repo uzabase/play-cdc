@@ -47,7 +47,10 @@ func createContract(params SutParams) *domain.Contract {
 				},
 				"arrayKey": []any{
 					map[string]any{
-						"stringKey": "arrayObjectStringValue",
+						"stringKey": "arrayObjectStringValue1",
+					},
+					map[string]any{
+						"stringKey": "arrayObjectStringValue2",
 					},
 				},
 			},
@@ -323,7 +326,13 @@ func TestToScenario_オブジェクトに含まれる値のアサーション(t 
 func TestToScenario_配列に含まれるオブジェクトに含まれる値のアサーション(t *testing.T) {
 	actual := contract.ToScenario("Consumer API")
 
-	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[0].stringKey"が文字列の"arrayObjectStringValue"である`))
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[0].stringKey"が文字列の"arrayObjectStringValue1"である`))
+}
+
+func TestToScenario_配列に含まれる2つめ以降のオブジェクトに含まれる値のアサーション(t *testing.T) {
+	actual := contract.ToScenario("Consumer API")
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[1].stringKey"が文字列の"arrayObjectStringValue2"である`))
 }
 
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
