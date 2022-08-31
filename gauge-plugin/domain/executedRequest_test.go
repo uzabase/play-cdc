@@ -16,7 +16,6 @@ func TestToContracts(t *testing.T) {
 				},
 				WasMatched: true,
 				StubMapping: domain.StubMapping{
-					Id: "id1",
 					Request: domain.StubRequest{
 						Method:      "GET",
 						Url:         "/url1",
@@ -52,7 +51,6 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 			{
 				WasMatched: true,
 				StubMapping: domain.StubMapping{
-					Id: "id1",
 					Request: domain.StubRequest{
 						Url: "/url1",
 					},
@@ -61,7 +59,6 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 			{
 				WasMatched: false,
 				StubMapping: domain.StubMapping{
-					Id: "id2",
 					Request: domain.StubRequest{
 						Url: "/url2",
 					},
@@ -82,19 +79,31 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 	assert.Equal(t, expected, actual)
 }
 
-func TestToContracts_契約はStubMappingのIdでユニークにする(t *testing.T) {
+func TestToContracts_契約は契約全体でユニークにする(t *testing.T) {
 	sut := domain.ExecutedRequests{
 		Requests: []domain.ExecutedRequest{
 			{
 				WasMatched: true,
 				StubMapping: domain.StubMapping{
-					Id: "id1",
+					Request: domain.StubRequest{
+						Method: "GET",
+					},
 				},
 			},
 			{
 				WasMatched: true,
 				StubMapping: domain.StubMapping{
-					Id: "id1",
+					Request: domain.StubRequest{
+						Method: "PUT",
+					},
+				},
+			},
+			{
+				WasMatched: true,
+				StubMapping: domain.StubMapping{
+					Request: domain.StubRequest{
+						Method: "GET",
+					},
 				},
 			},
 		},
@@ -102,5 +111,5 @@ func TestToContracts_契約はStubMappingのIdでユニークにする(t *testin
 
 	actual := sut.ToContracts()
 
-	assert.Len(t, actual, 1)
+	assert.Len(t, actual, 2)
 }

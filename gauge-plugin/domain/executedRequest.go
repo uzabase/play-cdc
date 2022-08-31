@@ -1,5 +1,7 @@
 package domain
 
+import "reflect"
+
 type ExecutedRequests struct {
 	Requests []ExecutedRequest `json:"requests"`
 }
@@ -15,26 +17,20 @@ type ActualRequest struct {
 }
 
 type StubMapping struct {
-	Id       string       `json:"id"`
 	Request  StubRequest  `json:"request"`
 	Response StubResponse `json:"response"`
 }
 
 func (er *ExecutedRequests) ToContracts() Contracts {
 	var result Contracts
-	var added = map[string]struct{}{}
 	for _, r := range er.Requests {
 		s := r.StubMapping
 
 		if !r.WasMatched {
 			continue
 		}
-		_, exists := added[s.Id]
-		if exists {
-			continue
-		}
 
-		result = append(result, &Contract{
+		c := &Contract{
 			Request: Request{
 				Method:      s.Request.Method,
 				Url:         s.Request.Url,
@@ -44,9 +40,23 @@ func (er *ExecutedRequests) ToContracts() Contracts {
 				Body:        r.Request.Body,
 			},
 			Response: s.Response,
-		})
-		added[s.Id] = struct{}{}
+		}
+
+		if exists(result, c) {
+			continue
+		}
+
+		result = append(result, c)
 	}
 
 	return result
+}
+
+func exists(contracts Contracts, contract *Contract) bool {
+	for _, v := range contracts {
+		if reflect.DeepEqual(v, contract) {
+			return true
+		}
+	}
+	return false
 }

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"crypto/md5"
 	"fmt"
 	"path/filepath"
 	"regexp"
@@ -99,7 +100,10 @@ func (r *Request) toUrl() string {
 func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
 	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
-	return fmt.Sprintf("%s_%s.json", strings.ToLower(r.Method), replaced)
+
+	hash := md5.Sum([]byte(r.Body))
+
+	return fmt.Sprintf("%s_%s_%x.json", strings.ToLower(r.Method), replaced, hash)
 }
 
 type QueryParams map[string]QueryParamMatcher
