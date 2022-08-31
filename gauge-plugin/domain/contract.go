@@ -47,7 +47,11 @@ func (c *Contract) ToScenario(consumerName string) *Scenario {
 }
 
 func (c *Contract) toHeading() ScenarioHeading {
-	return ScenarioHeading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
+	if c.Request.IsBodyAvailable() {
+		return ScenarioHeading(fmt.Sprintf("%s %s (body: %x)", c.Request.Method, c.Request.toUrl(), c.Request.toBodyHash()))
+	} else {
+		return ScenarioHeading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
+	}
 }
 
 func (c *Contract) toSteps(consumerName string) []Step {
@@ -97,13 +101,14 @@ func (r *Request) toUrl() string {
 	return url
 }
 
+func (r *Request) toBodyHash() [16]byte {
+	return md5.Sum([]byte(r.Body))
+}
+
 func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
 	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
-
-	hash := md5.Sum([]byte(r.Body))
-
-	return fmt.Sprintf("%s_%s_%x.json", strings.ToLower(r.Method), replaced, hash)
+	return fmt.Sprintf("%s_%s_%x.json", strings.ToLower(r.Method), replaced, r.toBodyHash())
 }
 
 type QueryParams map[string]QueryParamMatcher
