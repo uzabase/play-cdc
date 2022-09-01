@@ -49,6 +49,9 @@ func (h *handler) NotifyExecutionStarting(c context.Context, m *gm.ExecutionStar
 	if debug() {
 		fmt.Println("Received ExecutionStartingRequest")
 	}
+
+	usecase.InitRequests()
+
 	return &gm.Empty{}, nil
 }
 
@@ -84,6 +87,9 @@ func (h *handler) NotifyScenarioExecutionEnding(c context.Context, m *gm.Scenari
 	if debug() {
 		fmt.Println("Received ScenarioExecutionEndingRequest")
 	}
+
+	usecase.RecordRequests()
+
 	return &gm.Empty{}, nil
 }
 

@@ -7,12 +7,9 @@ import (
 
 func GenerateSpec() {
 	for _, e := range repository.GetProviderEnvs() {
-		requests, err := repository.FindExecutedRequests(e.ProviderEndpoint)
-		if err != nil {
-			panic(err)
-		}
+		requests := repository.LoadRecordedRequests()
 
-		contracts := requests.ToContracts()
+		contracts := domain.ToContracts(requests)
 
 		consumerName := repository.GetConsumerName()
 		if consumerName == "" {
@@ -28,7 +25,7 @@ func GenerateSpec() {
 		}
 		outputPath := domain.OutputPath(outputBasePath, e.ProviderName)
 
-		err = repository.SaveSpec(spec, domain.SpecFilePath(outputPath, consumerName))
+		err := repository.SaveSpec(spec, domain.SpecFilePath(outputPath, consumerName))
 		if err != nil {
 			panic(err)
 		}

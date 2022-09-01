@@ -8,7 +8,9 @@ import (
 	"play-cdc/domain"
 )
 
-func FindExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
+var recordedRequests = []domain.ExecutedRequest{}
+
+func FetchExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 	req, err := http.NewRequest("GET", endpoint+"/__admin/requests", nil)
 	if err != nil {
 		return nil, fmt.Errorf("Error: failed to create a request for endpoint(%s): %w", endpoint, err)
@@ -32,4 +34,16 @@ func FindExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 	}
 
 	return &result, nil
+}
+
+func RecordExecutedRequests(requests []domain.ExecutedRequest) {
+	recordedRequests = append(recordedRequests, requests...)
+}
+
+func LoadRecordedRequests() []domain.ExecutedRequest {
+	return recordedRequests
+}
+
+func ClearExecutedRequests() {
+	recordedRequests = []domain.ExecutedRequest{}
 }

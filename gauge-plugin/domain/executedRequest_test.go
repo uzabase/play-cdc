@@ -8,27 +8,25 @@ import (
 )
 
 func TestToContracts(t *testing.T) {
-	sut := domain.ExecutedRequests{
-		Requests: []domain.ExecutedRequest{
-			{
-				Request: domain.ActualRequest{
-					Body: "body",
-				},
-				WasMatched: true,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Method:      "GET",
-						Url:         "/url1",
-						UrlPath:     "/url1/path",
-						QueryParams: domain.QueryParams{},
-						Headers:     domain.RequestHeaders{},
-					},
+	sut := []domain.ExecutedRequest{
+		{
+			Request: domain.ActualRequest{
+				Body: "body",
+			},
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method:      "GET",
+					Url:         "/url1",
+					UrlPath:     "/url1/path",
+					QueryParams: domain.QueryParams{},
+					Headers:     domain.RequestHeaders{},
 				},
 			},
 		},
 	}
 
-	actual := sut.ToContracts()
+	actual := domain.ToContracts(sut)
 
 	expected := domain.Contracts{
 		&domain.Contract{
@@ -46,28 +44,26 @@ func TestToContracts(t *testing.T) {
 }
 
 func TestToContracts_マッチしたリクエストだけを契約として扱う(t *testing.T) {
-	sut := domain.ExecutedRequests{
-		Requests: []domain.ExecutedRequest{
-			{
-				WasMatched: true,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Url: "/url1",
-					},
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Url: "/url1",
 				},
 			},
-			{
-				WasMatched: false,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Url: "/url2",
-					},
+		},
+		{
+			WasMatched: false,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Url: "/url2",
 				},
 			},
 		},
 	}
 
-	actual := sut.ToContracts()
+	actual := domain.ToContracts(sut)
 
 	expected := domain.Contracts{
 		&domain.Contract{
@@ -80,36 +76,34 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 }
 
 func TestToContracts_契約は契約全体でユニークにする(t *testing.T) {
-	sut := domain.ExecutedRequests{
-		Requests: []domain.ExecutedRequest{
-			{
-				WasMatched: true,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Method: "GET",
-					},
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method: "GET",
 				},
 			},
-			{
-				WasMatched: true,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Method: "PUT",
-					},
+		},
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method: "PUT",
 				},
 			},
-			{
-				WasMatched: true,
-				StubMapping: domain.StubMapping{
-					Request: domain.StubRequest{
-						Method: "GET",
-					},
+		},
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method: "GET",
 				},
 			},
 		},
 	}
 
-	actual := sut.ToContracts()
+	actual := domain.ToContracts(sut)
 
 	assert.Len(t, actual, 2)
 }

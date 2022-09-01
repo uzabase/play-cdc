@@ -21,9 +21,9 @@ type StubMapping struct {
 	Response StubResponse `json:"response"`
 }
 
-func (er *ExecutedRequests) ToContracts() Contracts {
+func ToContracts(requests []ExecutedRequest) Contracts {
 	var result Contracts
-	for _, r := range er.Requests {
+	for _, r := range requests {
 		s := r.StubMapping
 
 		if !r.WasMatched {
