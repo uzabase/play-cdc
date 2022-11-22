@@ -1,6 +1,8 @@
 package usecase
 
-import "play-cdc/repository"
+import (
+	"play-cdc/repository"
+)
 
 func RecordRequests() {
 	for _, e := range repository.GetProviderEnvs() {

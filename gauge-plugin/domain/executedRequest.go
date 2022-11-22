@@ -1,6 +1,9 @@
 package domain
 
-import "reflect"
+import (
+	"encoding/json"
+	"reflect"
+)
 
 type ExecutedRequests struct {
 	Requests []ExecutedRequest `json:"requests"`
@@ -19,6 +22,20 @@ type ActualRequest struct {
 type StubMapping struct {
 	Request  StubRequest  `json:"request"`
 	Response StubResponse `json:"response"`
+}
+type StubRequest struct {
+	Method      string         `json:"method"`
+	Url         string         `json:"url"`
+	UrlPath     string         `json:"urlPath"`
+	QueryParams QueryParams    `json:"queryParameters"`
+	Headers     RequestHeaders `json:"headers"`
+}
+
+type StubResponse struct {
+	Status   int             `json:"status"`
+	Headers  ResponseHeaders `json:"headers"`
+	Body     string          `json:"body"`
+	JsonBody map[string]any  `json:"jsonBody"`
 }
 
 func ToContracts(requests []ExecutedRequest) Contracts {
@@ -39,10 +56,14 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 				Headers:     s.Request.Headers,
 				Body:        r.Request.Body,
 			},
-			Response: s.Response,
+			Response: Response{
+				Status: s.Response.Status,
+				Headers: s.Response.Headers,
+				JsonBody: s.Response.toJsonBody(),
+			},
 		}
 
-		if exists(result, c) {
+		if result.contains(c) {
 			continue
 		}
 
@@ -52,8 +73,25 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 	return result
 }
 
-func exists(contracts Contracts, contract *Contract) bool {
-	for _, v := range contracts {
+func (r *StubResponse) toJsonBody() (map[string]any) {
+	if r.JsonBody != nil {
+		return r.JsonBody
+	}
+
+	if len(r.Body) > 0 {
+		var jsonBody map[string]any
+		err := json.Unmarshal([]byte(r.Body), &jsonBody)
+		if err != nil {
+			panic(err)
+		}
+		return jsonBody
+	}
+
+	return nil
+}
+
+func (c Contracts) contains(contract *Contract) bool {
+	for _, v := range c {
 		if reflect.DeepEqual(v, contract) {
 			return true
 		}

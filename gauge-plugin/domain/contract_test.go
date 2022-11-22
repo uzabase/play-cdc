@@ -31,7 +31,7 @@ func createContract(params SutParams) *domain.Contract {
 			Headers:     params.headers,
 			Body:        params.body,
 		},
-		Response: domain.StubResponse{
+		Response: domain.Response{
 			Status: 200,
 			Headers: domain.ResponseHeaders{
 				"header1": "value1",
@@ -358,7 +358,7 @@ func TestToScenario_レスポンスボディのアサーションはキーの昇
 			Url:    "/test",
 			Method: "GET",
 		},
-		Response: domain.StubResponse{
+		Response: domain.Response{
 			Status: 200,
 			JsonBody: map[string]any{
 				"c": "c value",

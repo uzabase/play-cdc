@@ -22,6 +22,15 @@ func TestToContracts(t *testing.T) {
 					QueryParams: domain.QueryParams{},
 					Headers:     domain.RequestHeaders{},
 				},
+				Response: domain.StubResponse{
+					Status: 200,
+					Headers: domain.ResponseHeaders{
+						"headerKey": "headerValue",
+					},
+					JsonBody: map[string]any{
+						"bodyKey": "bodyValue",
+					},
+				},
 			},
 		},
 	}
@@ -38,8 +47,42 @@ func TestToContracts(t *testing.T) {
 				Headers:     domain.RequestHeaders{},
 				Body:        "body",
 			},
+			Response: domain.Response{
+				Status: 200,
+				Headers: domain.ResponseHeaders{
+					"headerKey": "headerValue",
+				},
+				JsonBody: map[string]any{
+					"bodyKey": "bodyValue",
+				},
+			},
 		},
 	}
+	assert.Equal(t, expected, actual)
+}
+
+func TestToContracts_JsonBodyがない場合Bodyをパースして使う(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Response: domain.StubResponse{
+					Body: "{\n  \"key\": \"value\"\n}",
+				},
+			},
+		},
+	}
+	expected := domain.Contracts{
+		&domain.Contract{
+			Response: domain.Response{
+				JsonBody: map[string]any{
+					"key": "value",
+				},
+			},
+		},
+	}
+	actual := domain.ToContracts(sut)
+
 	assert.Equal(t, expected, actual)
 }
 
