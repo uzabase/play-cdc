@@ -61,6 +61,37 @@ func TestToContracts(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
+func TestToContracts_JsonBodyのルート要素が配列(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Response: domain.StubResponse{
+					JsonBody: []any{
+						map[string]any{
+							"bodyKey": "bodyValue",
+						},
+					},
+				},
+			},
+		},
+	}
+	expected := domain.Contracts{
+		&domain.Contract{
+			Response: domain.Response{
+				JsonBody: []any{
+					map[string]any{
+						"bodyKey": "bodyValue",
+					},
+				},
+			},
+		},
+	}
+	actual := domain.ToContracts(sut)
+
+	assert.Equal(t, expected, actual)
+}
+
 func TestToContracts_JsonBodyがない場合Bodyをパースして使う(t *testing.T) {
 	sut := []domain.ExecutedRequest{
 		{
@@ -77,6 +108,33 @@ func TestToContracts_JsonBodyがない場合Bodyをパースして使う(t *test
 			Response: domain.Response{
 				JsonBody: map[string]any{
 					"key": "value",
+				},
+			},
+		},
+	}
+	actual := domain.ToContracts(sut)
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestToContracts_JsonBodyがない場合のBodyのルート要素が配列(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Response: domain.StubResponse{
+					Body: "[\n  {\n    \"key\": \"value\"\n  }\n]",
+				},
+			},
+		},
+	}
+	expected := domain.Contracts{
+		&domain.Contract{
+			Response: domain.Response{
+				JsonBody: []any{
+					map[string]any{
+						"key": "value",
+					},
 				},
 			},
 		},

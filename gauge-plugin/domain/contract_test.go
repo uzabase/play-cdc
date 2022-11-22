@@ -352,6 +352,27 @@ func TestToScenario_配列に含まれる2つめ以降のオブジェクトに�
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.arrayKey[1].stringKey"が文字列の"arrayObjectStringValue2"である`))
 }
 
+func TestToScenario_ルート要素が配列の場合のアサーション(t *testing.T) {
+	sut := &domain.Contract{
+		Request: domain.Request{
+			Url:    "/test",
+			Method: "GET",
+		},
+		Response: domain.Response{
+			Status: 200,
+			JsonBody: []any{
+				map[string]any{
+					"key": "value",
+				},
+			},
+		},
+	}
+
+	actual := sut.ToScenario("Consumer API")
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$[0].key"が文字列の"value"である`))
+}
+
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{

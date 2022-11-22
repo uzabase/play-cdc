@@ -27,13 +27,12 @@ func FetchExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 		return nil, fmt.Errorf("Error: failed to read response body from endpoint(%s): %w", endpoint, err)
 	}
 
-	var result domain.ExecutedRequests
-	err = json.Unmarshal(byteArray, &result)
+	result, err := Unmarshal(byteArray)
 	if err != nil {
 		return nil, fmt.Errorf("Error: failed to unmarshal json read from endpoint(%s): %w", endpoint, err)
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func RecordExecutedRequests(requests []domain.ExecutedRequest) {
@@ -46,4 +45,14 @@ func LoadRecordedRequests() []domain.ExecutedRequest {
 
 func ClearExecutedRequests() {
 	recordedRequests = []domain.ExecutedRequest{}
+}
+
+func Unmarshal(byteArray []byte) (*domain.ExecutedRequests, error) {
+	var result domain.ExecutedRequests
+	err := json.Unmarshal(byteArray, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, err
 }

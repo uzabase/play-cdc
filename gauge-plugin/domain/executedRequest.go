@@ -35,7 +35,7 @@ type StubResponse struct {
 	Status   int             `json:"status"`
 	Headers  ResponseHeaders `json:"headers"`
 	Body     string          `json:"body"`
-	JsonBody map[string]any  `json:"jsonBody"`
+	JsonBody any             `json:"jsonBody"`
 }
 
 func ToContracts(requests []ExecutedRequest) Contracts {
@@ -57,8 +57,8 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 				Body:        r.Request.Body,
 			},
 			Response: Response{
-				Status: s.Response.Status,
-				Headers: s.Response.Headers,
+				Status:   s.Response.Status,
+				Headers:  s.Response.Headers,
 				JsonBody: s.Response.toJsonBody(),
 			},
 		}
@@ -73,13 +73,13 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 	return result
 }
 
-func (r *StubResponse) toJsonBody() (map[string]any) {
+func (r *StubResponse) toJsonBody() any {
 	if r.JsonBody != nil {
 		return r.JsonBody
 	}
 
 	if len(r.Body) > 0 {
-		var jsonBody map[string]any
+		var jsonBody any
 		err := json.Unmarshal([]byte(r.Body), &jsonBody)
 		if err != nil {
 			panic(err)
