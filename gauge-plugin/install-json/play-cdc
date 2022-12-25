@@ -25,7 +25,7 @@
                 },
                 "arm64": {
                     "windows": "",
-                    "linux": "",
+                    "linux": "dummy",
                     "darwin": "https://github.com/uzabase/play-cdc/releases/download/v0.1.0/play-cdc-0.1.0-darwin.arm64.zip"
                 }
             }
