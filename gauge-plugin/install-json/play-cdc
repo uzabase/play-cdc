@@ -3,9 +3,10 @@
     "description": "Play CDC - generates spec files from WireMock recordings",
     "versions": [
         {
-            "version": "0.1.0",
+            "version": "0.1.1",
             "gaugeVersionSupport": {
-                "minimum": "1.4.3"
+                "minimum": "1.4.3",
+                "maximum": ""
             },
             "install": {
                 "windows": [],
@@ -20,13 +21,13 @@
                 },
                 "x64": {
                     "windows": "",
-                    "linux": "",
-                    "darwin": ""
+                    "linux": "https://github.com/uzabase/play-cdc/releases/download/v0.1.1/play-cdc-0.1.1-linux.amd64.zip",
+                    "darwin": "https://github.com/uzabase/play-cdc/releases/download/v0.1.1/play-cdc-0.1.1-darwin.arm64.zip"
                 },
                 "arm64": {
                     "windows": "",
-                    "linux": "dummy",
-                    "darwin": "https://github.com/uzabase/play-cdc/releases/download/v0.1.0/play-cdc-0.1.0-darwin.arm64.zip"
+                    "linux": "https://github.com/uzabase/play-cdc/releases/download/v0.1.1/play-cdc-0.1.1-linux.amd64.zip",
+                    "darwin": "https://github.com/uzabase/play-cdc/releases/download/v0.1.1/play-cdc-0.1.1-darwin.arm64.zip"
                 }
             }
         }
