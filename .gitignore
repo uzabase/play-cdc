@@ -1,6 +1,6 @@
 target
 out
+dist
 .idea
 *.iml
 .vscode
-
