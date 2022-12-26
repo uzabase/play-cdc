@@ -220,7 +220,7 @@ func TestToScenario_ボディを含むPOSTリクエスト(t *testing.T) {
 	actual := sut.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(
-		`URL"/test"にボディ"<file:fixtures/contracts/consumer_api/post_test_841a2d689ad86bd1611447453c22c6fc.json>"で、POSTリクエストを送る`))
+		`URL"/test"にボディ<file:fixtures/contracts/consumer_api/post_test_841a2d689ad86bd1611447453c22c6fc.json>で、POSTリクエストを送る`))
 }
 
 func TestToScenario_ボディを含むPUTリクエスト(t *testing.T) {
@@ -233,7 +233,7 @@ func TestToScenario_ボディを含むPUTリクエスト(t *testing.T) {
 	actual := sut.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(
-		`URL"/test"にボディ"<file:fixtures/contracts/consumer_api/put_test_841a2d689ad86bd1611447453c22c6fc.json>"で、PUTリクエストを送る`))
+		`URL"/test"にボディ<file:fixtures/contracts/consumer_api/put_test_841a2d689ad86bd1611447453c22c6fc.json>で、PUTリクエストを送る`))
 }
 
 func TestToScenario_POSTとPUTリクエスト以外にはボディを含められない(t *testing.T) {
@@ -263,7 +263,7 @@ func TestToScenario_ヘッダとボディを含むPOSTリクエスト(t *testing
 	actual := sut.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(
-		`URL"/test"にボディ"<file:fixtures/contracts/consumer_api/post_test_841a2d689ad86bd1611447453c22c6fc.json>"、ヘッダー"content-type: application/json"で、POSTリクエストを送る`))
+		`URL"/test"にボディ<file:fixtures/contracts/consumer_api/post_test_841a2d689ad86bd1611447453c22c6fc.json>、ヘッダー"content-type: application/json"で、POSTリクエストを送る`))
 }
 
 func TestToScenario_ヘッダとボディを含むPUTリクエスト(t *testing.T) {
@@ -281,7 +281,7 @@ func TestToScenario_ヘッダとボディを含むPUTリクエスト(t *testing.
 	actual := sut.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(
-		`URL"/test"にボディ"<file:fixtures/contracts/consumer_api/put_test_841a2d689ad86bd1611447453c22c6fc.json>"、ヘッダー"content-type: application/json"で、PUTリクエストを送る`))
+		`URL"/test"にボディ<file:fixtures/contracts/consumer_api/put_test_841a2d689ad86bd1611447453c22c6fc.json>、ヘッダー"content-type: application/json"で、PUTリクエストを送る`))
 }
 
 func TestToScenario_ボディを含む複雑なURLのPUTリクエスト(t *testing.T) {
@@ -294,7 +294,7 @@ func TestToScenario_ボディを含む複雑なURLのPUTリクエスト(t *testi
 	actual := sut.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(
-		`URL"/v1/companies/12345678?lang=ja&currency=JPY"にボディ"<file:fixtures/contracts/consumer_api/put_v1_companies_12345678_lang_ja_currency_JPY_841a2d689ad86bd1611447453c22c6fc.json>"で、PUTリクエストを送る`))
+		`URL"/v1/companies/12345678?lang=ja&currency=JPY"にボディ<file:fixtures/contracts/consumer_api/put_v1_companies_12345678_lang_ja_currency_JPY_841a2d689ad86bd1611447453c22c6fc.json>で、PUTリクエストを送る`))
 }
 
 func TestToScenario_レスポンスステータスコード(t *testing.T) {
