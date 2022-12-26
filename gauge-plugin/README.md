@@ -2,8 +2,9 @@
 
 ## Install
 
+[Releases](https://github.com/uzabase/play-cdc/releases)から自分の環境に合うzipファイルをダウンロードして、
 ```
-$ make install
+$ gauge install play-cdc -f [zipファイル名]
 ```
 
 ## Usage
