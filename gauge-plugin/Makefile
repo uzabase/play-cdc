@@ -36,27 +36,27 @@ build-linux-arm64:
 	chmod +x out/linux-arm64/play-cdc
 
 install: build
-	mkdir -p ~/.gauge/plugins/play-cdc/0.1.1
-	mv out/play-cdc ~/.gauge/plugins/play-cdc/0.1.1
-	cp plugin.json ~/.gauge/plugins/play-cdc/0.1.1
+	mkdir -p ~/.gauge/plugins/play-cdc/0.1.2
+	mv out/play-cdc ~/.gauge/plugins/play-cdc/0.1.2
+	cp plugin.json ~/.gauge/plugins/play-cdc/0.1.2
 
 package: distclean build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build-linux-arm64
 	mkdir -p dist/linux-amd64
 	cp out/linux-amd64/play-cdc dist/linux-amd64
 	cp plugin.json dist/linux-amd64
-	cd dist/linux-amd64 && zip -r play-cdc-0.1.1-linux.amd64.zip .
+	cd dist/linux-amd64 && zip -r play-cdc-0.1.2-linux.amd64.zip .
 
 	mkdir -p dist/linux-arm64
 	cp out/linux-arm64/play-cdc dist/linux-arm64
 	cp plugin.json dist/linux-arm64
-	cd dist/linux-arm64 && zip -r play-cdc-0.1.1-linux.arm64.zip .
+	cd dist/linux-arm64 && zip -r play-cdc-0.1.2-linux.arm64.zip .
 
 	mkdir -p dist/darwin-amd64
 	cp out/darwin-amd64/play-cdc dist/darwin-amd64
 	cp plugin.json dist/darwin-amd64
-	cd dist/darwin-amd64 && zip -r play-cdc-0.1.1-darwin.amd64.zip .
+	cd dist/darwin-amd64 && zip -r play-cdc-0.1.2-darwin.amd64.zip .
 
 	mkdir -p dist/darwin-arm64
 	cp out/darwin-arm64/play-cdc dist/darwin-arm64
 	cp plugin.json dist/darwin-arm64
-	cd dist/darwin-arm64 && zip -r play-cdc-0.1.1-darwin.arm64.zip .
+	cd dist/darwin-arm64 && zip -r play-cdc-0.1.2-darwin.arm64.zip .
