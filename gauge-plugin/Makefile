@@ -46,7 +46,7 @@ package: distclean build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build
 	mkdir -p dist/linux-amd64
 	cp out/linux-amd64/play-cdc dist/linux-amd64
 	cp plugin.json dist/linux-amd64
-	cd dist/linux-amd64 && zip -r play-cdc-$(VERSION)-linux.amd64.zip .
+	cd dist/linux-amd64 && zip -r play-cdc-$(VERSION)-linux.x86_64.zip .
 
 	mkdir -p dist/linux-arm64
 	cp out/linux-arm64/play-cdc dist/linux-arm64
@@ -56,7 +56,7 @@ package: distclean build-darwin-amd64 build-darwin-arm64 build-linux-amd64 build
 	mkdir -p dist/darwin-amd64
 	cp out/darwin-amd64/play-cdc dist/darwin-amd64
 	cp plugin.json dist/darwin-amd64
-	cd dist/darwin-amd64 && zip -r play-cdc-$(VERSION)-darwin.amd64.zip .
+	cd dist/darwin-amd64 && zip -r play-cdc-$(VERSION)-darwin.x86_64.zip .
 
 	mkdir -p dist/darwin-arm64
 	cp out/darwin-arm64/play-cdc dist/darwin-arm64
