@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -239,7 +240,8 @@ func toNumberStep(n float64, keyChain KeyChain) string {
 	if n == math.Trunc(n) {
 		return fmt.Sprintf(`レスポンスのJSONの"%s"が整数の"%d"である`, keyChain.toPath(), int64(n))
 	} else {
-		return fmt.Sprintf(`レスポンスのJSONの"%s"が小数の"%g"である`, keyChain.toPath(), n)
+		formatted := strconv.FormatFloat(n, 'f', -1, 64)
+		return fmt.Sprintf(`レスポンスのJSONの"%s"が小数の"%s"である`, keyChain.toPath(), formatted)
 	}
 }
 

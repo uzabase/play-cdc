@@ -321,11 +321,23 @@ func TestToScenario_整数のアサーション(t *testing.T) {
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.integerKey"が整数の"123"である`))
 }
-
 func TestToScenario_小数のアサーション(t *testing.T) {
 	actual := contract.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.floatKey"が小数の"123.456"である`))
+}
+
+func TestToScenario_大きな小数のアサーションも非指数表記で出力する(t *testing.T) {
+	sut := &domain.Contract{
+		Response: domain.Response{
+			JsonBody: map[string]any{
+				"floatKey": 75360283433.45415,
+			},
+		},
+	}
+	actual := sut.ToScenario("Consumer API")
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.floatKey"が小数の"75360283433.45415"である`))
 }
 
 func TestToScenario_真偽値のアサーション(t *testing.T) {
