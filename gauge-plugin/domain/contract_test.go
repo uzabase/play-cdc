@@ -412,3 +412,45 @@ func TestToScenario_レスポンスボディのアサーションはキーの昇
 	assert.Contains(t, actual.Steps[4], "b value")
 	assert.Contains(t, actual.Steps[5], "c value")
 }
+
+func TestToScenario_レスポンスボディのアサーションを並べる際に配列のインデックスは数値として扱う(t *testing.T) {
+	sut := &domain.Contract{
+		Request: domain.Request{
+			Url:    "/test",
+			Method: "GET",
+		},
+		Response: domain.Response{
+			Status: 200,
+			JsonBody: map[string]any{
+				"a": []any{
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+				},
+			},
+		},
+	}
+
+	actual := sut.ToScenario("Consumer API")
+
+	// Steps[0]はリクエスト、Steps[1]はステータスコード
+	assert.Contains(t, actual.Steps[2], "$.a[0]")
+	assert.Contains(t, actual.Steps[3], "$.a[1]")
+	assert.Contains(t, actual.Steps[4], "$.a[2]")
+	assert.Contains(t, actual.Steps[5], "$.a[3]")
+	assert.Contains(t, actual.Steps[6], "$.a[4]")
+	assert.Contains(t, actual.Steps[7], "$.a[5]")
+	assert.Contains(t, actual.Steps[8], "$.a[6]")
+	assert.Contains(t, actual.Steps[9], "$.a[7]")
+	assert.Contains(t, actual.Steps[10], "$.a[8]")
+	assert.Contains(t, actual.Steps[11], "$.a[9]")
+	assert.Contains(t, actual.Steps[12], "$.a[10]") // [10]が[1]の次ではなく、正しく[9]の次になっている
+}

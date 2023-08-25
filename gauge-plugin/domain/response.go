@@ -1,6 +1,7 @@
 package domain;
 
 import (
+	"regexp"
 	"strconv"
 	"math"
 	"strings"
@@ -37,10 +38,6 @@ func (r *Response) toBodyAssertions() []Step {
 	return toAssertions(r.JsonBody, []string{"$"})
 }
 
-func (k KeyChain) toPath() string {
-	return strings.Join(k, ".")
-}
-
 func toAssertions(v any, keyChain KeyChain) []Step {
 	var steps []Step
 
@@ -59,6 +56,8 @@ func toAssertions(v any, keyChain KeyChain) []Step {
 		fmt.Printf("Warning: toAssertions - I don't know about type %T!\n", v)
 	}
 
+	sortSteps(steps)
+
 	return steps
 }
 
@@ -69,7 +68,6 @@ func objectToAssertions(object map[string]any, keyChain KeyChain) []Step {
 		assertions = append(assertions, toAssertions(v, keyChain)...)
 	}
 
-	sort.Slice(assertions, func(i, j int) bool { return assertions[i] < assertions[j] })
 	return assertions
 }
 
@@ -100,4 +98,38 @@ func toNumberStep(n float64, keyChain KeyChain) string {
 
 func toBoolStep(b bool, keyChain KeyChain) string {
 	return fmt.Sprintf(`レスポンスのJSONの"%s"が真偽値の"%t"である`, keyChain.toPath(), b)
+}
+
+func (k KeyChain) toPath() string {
+	return strings.Join(k, ".")
+}
+
+func sortSteps(steps []Step) {
+	replaceArrayIndexesWithZeroPaddedOne := func (step string) string {
+		r := regexp.MustCompile(`\[\d+\]`)
+		indexes := r.FindAllStringSubmatch(step, -1)
+
+		var indexNumbers []int
+		for _, v := range indexes {
+			i, _ := strconv.Atoi(strings.TrimSuffix(strings.TrimPrefix(v[0], "["), "]"))
+			indexNumbers = append(indexNumbers, i)
+		}
+
+		var paddedIndexes []string
+		for _, v := range indexNumbers {
+			padded := fmt.Sprintf("%03d", v)
+			paddedIndexes = append(paddedIndexes, padded)
+		}
+
+		var replaced = step
+		for i, _ := range indexes {
+			replaced = strings.Replace(replaced, indexes[i][0], paddedIndexes[i], -1)
+		}
+
+		return replaced
+	}
+
+	sort.Slice(steps, func(i, j int) bool {
+		return replaceArrayIndexesWithZeroPaddedOne(string(steps[i])) < replaceArrayIndexesWithZeroPaddedOne(string(steps[j]))
+	})
 }
