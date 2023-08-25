@@ -1,6 +1,6 @@
 {
   "id": "play-cdc",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "name": "play-cdc",
   "description": "Play CDC - generates spec files from WireMock recordings",
   "install": {
