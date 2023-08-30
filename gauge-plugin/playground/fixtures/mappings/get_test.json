@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/test"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "key": "value"
+    }
+  }
+}
