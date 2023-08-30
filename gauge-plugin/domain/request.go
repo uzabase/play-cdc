@@ -1,12 +1,12 @@
 package domain
 
 import (
+	"crypto/md5"
+	"fmt"
+	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
-	"regexp"
-	"crypto/md5"
-	"path/filepath"
-	"fmt"
 )
 
 type Request struct {

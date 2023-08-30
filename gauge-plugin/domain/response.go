@@ -1,12 +1,12 @@
-package domain;
+package domain
 
 import (
-	"regexp"
-	"strconv"
-	"math"
-	"strings"
-	"sort"
 	"fmt"
+	"math"
+	"regexp"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 type Response struct {
@@ -105,7 +105,7 @@ func (k KeyChain) toPath() string {
 }
 
 func sortSteps(steps []Step) {
-	replaceArrayIndexesWithZeroPaddedOne := func (step string) string {
+	replaceArrayIndexesWithZeroPaddedOne := func(step string) string {
 		r := regexp.MustCompile(`\[\d+\]`)
 		indexes := r.FindAllStringSubmatch(step, -1)
 

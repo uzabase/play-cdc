@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"fmt"
+	"path/filepath"
 	"play-cdc/domain"
 	"play-cdc/repository"
 )
@@ -23,8 +25,11 @@ func GenerateSpec() {
 		if outputBasePath == "" {
 			panic("Error: output base path is empty!")
 		}
-		outputPath := domain.OutputPath(outputBasePath, e.ProviderName)
+		if !filepath.IsAbs(outputBasePath) {
+			panic(fmt.Errorf("Error: output base path is not an absolute path! Current value: %s", outputBasePath))
+		}
 
+		outputPath := domain.OutputPath(outputBasePath, e.ProviderName)
 		err := repository.SaveSpec(spec, domain.SpecFilePath(outputPath, consumerName))
 		if err != nil {
 			panic(err)
