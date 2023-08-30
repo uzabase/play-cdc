@@ -13,7 +13,7 @@ $ gauge install play-cdc -f [zipファイル名]
 
 1. コンシューマ側のテストで、`manifest.json`の`Plugins`に`play-cdc`を追加する。
 2. `env/default/playcdc.properties`ファイルを作り、以下のプロパティを設定する。
-  - `cdc_output_base_path`: 契約の出力先パス（ディレクトリ）
+  - `cdc_output_base_path`: 契約の出力先パス（ディレクトリの**絶対パス**）
   - `cdc_consumer_name`: コンシューマ（=E2E自体のテスト対象）の名前
 3. WireMockでスタブしているプロバイダーそれぞれについて、`env/default/playcdc.properties`に以下2つのプロパティを設定する。（`[n]`は1以上の整数）
   - `cdc_provider_endpoint_[n]`: WireMockのエンドポイント
