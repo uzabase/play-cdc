@@ -3,7 +3,7 @@ package repository
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"play-cdc/domain"
 )
@@ -22,9 +22,13 @@ func FetchExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 	}
 	defer resp.Body.Close()
 
-	byteArray, err := ioutil.ReadAll(resp.Body)
+	byteArray, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("Error: failed to read response body from endpoint(%s): %w", endpoint, err)
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("Error: received non-ok response from endpoint(%s). The response body was: %s", endpoint, byteArray)
 	}
 
 	result, err := Unmarshal(byteArray)
