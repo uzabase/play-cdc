@@ -47,11 +47,13 @@ func toAssertions(v any, keyChain KeyChain) []Step {
 	case []any:
 		steps = arrayToAssertions(v, keyChain)
 	case string:
-		steps = []Step{Step(toStringStep(v, keyChain))}
+		steps = []Step{toStringStep(v, keyChain)}
 	case float64:
-		steps = []Step{Step(toNumberStep(v, keyChain))}
+		steps = []Step{toNumberStep(v, keyChain)}
 	case bool:
-		steps = []Step{Step(toBoolStep(v, keyChain))}
+		steps = []Step{toBoolStep(v, keyChain)}
+	case nil:
+		steps = []Step{toNullStep(keyChain)}
 	default:
 		fmt.Printf("Warning: toAssertions - I don't know about type %T!\n", v)
 	}
@@ -83,21 +85,25 @@ func arrayToAssertions(array []any, keyChain KeyChain) []Step {
 	return assertions
 }
 
-func toStringStep(s string, keyChain KeyChain) string {
-	return fmt.Sprintf(`レスポンスのJSONの"%s"が文字列の"%s"である`, keyChain.toPath(), s)
+func toStringStep(s string, keyChain KeyChain) Step {
+	return Step(fmt.Sprintf(`レスポンスのJSONの"%s"が文字列の"%s"である`, keyChain.toPath(), s))
 }
 
-func toNumberStep(n float64, keyChain KeyChain) string {
+func toNumberStep(n float64, keyChain KeyChain) Step {
 	if n == math.Trunc(n) {
-		return fmt.Sprintf(`レスポンスのJSONの"%s"が整数の"%d"である`, keyChain.toPath(), int64(n))
+		return Step(fmt.Sprintf(`レスポンスのJSONの"%s"が整数の"%d"である`, keyChain.toPath(), int64(n)))
 	} else {
 		formatted := strconv.FormatFloat(n, 'f', -1, 64)
-		return fmt.Sprintf(`レスポンスのJSONの"%s"が小数の"%s"である`, keyChain.toPath(), formatted)
+		return Step(fmt.Sprintf(`レスポンスのJSONの"%s"が小数の"%s"である`, keyChain.toPath(), formatted))
 	}
 }
 
-func toBoolStep(b bool, keyChain KeyChain) string {
-	return fmt.Sprintf(`レスポンスのJSONの"%s"が真偽値の"%t"である`, keyChain.toPath(), b)
+func toBoolStep(b bool, keyChain KeyChain) Step {
+	return Step(fmt.Sprintf(`レスポンスのJSONの"%s"が真偽値の"%t"である`, keyChain.toPath(), b))
+}
+
+func toNullStep(keyChain KeyChain) Step {
+	return Step(fmt.Sprintf(`レスポンスのJSONの"%s"がnullである`, keyChain.toPath()))
 }
 
 func (k KeyChain) toPath() string {

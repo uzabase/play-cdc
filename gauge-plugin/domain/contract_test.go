@@ -42,6 +42,7 @@ func createContract(params SutParams) *domain.Contract {
 				"integerKey": float64(123),
 				"floatKey":   123.456,
 				"booleanKey": true,
+				"nullKey":    nil,
 				"objectKey": map[string]any{
 					"stringKey": "objectStringValue",
 				},
@@ -344,6 +345,12 @@ func TestToScenario_真偽値のアサーション(t *testing.T) {
 	actual := contract.ToScenario("Consumer API")
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.booleanKey"が真偽値の"true"である`))
+}
+
+func TestToScenario_nullのアサーション(t *testing.T) {
+	actual := contract.ToScenario("Consumer API")
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスのJSONの"$.nullKey"がnullである`))
 }
 
 func TestToScenario_オブジェクトに含まれる値のアサーション(t *testing.T) {
