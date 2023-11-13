@@ -52,9 +52,11 @@ func TestToContracts(t *testing.T) {
 				Headers: domain.ResponseHeaders{
 					"headerKey": "headerValue",
 				},
-				JsonBody: map[string]any{
-					"bodyKey": "bodyValue",
-				},
+				Body: domain.CreateJsonResponseBody(
+					map[string]any{
+						"bodyKey": "bodyValue",
+					},
+				),
 			},
 		},
 	}
@@ -79,11 +81,13 @@ func TestToContracts_JsonBodyのルート要素が配列(t *testing.T) {
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				JsonBody: []any{
-					map[string]any{
-						"bodyKey": "bodyValue",
+				Body: domain.CreateJsonResponseBody(
+					[]any{
+						map[string]any{
+							"bodyKey": "bodyValue",
+						},
 					},
-				},
+				),
 			},
 		},
 	}
@@ -92,7 +96,7 @@ func TestToContracts_JsonBodyのルート要素が配列(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-func TestToContracts_JsonBodyがない場合Bodyをパースして使う(t *testing.T) {
+func TestToContracts_JsonBodyがなくBodyがJsonの場合パースして使う(t *testing.T) {
 	sut := []domain.ExecutedRequest{
 		{
 			WasMatched: true,
@@ -106,9 +110,34 @@ func TestToContracts_JsonBodyがない場合Bodyをパースして使う(t *test
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				JsonBody: map[string]any{
-					"key": "value",
+				Body: domain.CreateJsonResponseBody(
+					map[string]any{
+						"key": "value",
+					},
+				),
+			},
+		},
+	}
+	actual := domain.ToContracts(sut)
+
+	assert.Equal(t, expected, actual)
+}
+
+func TestToContracts_JsonBodyがなくBodyがJsonではない場合テキストとして扱う(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Response: domain.StubResponse{
+					Body: "some text message",
 				},
+			},
+		},
+	}
+	expected := domain.Contracts{
+		&domain.Contract{
+			Response: domain.Response{
+				Body: domain.CreateTextResponseBody("some text message"),
 			},
 		},
 	}
@@ -131,11 +160,13 @@ func TestToContracts_JsonBodyがない場合のBodyのルート要素が配列(t
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				JsonBody: []any{
-					map[string]any{
-						"key": "value",
+				Body: domain.CreateJsonResponseBody(
+					[]any{
+						map[string]any{
+							"key": "value",
+						},
 					},
-				},
+				),
 			},
 		},
 	}

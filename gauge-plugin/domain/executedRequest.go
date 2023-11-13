@@ -57,9 +57,9 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 				Body:        r.Request.Body,
 			},
 			Response: Response{
-				Status:   s.Response.Status,
-				Headers:  s.Response.Headers,
-				JsonBody: s.Response.toJsonBody(),
+				Status:  s.Response.Status,
+				Headers: s.Response.Headers,
+				Body:    s.Response.toBody(),
 			},
 		}
 
@@ -73,18 +73,19 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 	return result
 }
 
-func (r *StubResponse) toJsonBody() any {
+func (r *StubResponse) toBody() ResponseBody {
 	if r.JsonBody != nil {
-		return r.JsonBody
+		return CreateJsonResponseBody(r.JsonBody)
 	}
 
 	if len(r.Body) > 0 {
 		var jsonBody any
 		err := json.Unmarshal([]byte(r.Body), &jsonBody)
-		if err != nil {
-			panic(err)
+		if err == nil {
+			return CreateJsonResponseBody(jsonBody)
+		} else {
+			return CreateTextResponseBody(r.Body)
 		}
-		return jsonBody
 	}
 
 	return nil

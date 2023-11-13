@@ -37,24 +37,26 @@ func createContract(params SutParams) *domain.Contract {
 				"header1": "value1",
 				"header2": "value2",
 			},
-			JsonBody: map[string]any{
-				"stringKey":  "stringValue",
-				"integerKey": float64(123),
-				"floatKey":   123.456,
-				"booleanKey": true,
-				"nullKey":    nil,
-				"objectKey": map[string]any{
-					"stringKey": "objectStringValue",
-				},
-				"arrayKey": []any{
-					map[string]any{
-						"stringKey": "arrayObjectStringValue1",
+			Body: domain.CreateJsonResponseBody(
+				map[string]any{
+					"stringKey":  "stringValue",
+					"integerKey": float64(123),
+					"floatKey":   123.456,
+					"booleanKey": true,
+					"nullKey":    nil,
+					"objectKey": map[string]any{
+						"stringKey": "objectStringValue",
 					},
-					map[string]any{
-						"stringKey": "arrayObjectStringValue2",
+					"arrayKey": []any{
+						map[string]any{
+							"stringKey": "arrayObjectStringValue1",
+						},
+						map[string]any{
+							"stringKey": "arrayObjectStringValue2",
+						},
 					},
 				},
-			},
+			),
 		},
 	}
 }
@@ -331,9 +333,11 @@ func TestToScenario_小数のアサーション(t *testing.T) {
 func TestToScenario_大きな小数のアサーションも非指数表記で出力する(t *testing.T) {
 	sut := &domain.Contract{
 		Response: domain.Response{
-			JsonBody: map[string]any{
-				"floatKey": 75360283433.45415,
-			},
+			Body: domain.CreateJsonResponseBody(
+				map[string]any{
+					"floatKey": 75360283433.45415,
+				},
+			),
 		},
 	}
 	actual := sut.ToScenario("Consumer API")
@@ -379,11 +383,13 @@ func TestToScenario_ルート要素が配列の場合のアサーション(t *te
 		},
 		Response: domain.Response{
 			Status: 200,
-			JsonBody: []any{
-				map[string]any{
-					"key": "value",
+			Body: domain.CreateJsonResponseBody(
+				[]any{
+					map[string]any{
+						"key": "value",
+					},
 				},
-			},
+			),
 		},
 	}
 
@@ -400,14 +406,16 @@ func TestToScenario_レスポンスボディのアサーションはキーの昇
 		},
 		Response: domain.Response{
 			Status: 200,
-			JsonBody: map[string]any{
-				"c": "c value",
-				"b": "b value",
-				"a": map[string]any{
-					"x": "a.x value",
+			Body: domain.CreateJsonResponseBody(
+				map[string]any{
+					"c": "c value",
+					"b": "b value",
+					"a": map[string]any{
+						"x": "a.x value",
+					},
+					"abc": "abc value",
 				},
-				"abc": "abc value",
-			},
+			),
 		},
 	}
 
@@ -428,21 +436,23 @@ func TestToScenario_レスポンスボディのアサーションを並べる際
 		},
 		Response: domain.Response{
 			Status: 200,
-			JsonBody: map[string]any{
-				"a": []any{
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6",
-					"7",
-					"8",
-					"9",
-					"10",
-					"11",
+			Body: domain.CreateJsonResponseBody(
+				map[string]any{
+					"a": []any{
+						"1",
+						"2",
+						"3",
+						"4",
+						"5",
+						"6",
+						"7",
+						"8",
+						"9",
+						"10",
+						"11",
+					},
 				},
-			},
+			),
 		},
 	}
 
@@ -460,4 +470,21 @@ func TestToScenario_レスポンスボディのアサーションを並べる際
 	assert.Contains(t, actual.Steps[10], "$.a[8]")
 	assert.Contains(t, actual.Steps[11], "$.a[9]")
 	assert.Contains(t, actual.Steps[12], "$.a[10]") // [10]が[1]の次ではなく、正しく[9]の次になっている
+}
+
+func TestToScenario_レスポンスボディがJSONではない場合文字列として扱う(t *testing.T) {
+	sut := &domain.Contract{
+		Request: domain.Request{
+			Url:    "/test",
+			Method: "GET",
+		},
+		Response: domain.Response{
+			Status: 200,
+			Body: domain.CreateTextResponseBody("some text message"),
+		},
+	}
+
+	actual := sut.ToScenario("Consumer API")
+
+	assert.Contains(t, actual.Steps, domain.Step(`レスポンスボディが文字列"some text message"である`))
 }
