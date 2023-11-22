@@ -488,3 +488,19 @@ func TestToScenario_レスポンスボディがJSONではない場合文字列�
 
 	assert.Contains(t, actual.Steps, domain.Step(`レスポンスボディが文字列"some text message"である`))
 }
+
+func TestToScenario_レスポンスボディがない場合は出力しない(t *testing.T) {
+	sut := &domain.Contract{
+		Request: domain.Request{
+			Url:    "/test",
+			Method: "GET",
+		},
+		Response: domain.Response{
+			Status: 200,
+		},
+	}
+
+	actual := sut.ToScenario("Consumer API")
+
+	assert.Len(t, actual.Steps, 2)
+}

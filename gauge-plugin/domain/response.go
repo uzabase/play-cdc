@@ -33,5 +33,9 @@ func (r *Response) toHeaderAssertions() []Step {
 }
 
 func (r *Response) toBodyAssertions() []Step {
+	if r.Body == nil {
+		return []Step{}
+	}
+
 	return r.Body.toAssertions()
 }
