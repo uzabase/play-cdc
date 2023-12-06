@@ -480,7 +480,7 @@ func TestToScenario_レスポンスボディがJSONではない場合文字列�
 		},
 		Response: domain.Response{
 			Status: 200,
-			Body: domain.CreateTextResponseBody("some text message"),
+			Body:   domain.CreateTextResponseBody("some text message"),
 		},
 	}
 

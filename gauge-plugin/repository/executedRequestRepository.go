@@ -8,7 +8,7 @@ import (
 	"play-cdc/domain"
 )
 
-var recordedRequests = []domain.ExecutedRequest{}
+var recordedRequests = map[string][]domain.ExecutedRequest{}
 
 func FetchExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 	req, err := http.NewRequest("GET", endpoint+"/__admin/requests", nil)
@@ -39,16 +39,16 @@ func FetchExecutedRequests(endpoint string) (*domain.ExecutedRequests, error) {
 	return result, nil
 }
 
-func RecordExecutedRequests(requests []domain.ExecutedRequest) {
-	recordedRequests = append(recordedRequests, requests...)
+func RecordExecutedRequests(key string, requests []domain.ExecutedRequest) {
+	recordedRequests[key] = append(recordedRequests[key], requests...)
 }
 
-func LoadRecordedRequests() []domain.ExecutedRequest {
-	return recordedRequests
+func LoadRecordedRequests(key string) []domain.ExecutedRequest {
+	return recordedRequests[key]
 }
 
 func ClearExecutedRequests() {
-	recordedRequests = []domain.ExecutedRequest{}
+	recordedRequests = map[string][]domain.ExecutedRequest{}
 }
 
 func Unmarshal(byteArray []byte) (*domain.ExecutedRequests, error) {

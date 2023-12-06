@@ -9,7 +9,7 @@ import (
 
 func GenerateSpec() {
 	for _, e := range repository.GetProviderEnvs() {
-		requests := repository.LoadRecordedRequests()
+		requests := repository.LoadRecordedRequests(e.ProviderEndpoint)
 
 		contracts := domain.ToContracts(requests)
 

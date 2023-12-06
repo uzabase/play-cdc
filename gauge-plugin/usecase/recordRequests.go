@@ -11,6 +11,6 @@ func RecordRequests() {
 			panic(err)
 		}
 
-		repository.RecordExecutedRequests(requests.Requests)
+		repository.RecordExecutedRequests(e.ProviderEndpoint, requests.Requests)
 	}
 }
