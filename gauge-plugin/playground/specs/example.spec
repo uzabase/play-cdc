@@ -2,3 +2,4 @@
 
 ## Example scenario
 * URL"/test"にGETリクエストを送る
+* Example concept

@@ -93,6 +93,20 @@ func (h *handler) NotifyScenarioExecutionEnding(c context.Context, m *gm.Scenari
 	return &gm.Empty{}, nil
 }
 
+func (h *handler) NotifyConceptExecutionStarting(c context.Context, m *gm.ConceptExecutionStartingRequest) (*gm.Empty, error) {
+	if debug() {
+		fmt.Println("Received ConceptExecutionStartingRequest")
+	}
+	return &gm.Empty{}, nil
+}
+
+func (h *handler) NotifyConceptExecutionEnding(c context.Context, m *gm.ConceptExecutionEndingRequest) (*gm.Empty, error) {
+	if debug() {
+		fmt.Println("Received ConceptExecutionEndingRequest")
+	}
+	return &gm.Empty{}, nil
+}
+
 func (h *handler) NotifyStepExecutionStarting(c context.Context, m *gm.StepExecutionStartingRequest) (*gm.Empty, error) {
 	if debug() {
 		fmt.Println("Received StepExecutionStartingRequest")
