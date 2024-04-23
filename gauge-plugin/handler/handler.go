@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	gm "play-cdc/gauge_messages"
 	"play-cdc/repository"
 	"play-cdc/usecase"
@@ -132,4 +133,17 @@ func (h *handler) NotifySuiteResult(c context.Context, m *gm.SuiteExecutionResul
 
 	usecase.GenerateSpec()
 	return &gm.Empty{}, nil
+}
+
+func (h *handler) NotifyKillProcess(c context.Context, m *gm.KillProcessRequest) (*gm.Empty, error) {
+	if debug() {
+		fmt.Println("Received KillProcessRequest")
+	}
+	defer h.stopServer()
+	return &gm.Empty{}, nil
+}
+
+func (h *handler) stopServer() {
+	h.server.Stop()
+	os.Exit(0)
 }
