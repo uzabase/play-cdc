@@ -99,7 +99,7 @@ func (h RequestHeaders) String() string {
 
 	sort.Slice(headers, func(i, j int) bool { return headers[i] < headers[j] })
 
-	return strings.Join(headers, ` \r\n `)
+	return strings.Join(headers, ` \n `)
 }
 
 func (m HeaderMatcher) String() string {
