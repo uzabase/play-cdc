@@ -44,10 +44,6 @@ func (r *Request) toRequestStep(consumerName string) Step {
 	return Step(request)
 }
 
-func (r *Request) bodyFilePath(consumerName string) string {
-	return filepath.Join(RequestBodiesRelativePath(consumerName), r.ToBodyFileName())
-}
-
 func (r *Request) IsBodyAvailable() bool {
 	return len(r.Body) > 0 && (r.Method == "POST" || r.Method == "PUT")
 }
@@ -62,14 +58,34 @@ func (r *Request) toUrl() string {
 	return url
 }
 
-func (r *Request) toBodyHash() [16]byte {
-	return md5.Sum([]byte(r.Body))
+func (r *Request) bodyFilePath(consumerName string) string {
+	return filepath.Join(RequestBodiesRelativePath(consumerName), r.ToBodyFileName())
 }
 
 func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
 	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
 	return fmt.Sprintf("%s_%s_%x.json", strings.ToLower(r.Method), replaced, r.toBodyHash())
+}
+
+func (r *Request) toBodyHeading() string {
+	if r.IsBodyAvailable() {
+		return fmt.Sprintf(" (body: %x)", r.toBodyHash())
+	} else {
+		return ""
+	}
+}
+
+func (r *Request) toBodyHash() [16]byte {
+	return md5.Sum([]byte(r.Body))
+}
+
+func (r *Request) toHeaderHeading() string {
+	if len(r.Headers) > 0 {
+		return fmt.Sprintf(" (%s)", r.Headers)
+	} else {
+		return ""
+	}
 }
 
 func (h QueryParams) String() string {

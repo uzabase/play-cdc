@@ -97,6 +97,25 @@ func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 	assert.Equal(t, domain.ScenarioHeading(`GET /test`), actual.Heading)
 }
 
+func TestToScenario_リクエストヘッダがある場合シナリオ名にヘッダを含む(t *testing.T) {
+	sut := createContract(SutParams{
+		method:  "PUT",
+		urlPath: "/test",
+		headers: domain.RequestHeaders{
+			"content-type": {
+				"equalTo": "application/json",
+			},
+			"options": {
+				"equalTo": "123, 456",
+			},
+		},
+	})
+
+	actual := sut.ToScenario("Consumer API")
+
+	assert.Equal(t, domain.ScenarioHeading(`PUT /test (content-type: application/json \n options: 123, 456)`), actual.Heading)
+}
+
 func TestToScenario_リクエストボディがある場合シナリオ名にボディのハッシュを含む(t *testing.T) {
 	sut := createContract(SutParams{
 		method: "PUT",

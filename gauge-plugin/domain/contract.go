@@ -33,11 +33,8 @@ func (c *Contract) ToScenario(consumerName string) *Scenario {
 }
 
 func (c *Contract) toHeading() ScenarioHeading {
-	if c.Request.IsBodyAvailable() {
-		return ScenarioHeading(fmt.Sprintf("%s %s (body: %x)", c.Request.Method, c.Request.toUrl(), c.Request.toBodyHash()))
-	} else {
-		return ScenarioHeading(fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl()))
-	}
+	base := fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl())
+	return ScenarioHeading(fmt.Sprintf("%s%s%s", base, c.Request.toHeaderHeading(), c.Request.toBodyHeading()))
 }
 
 func (c *Contract) toSteps(consumerName string) []Step {
