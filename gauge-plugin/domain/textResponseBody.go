@@ -4,7 +4,7 @@ import "fmt"
 
 type TextResponseBody string
 
-func CreateTextResponseBody(value string) ResponseBody {
+func NewTextResponseBody(value string) ResponseBody {
 	result := TextResponseBody(value)
 	return &result
 }

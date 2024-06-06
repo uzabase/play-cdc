@@ -52,7 +52,7 @@ func TestToContracts(t *testing.T) {
 				Headers: domain.ResponseHeaders{
 					"headerKey": "headerValue",
 				},
-				Body: domain.CreateJsonResponseBody(
+				Body: domain.NewJsonResponseBody(
 					map[string]any{
 						"bodyKey": "bodyValue",
 					},
@@ -81,7 +81,7 @@ func TestToContracts_JsonBodyのルート要素が配列(t *testing.T) {
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				Body: domain.CreateJsonResponseBody(
+				Body: domain.NewJsonResponseBody(
 					[]any{
 						map[string]any{
 							"bodyKey": "bodyValue",
@@ -110,7 +110,7 @@ func TestToContracts_JsonBodyがなくBodyがJsonの場合パースして使う(
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				Body: domain.CreateJsonResponseBody(
+				Body: domain.NewJsonResponseBody(
 					map[string]any{
 						"key": "value",
 					},
@@ -137,7 +137,7 @@ func TestToContracts_JsonBodyがなくBodyがJsonではない場合テキスト�
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				Body: domain.CreateTextResponseBody("some text message"),
+				Body: domain.NewTextResponseBody("some text message"),
 			},
 		},
 	}
@@ -160,7 +160,7 @@ func TestToContracts_JsonBodyがない場合のBodyのルート要素が配列(t
 	expected := domain.Contracts{
 		&domain.Contract{
 			Response: domain.Response{
-				Body: domain.CreateJsonResponseBody(
+				Body: domain.NewJsonResponseBody(
 					[]any{
 						map[string]any{
 							"key": "value",

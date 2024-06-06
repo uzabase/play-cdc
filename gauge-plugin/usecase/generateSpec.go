@@ -1,40 +1,47 @@
 package usecase
 
 import (
-	"fmt"
-	"path/filepath"
 	"play-cdc/domain"
 	"play-cdc/repository"
 )
 
 func GenerateSpec() {
-	for _, e := range repository.GetProviderEnvs() {
-		requests := repository.LoadRecordedRequests(e.ProviderEndpoint)
+	for _, env := range repository.GetProviderEnvs() {
+		spec, contracts := load(env)
 
-		contracts := domain.ToContracts(requests)
-
-		consumerName := repository.GetConsumerName()
-		if consumerName == "" {
-			panic("Error: consumer name is empty!")
+		errors := save(env, spec, contracts)
+		if errors != nil {
+			panic(errors)
 		}
-
-		spec := contracts.ToSpec(consumerName, e.ProviderName)
-		spec.SortScenarios()
-
-		outputBasePath := repository.GetOutputBasePath()
-		if outputBasePath == "" {
-			panic("Error: output base path is empty!")
-		}
-		if !filepath.IsAbs(outputBasePath) {
-			panic(fmt.Errorf("Error: output base path is not an absolute path! Current value: %s", outputBasePath))
-		}
-
-		outputPath := domain.OutputPath(outputBasePath, e.ProviderName)
-		err := repository.SaveSpec(spec, domain.SpecFilePath(outputPath, consumerName))
-		if err != nil {
-			panic(err)
-		}
-
-		repository.SaveRequestBodies(contracts, domain.RequestBodiesPath(outputPath, consumerName))
 	}
+}
+
+func load(env domain.ProviderEnv) (*domain.Spec, domain.Contracts) {
+	requests := repository.LoadRecordedRequests(env.ProviderEndpoint)
+
+	contracts := domain.ToContracts(requests)
+
+	spec := contracts.ToSpec(repository.GetConsumerName(), env.ProviderName)
+	spec.SortScenarios()
+
+	return spec, contracts
+}
+
+func save(env domain.ProviderEnv, spec *domain.Spec, contracts domain.Contracts) []error {
+	err := repository.SaveSpec(spec, domain.SpecFilePath(outputPath(env), repository.GetConsumerName()))
+	if err != nil {
+		return []error{err}
+	}
+
+	errors := repository.SaveRequestBodies(contracts, domain.RequestBodiesPath(outputPath(env), repository.GetConsumerName()))
+	if len(errors) > 0 {
+		return errors
+	}
+
+	return nil
+}
+
+func outputPath(env domain.ProviderEnv) string {
+	outputBasePath := repository.GetOutputBasePath()
+	return domain.OutputPath(outputBasePath, env.ProviderName)
 }

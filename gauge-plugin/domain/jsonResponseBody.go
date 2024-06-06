@@ -13,7 +13,7 @@ type JsonResponseBody struct {
 	value any
 }
 
-func CreateJsonResponseBody(value any) JsonResponseBody {
+func NewJsonResponseBody(value any) JsonResponseBody {
 	return JsonResponseBody{
 		value,
 	}

@@ -37,7 +37,7 @@ func createContract(params SutParams) *domain.Contract {
 				"header1": "value1",
 				"header2": "value2",
 			},
-			Body: domain.CreateJsonResponseBody(
+			Body: domain.NewJsonResponseBody(
 				map[string]any{
 					"stringKey":  "stringValue",
 					"integerKey": float64(123),
@@ -352,7 +352,7 @@ func TestToScenario_小数のアサーション(t *testing.T) {
 func TestToScenario_大きな小数のアサーションも非指数表記で出力する(t *testing.T) {
 	sut := &domain.Contract{
 		Response: domain.Response{
-			Body: domain.CreateJsonResponseBody(
+			Body: domain.NewJsonResponseBody(
 				map[string]any{
 					"floatKey": 75360283433.45415,
 				},
@@ -402,7 +402,7 @@ func TestToScenario_ルート要素が配列の場合のアサーション(t *te
 		},
 		Response: domain.Response{
 			Status: 200,
-			Body: domain.CreateJsonResponseBody(
+			Body: domain.NewJsonResponseBody(
 				[]any{
 					map[string]any{
 						"key": "value",
@@ -425,7 +425,7 @@ func TestToScenario_レスポンスボディのアサーションはキーの昇
 		},
 		Response: domain.Response{
 			Status: 200,
-			Body: domain.CreateJsonResponseBody(
+			Body: domain.NewJsonResponseBody(
 				map[string]any{
 					"c": "c value",
 					"b": "b value",
@@ -455,7 +455,7 @@ func TestToScenario_レスポンスボディのアサーションを並べる際
 		},
 		Response: domain.Response{
 			Status: 200,
-			Body: domain.CreateJsonResponseBody(
+			Body: domain.NewJsonResponseBody(
 				map[string]any{
 					"a": []any{
 						"1",
@@ -499,7 +499,7 @@ func TestToScenario_レスポンスボディがJSONではない場合文字列�
 		},
 		Response: domain.Response{
 			Status: 200,
-			Body:   domain.CreateTextResponseBody("some text message"),
+			Body:   domain.NewTextResponseBody("some text message"),
 		},
 	}
 

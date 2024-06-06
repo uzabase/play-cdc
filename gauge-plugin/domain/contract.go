@@ -7,17 +7,18 @@ import (
 type Contracts []*Contract
 
 func (c Contracts) ToSpec(consumerName string, providerName string) *Spec {
-	scenarios := make([]*Scenario, len(c))
+	heading := toSpecHeading(consumerName, providerName)
 
+	scenarios := make([]*Scenario, len(c))
 	for i, contract := range c {
 		scenarios[i] = contract.ToScenario(consumerName)
 	}
 
-	return NewSpec(toSpecHeading(consumerName, providerName), scenarios)
+	return NewSpec(heading, scenarios)
 }
 
-func toSpecHeading(consumerName string, providerName string) string {
-	return fmt.Sprintf("%sが依存している%sの仕様", consumerName, providerName)
+func toSpecHeading(consumerName string, providerName string) SpecHeading {
+	return SpecHeading(fmt.Sprintf("%sが依存している%sの仕様", consumerName, providerName))
 }
 
 type Contract struct {

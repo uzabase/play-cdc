@@ -13,9 +13,9 @@ type Spec struct {
 
 type SpecHeading string
 
-func NewSpec(heading string, scenarios []*Scenario) *Spec {
+func NewSpec(heading SpecHeading, scenarios []*Scenario) *Spec {
 	return &Spec{
-		Heading:   SpecHeading(heading),
+		Heading:   heading,
 		Scenarios: scenarios,
 	}
 }

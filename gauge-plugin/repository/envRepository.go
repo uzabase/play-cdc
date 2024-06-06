@@ -3,16 +3,13 @@ package repository
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"play-cdc/domain"
 	"strconv"
 )
 
-type ProviderEnv struct {
-	ProviderEndpoint string
-	ProviderName     string
-}
-
-func GetProviderEnvs() []ProviderEnv {
-	var result []ProviderEnv
+func GetProviderEnvs() []domain.ProviderEnv {
+	var result []domain.ProviderEnv
 
 	for i := 1; ; i++ {
 		providerEndpointKey := fmt.Sprintf("cdc_provider_endpoint_%d", i)
@@ -32,7 +29,7 @@ func GetProviderEnvs() []ProviderEnv {
 			break
 		}
 
-		result = append(result, ProviderEnv{
+		result = append(result, domain.ProviderEnv{
 			ProviderEndpoint: providerEndpoint,
 			ProviderName:     providerName,
 		})
@@ -42,17 +39,35 @@ func GetProviderEnvs() []ProviderEnv {
 }
 
 func GetOutputBasePath() string {
-	return os.Getenv("cdc_output_base_path")
+	outputBasePath := os.Getenv("cdc_output_base_path")
+
+	if outputBasePath == "" {
+		panic("error: output base path is empty!")
+	}
+
+	if !filepath.IsAbs(outputBasePath) {
+		panic(fmt.Errorf("error: output base path is not an absolute path! current value: %s", outputBasePath))
+	}
+
+	return outputBasePath
 }
 
 func GetConsumerName() string {
-	return os.Getenv("cdc_consumer_name")
+	consumerName := os.Getenv("cdc_consumer_name")
+
+	if consumerName == "" {
+		panic("error: consumer name is empty!")
+	}
+
+	return consumerName
 }
 
 func IsDebug() bool {
 	debug, err := strconv.ParseBool(os.Getenv("cdc_debug"))
+
 	if err != nil {
 		return false
 	}
+
 	return debug
 }

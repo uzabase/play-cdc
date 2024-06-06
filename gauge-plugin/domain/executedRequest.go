@@ -75,16 +75,16 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 
 func (r *StubResponse) toBody() ResponseBody {
 	if r.JsonBody != nil {
-		return CreateJsonResponseBody(r.JsonBody)
+		return NewJsonResponseBody(r.JsonBody)
 	}
 
 	if len(r.Body) > 0 {
 		var jsonBody any
 		err := json.Unmarshal([]byte(r.Body), &jsonBody)
 		if err == nil {
-			return CreateJsonResponseBody(jsonBody)
+			return NewJsonResponseBody(jsonBody)
 		} else {
-			return CreateTextResponseBody(r.Body)
+			return NewTextResponseBody(r.Body)
 		}
 	}
 
