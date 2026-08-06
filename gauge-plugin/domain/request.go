@@ -64,7 +64,7 @@ func (r *Request) bodyFilePath(consumerName string) string {
 
 func (r *Request) ToBodyFileName() string {
 	re := regexp.MustCompile("[/|?|=|&]")
-	replaced := re.ReplaceAllString(r.toUrl()[1:], "_")
+	replaced := re.ReplaceAllString(strings.TrimPrefix(r.toUrl(), "/"), "_")
 	return fmt.Sprintf("%s_%s_%x.json", strings.ToLower(r.Method), replaced, r.toBodyHash())
 }
 
