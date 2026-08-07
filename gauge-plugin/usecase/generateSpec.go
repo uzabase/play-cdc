@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"play-cdc/domain"
 	"play-cdc/repository"
-	"strings"
 )
 
 func GenerateSpec() {
@@ -13,11 +12,7 @@ func GenerateSpec() {
 
 		errors := save(env, spec, contracts)
 		if errors != nil {
-			msgs := make([]string, len(errors))
-			for i, err := range errors {
-				msgs[i] = err.Error()
-			}
-			panic(fmt.Errorf("failed to save spec: %s", strings.Join(msgs, "; ")))
+			panic(fmt.Errorf("failed to save spec: %s", domain.JoinErrors(errors)))
 		}
 	}
 }
