@@ -207,6 +207,71 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 	assert.Equal(t, expected, actual)
 }
 
+func TestToContracts_stubにurlもurlPathもない場合は実際のリクエストURLを使う(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			Request: domain.ActualRequest{
+				Url:  "/users/123?active=true",
+				Body: `{"name":"alice"}`,
+			},
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method: "POST",
+				},
+			},
+		},
+	}
+
+	actual := domain.ToContracts(sut)
+
+	assert.Equal(t, "/users/123?active=true", actual[0].Request.Url)
+	assert.Empty(t, actual[0].Request.UrlPath)
+}
+
+func TestToContracts_stubにurlがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			Request: domain.ActualRequest{
+				Url: "/users/123",
+			},
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method: "GET",
+					Url:    "/users/stub",
+				},
+			},
+		},
+	}
+
+	actual := domain.ToContracts(sut)
+
+	assert.Equal(t, "/users/stub", actual[0].Request.Url)
+}
+
+func TestToContracts_stubにurlPathがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
+	sut := []domain.ExecutedRequest{
+		{
+			Request: domain.ActualRequest{
+				Url: "/users/123",
+			},
+			WasMatched: true,
+			StubMapping: domain.StubMapping{
+				Request: domain.StubRequest{
+					Method:  "GET",
+					UrlPath: "/users/stub",
+				},
+			},
+		},
+	}
+
+	actual := domain.ToContracts(sut)
+
+	assert.Empty(t, actual[0].Request.Url)
+	assert.Equal(t, "/users/stub", actual[0].Request.UrlPath)
+}
+
 func TestToContracts_契約は契約全体でユニークにする(t *testing.T) {
 	sut := []domain.ExecutedRequest{
 		{

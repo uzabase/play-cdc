@@ -1,4 +1,5 @@
 VERSION := 0.1.14
+GO_BUILD_FLAGS := -trimpath
 
 clean:
 	rm -rf out
@@ -14,27 +15,27 @@ test:
 
 build:
 	mkdir -p out
-	go build -o out/play-cdc
+	go build $(GO_BUILD_FLAGS) -o out/play-cdc
 	chmod +x out/play-cdc
 
 build-darwin-amd64:
 	mkdir -p out/darwin-amd64
-	GOOS=darwin GOARCH=amd64 go build -o out/darwin-amd64/play-cdc
+	GOOS=darwin GOARCH=amd64 go build $(GO_BUILD_FLAGS) -o out/darwin-amd64/play-cdc
 	chmod +x out/darwin-amd64/play-cdc
 
 build-darwin-arm64:
 	mkdir -p out/darwin-arm64
-	GOOS=darwin GOARCH=arm64 go build -o out/darwin-arm64/play-cdc
+	GOOS=darwin GOARCH=arm64 go build $(GO_BUILD_FLAGS) -o out/darwin-arm64/play-cdc
 	chmod +x out/darwin-arm64/play-cdc
 
 build-linux-amd64:
 	mkdir -p out/linux-amd64
-	GOOS=linux GOARCH=amd64 go build -o out/linux-amd64/play-cdc
+	GOOS=linux GOARCH=amd64 go build $(GO_BUILD_FLAGS) -o out/linux-amd64/play-cdc
 	chmod +x out/linux-amd64/play-cdc
 
 build-linux-arm64:
 	mkdir -p out/linux-arm64
-	GOOS=linux GOARCH=arm64 go build -o out/linux-arm64/play-cdc
+	GOOS=linux GOARCH=arm64 go build $(GO_BUILD_FLAGS) -o out/linux-arm64/play-cdc
 	chmod +x out/linux-arm64/play-cdc
 
 install: build
