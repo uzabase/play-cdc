@@ -40,12 +40,10 @@ func TestToContracts(t *testing.T) {
 	expected := domain.Contracts{
 		&domain.Contract{
 			Request: domain.Request{
-				Method:      "GET",
-				Url:         "/url1",
-				UrlPath:     "/url1/path",
-				QueryParams: domain.QueryParams{},
-				Headers:     domain.RequestHeaders{},
-				Body:        "body",
+				Method:  "GET",
+				Url:     domain.NewUrl(domain.StubRequest{Url: "/url1"}, domain.ActualRequest{}),
+				Headers: domain.RequestHeaders{},
+				Body:    "body",
 			},
 			Response: domain.Response{
 				Status: 200,
@@ -200,7 +198,7 @@ func TestToContracts_マッチしたリクエストだけを契約として扱�
 	expected := domain.Contracts{
 		&domain.Contract{
 			Request: domain.Request{
-				Url: "/url1",
+				Url: domain.NewUrl(domain.StubRequest{Url: "/url1"}, domain.ActualRequest{}),
 			},
 		},
 	}
@@ -225,8 +223,7 @@ func TestToContracts_stubにurlもurlPathもない場合は実際のリクエス
 
 	actual := domain.ToContracts(sut)
 
-	assert.Equal(t, "/users/123?active=true", actual[0].Request.Url)
-	assert.Empty(t, actual[0].Request.UrlPath)
+	assert.Equal(t, "/users/123?active=true", actual[0].Request.Url.String())
 }
 
 func TestToContracts_stubにurlがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
@@ -247,7 +244,7 @@ func TestToContracts_stubにurlがある場合は実際のリクエストURLで�
 
 	actual := domain.ToContracts(sut)
 
-	assert.Equal(t, "/users/stub", actual[0].Request.Url)
+	assert.Equal(t, "/users/stub", actual[0].Request.Url.String())
 }
 
 func TestToContracts_stubにurlPathがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
@@ -268,8 +265,7 @@ func TestToContracts_stubにurlPathがある場合は実際のリクエストURL
 
 	actual := domain.ToContracts(sut)
 
-	assert.Empty(t, actual[0].Request.Url)
-	assert.Equal(t, "/users/stub", actual[0].Request.UrlPath)
+	assert.Equal(t, "/users/stub", actual[0].Request.Url.String())
 }
 
 func TestToContracts_契約は契約全体でユニークにする(t *testing.T) {

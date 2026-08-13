@@ -8,28 +8,24 @@ import (
 )
 
 type SutParams struct {
-	method      string
-	url         string
-	urlPath     string
-	queryParams domain.QueryParams
-	headers     domain.RequestHeaders
-	body        string
+	method  string
+	url     string
+	headers domain.RequestHeaders
+	body    string
 }
 
 var contract = createContract(SutParams{
-	method:  "GET",
-	urlPath: "/test",
+	method: "GET",
+	url:    "/test",
 })
 
 func createContract(params SutParams) *domain.Contract {
 	return &domain.Contract{
 		Request: domain.Request{
-			Url:         params.url,
-			UrlPath:     params.urlPath,
-			Method:      params.method,
-			QueryParams: params.queryParams,
-			Headers:     params.headers,
-			Body:        params.body,
+			Url:     domain.NewUrl(domain.StubRequest{Url: params.url}, domain.ActualRequest{}),
+			Method:  params.method,
+			Headers: params.headers,
+			Body:    params.body,
 		},
 		Response: domain.Response{
 			Status: 200,
@@ -70,15 +66,10 @@ func TestToSpec(t *testing.T) {
 	assert.Len(t, actual.Scenarios, 2)
 }
 
-func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
+func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "GET",
-		urlPath: "/test",
-		queryParams: domain.QueryParams{
-			"query": {
-				"equalTo": "value",
-			},
-		},
+		method: "GET",
+		url:    "/test?query=value",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -86,21 +77,10 @@ func TestToScenario_シナリオ名にurlPathを使う(t *testing.T) {
 	assert.Equal(t, domain.ScenarioHeading(`GET /test?query=value`), actual.Heading)
 }
 
-func TestToScenario_シナリオ名にurlを使う(t *testing.T) {
-	sut := createContract(SutParams{
-		method: "GET",
-		url:    "/test",
-	})
-
-	actual := sut.ToScenario("Consumer API")
-
-	assert.Equal(t, domain.ScenarioHeading(`GET /test`), actual.Heading)
-}
-
 func TestToScenario_リクエストヘッダがある場合シナリオ名にヘッダを含む(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "PUT",
-		urlPath: "/test",
+		method: "PUT",
+		url:    "/test",
 		headers: domain.RequestHeaders{
 			"content-type": {
 				"equalTo": "application/json",
@@ -128,17 +108,6 @@ func TestToScenario_リクエストボディがある場合シナリオ名にボ
 	assert.Equal(t, domain.ScenarioHeading(`PUT /test (body: 841a2d689ad86bd1611447453c22c6fc)`), actual.Heading)
 }
 
-func TestToScenario_リクエストパスにurlPathを使う(t *testing.T) {
-	sut := createContract(SutParams{
-		method:  "GET",
-		urlPath: "/test",
-	})
-
-	actual := sut.ToScenario("Consumer API")
-
-	assert.Contains(t, actual.Steps, domain.Step(`URL"/test"にGETリクエストを送る`))
-}
-
 func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
 	sut := createContract(SutParams{
 		method: "GET",
@@ -152,8 +121,8 @@ func TestToScenario_リクエストパスにurlを使う(t *testing.T) {
 
 func TestToScenario_GETリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "GET",
-		urlPath: "/test",
+		method: "GET",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -163,8 +132,8 @@ func TestToScenario_GETリクエスト(t *testing.T) {
 
 func TestToScenario_POSTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "POST",
-		urlPath: "/test",
+		method: "POST",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -174,8 +143,8 @@ func TestToScenario_POSTリクエスト(t *testing.T) {
 
 func TestToScenario_PUTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "PUT",
-		urlPath: "/test",
+		method: "PUT",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -185,8 +154,8 @@ func TestToScenario_PUTリクエスト(t *testing.T) {
 
 func TestToScenario_DELETEリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "DELETE",
-		urlPath: "/test",
+		method: "DELETE",
+		url:    "/test",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -196,16 +165,8 @@ func TestToScenario_DELETEリクエスト(t *testing.T) {
 
 func TestToScenario_クエリパラメータを含むリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "GET",
-		urlPath: "/test",
-		queryParams: domain.QueryParams{
-			"q1": {
-				"equalTo": "v1",
-			},
-			"q2": {
-				"equalTo": "v2",
-			},
-		},
+		method: "GET",
+		url:    "/test?q1=v1&q2=v2",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -215,8 +176,8 @@ func TestToScenario_クエリパラメータを含むリクエスト(t *testing.
 
 func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "PUT",
-		urlPath: "/test",
+		method: "PUT",
+		url:    "/test",
 		headers: domain.RequestHeaders{
 			"content-type": {
 				"equalTo": "application/json",
@@ -234,9 +195,9 @@ func TestToScenario_ヘッダを含むリクエスト(t *testing.T) {
 
 func TestToScenario_ボディを含むPOSTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "POST",
-		urlPath: "/test",
-		body:    "body",
+		method: "POST",
+		url:    "/test",
+		body:   "body",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -247,9 +208,9 @@ func TestToScenario_ボディを含むPOSTリクエスト(t *testing.T) {
 
 func TestToScenario_ボディを含むPUTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "PUT",
-		urlPath: "/test",
-		body:    "body",
+		method: "PUT",
+		url:    "/test",
+		body:   "body",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -260,9 +221,9 @@ func TestToScenario_ボディを含むPUTリクエスト(t *testing.T) {
 
 func TestToScenario_POSTとPUTリクエスト以外にはボディを含められない(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "GET",
-		urlPath: "/test",
-		body:    "body",
+		method: "GET",
+		url:    "/test",
+		body:   "body",
 	})
 
 	actual := sut.ToScenario("Consumer API")
@@ -272,8 +233,8 @@ func TestToScenario_POSTとPUTリクエスト以外にはボディを含めら�
 
 func TestToScenario_ヘッダとボディを含むPOSTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "POST",
-		urlPath: "/test",
+		method: "POST",
+		url:    "/test",
 		headers: domain.RequestHeaders{
 			"content-type": {
 				"equalTo": "application/json",
@@ -290,8 +251,8 @@ func TestToScenario_ヘッダとボディを含むPOSTリクエスト(t *testing
 
 func TestToScenario_ヘッダとボディを含むPUTリクエスト(t *testing.T) {
 	sut := createContract(SutParams{
-		method:  "PUT",
-		urlPath: "/test",
+		method: "PUT",
+		url:    "/test",
 		headers: domain.RequestHeaders{
 			"content-type": {
 				"equalTo": "application/json",
@@ -397,7 +358,7 @@ func TestToScenario_配列に含まれる2つめ以降のオブジェクトに�
 func TestToScenario_ルート要素が配列の場合のアサーション(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:    "/test",
+			Url:    domain.NewUrl(domain.StubRequest{Url: "/test"}, domain.ActualRequest{}),
 			Method: "GET",
 		},
 		Response: domain.Response{
@@ -420,7 +381,7 @@ func TestToScenario_ルート要素が配列の場合のアサーション(t *te
 func TestToScenario_レスポンスボディのアサーションはキーの昇順で並べる(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:    "/test",
+			Url:    domain.NewUrl(domain.StubRequest{Url: "/test"}, domain.ActualRequest{}),
 			Method: "GET",
 		},
 		Response: domain.Response{
@@ -450,7 +411,7 @@ func TestToScenario_レスポンスボディのアサーションはキーの昇
 func TestToScenario_レスポンスボディのアサーションを並べる際に配列のインデックスは数値として扱う(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:    "/test",
+			Url:    domain.NewUrl(domain.StubRequest{Url: "/test"}, domain.ActualRequest{}),
 			Method: "GET",
 		},
 		Response: domain.Response{
@@ -494,7 +455,7 @@ func TestToScenario_レスポンスボディのアサーションを並べる際
 func TestToScenario_レスポンスボディがJSONではない場合文字列として扱う(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:    "/test",
+			Url:    domain.NewUrl(domain.StubRequest{Url: "/test"}, domain.ActualRequest{}),
 			Method: "GET",
 		},
 		Response: domain.Response{
@@ -511,7 +472,7 @@ func TestToScenario_レスポンスボディがJSONではない場合文字列�
 func TestToScenario_レスポンスボディがない場合は出力しない(t *testing.T) {
 	sut := &domain.Contract{
 		Request: domain.Request{
-			Url:    "/test",
+			Url:    domain.NewUrl(domain.StubRequest{Url: "/test"}, domain.ActualRequest{}),
 			Method: "GET",
 		},
 		Response: domain.Response{

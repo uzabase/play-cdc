@@ -34,7 +34,7 @@ func (c *Contract) ToScenario(consumerName string) *Scenario {
 }
 
 func (c *Contract) toHeading() ScenarioHeading {
-	base := fmt.Sprintf("%s %s", c.Request.Method, c.Request.toUrl())
+	base := fmt.Sprintf("%s %s", c.Request.Method, c.Request.Url)
 	return ScenarioHeading(fmt.Sprintf("%s%s%s", base, c.Request.toHeaderHeading(), c.Request.toBodyHeading()))
 }
 

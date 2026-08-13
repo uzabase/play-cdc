@@ -48,20 +48,12 @@ func ToContracts(requests []ExecutedRequest) Contracts {
 			continue
 		}
 
-		url := s.Request.Url
-		urlPath := s.Request.UrlPath
-		if len(url) == 0 && len(urlPath) == 0 {
-			url = r.Request.Url
-		}
-
 		c := &Contract{
 			Request: Request{
-				Method:      s.Request.Method,
-				Url:         url,
-				UrlPath:     urlPath,
-				QueryParams: s.Request.QueryParams,
-				Headers:     s.Request.Headers,
-				Body:        r.Request.Body,
+				Method:  s.Request.Method,
+				Url:     NewUrl(s.Request, r.Request),
+				Headers: s.Request.Headers,
+				Body:    r.Request.Body,
 			},
 			Response: Response{
 				Status:  s.Response.Status,
