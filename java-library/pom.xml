@@ -47,7 +47,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <kotest.version>5.1.0</kotest.version>
         <mockk.version>1.12.2</mockk.version>
-        <jackson.version>2.13.1</jackson.version>
+        <jackson.version>2.18.6</jackson.version>
         <dokka.version>1.5.31</dokka.version>
     </properties>
 
