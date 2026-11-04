@@ -133,6 +133,12 @@ func TestUnmarshal_クエリ条件から契約のURLを生成する(t *testing.T
 			expectedURL:     "/test?q=TRUE",
 		},
 		{
+			name:            "未知の真偽値や配列やオブジェクトのオプションを読み飛ばす",
+			queryParameters: `{"q":{"equalTo":"value","futureFlag":true,"futureArray":[true,{"enabled":true}],"futureObject":{"enabled":true}}}`,
+			actualURL:       "/test?q=value",
+			expectedURL:     "/test?q=value",
+		},
+		{
 			name:            "falseのオプションも読み込める",
 			queryParameters: `{"q":{"equalTo":"true","caseInsensitive":false,"absent":false}}`,
 			actualURL:       "/test?q=true",

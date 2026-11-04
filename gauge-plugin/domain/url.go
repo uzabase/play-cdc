@@ -29,9 +29,8 @@ func (u Url) String() string {
 type QueryParams map[string]QueryParamMatcher
 
 type QueryParamMatcher struct {
-	EqualTo         *string `json:"equalTo"`
-	Absent          bool    `json:"absent"`
-	CaseInsensitive bool    `json:"caseInsensitive"`
+	EqualTo *string `json:"equalTo"`
+	Absent  bool    `json:"absent"`
 }
 
 // Conditions without a literal value must use the recorded request URL instead.
