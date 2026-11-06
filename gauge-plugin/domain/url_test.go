@@ -26,12 +26,13 @@ func TestNewUrl_urlがなくurlPathがある場合はurlPathを使う(t *testing
 }
 
 func TestNewUrl_urlPathとクエリパラメータを結合する(t *testing.T) {
+	v1, v2 := "v1", "v2"
 	actual := domain.NewUrl(
 		domain.StubRequest{
 			UrlPath: "/test",
 			QueryParams: domain.QueryParams{
-				"q1": {"equalTo": "v1"},
-				"q2": {"equalTo": "v2"},
+				"q1": {EqualTo: &v1},
+				"q2": {EqualTo: &v2},
 			},
 		},
 		domain.ActualRequest{},
@@ -72,8 +73,11 @@ func TestNewUrl_urlとurlPathの両方がある場合はurlを優先する(t *te
 		domain.StubRequest{
 			Url:     "/url1",
 			UrlPath: "/url1/path",
+			QueryParams: domain.QueryParams{
+				"q": {},
+			},
 		},
-		domain.ActualRequest{},
+		domain.ActualRequest{Url: "/actual?q=value"},
 	)
 
 	assert.Equal(t, "/url1", actual.String())
