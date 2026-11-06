@@ -33,15 +33,12 @@ type QueryParamMatcher struct {
 }
 
 func (h QueryParams) convertibleToRequest() bool {
-	if len(h) == 0 {
-		return true
-	}
 	for _, v := range h {
-		if v.EqualTo != nil {
-			return true
+		if v.EqualTo == nil {
+			return false
 		}
 	}
-	return false
+	return true
 }
 
 func (h QueryParams) toQueryString() string {

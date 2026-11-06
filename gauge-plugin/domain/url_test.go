@@ -50,7 +50,7 @@ func TestNewUrl_urlもurlPathもない場合は実際のリクエストURLを使
 	assert.Equal(t, "/users/123?active=true", actual.String())
 }
 
-func TestNewUrl_equalToがあればそれだけでURLを作る(t *testing.T) {
+func TestNewUrl_equalTo以外のクエリ条件が混在する場合は実際のリクエストURLを使う(t *testing.T) {
 	v := "v1"
 	actual := domain.NewUrl(
 		domain.StubRequest{
@@ -63,7 +63,7 @@ func TestNewUrl_equalToがあればそれだけでURLを作る(t *testing.T) {
 		domain.ActualRequest{Url: "/test?q1=v1&q2=actual&extra=1"},
 	)
 
-	assert.Equal(t, "/test?q1=v1", actual.String())
+	assert.Equal(t, "/test?q1=v1&q2=actual&extra=1", actual.String())
 }
 
 func TestNewUrl_equalToが一つもないクエリ条件は実際のリクエストURLを使う(t *testing.T) {
