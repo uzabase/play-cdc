@@ -50,22 +50,34 @@ func TestNewUrl_urlもurlPathもない場合は実際のリクエストURLを使
 	assert.Equal(t, "/users/123?active=true", actual.String())
 }
 
-func TestNewUrl_urlがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
+func TestNewUrl_equalToがあればそれだけでURLを作る(t *testing.T) {
+	v := "v1"
 	actual := domain.NewUrl(
-		domain.StubRequest{Url: "/users/stub"},
-		domain.ActualRequest{Url: "/users/123"},
+		domain.StubRequest{
+			UrlPath: "/test",
+			QueryParams: domain.QueryParams{
+				"q1": {EqualTo: &v},
+				"q2": {},
+			},
+		},
+		domain.ActualRequest{Url: "/test?q1=v1&q2=actual&extra=1"},
 	)
 
-	assert.Equal(t, "/users/stub", actual.String())
+	assert.Equal(t, "/test?q1=v1", actual.String())
 }
 
-func TestNewUrl_urlPathがある場合は実際のリクエストURLで上書きしない(t *testing.T) {
+func TestNewUrl_equalToが一つもないクエリ条件は実際のリクエストURLを使う(t *testing.T) {
 	actual := domain.NewUrl(
-		domain.StubRequest{UrlPath: "/users/stub"},
-		domain.ActualRequest{Url: "/users/123"},
+		domain.StubRequest{
+			UrlPath: "/test",
+			QueryParams: domain.QueryParams{
+				"q": {},
+			},
+		},
+		domain.ActualRequest{Url: "/test?q=actual"},
 	)
 
-	assert.Equal(t, "/users/stub", actual.String())
+	assert.Equal(t, "/test?q=actual", actual.String())
 }
 
 func TestNewUrl_urlとurlPathの両方がある場合はurlを優先する(t *testing.T) {

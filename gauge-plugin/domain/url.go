@@ -11,15 +11,15 @@ type Url struct {
 }
 
 func NewUrl(stub StubRequest, actual ActualRequest) Url {
+	var value string
 	if len(stub.Url) > 0 {
-		return Url{value: stub.Url}
+		value = stub.Url
+	} else if len(stub.UrlPath) > 0 && stub.QueryParams.convertibleToRequest() {
+		value = stub.UrlPath + stub.QueryParams.toQueryString()
+	} else {
+		value = actual.Url
 	}
-	if len(stub.UrlPath) > 0 {
-		if query, ok := stub.QueryParams.toQueryString(); ok {
-			return Url{value: stub.UrlPath + query}
-		}
-	}
-	return Url{value: actual.Url}
+	return Url{value: value}
 }
 
 func (u Url) String() string {
@@ -30,26 +30,32 @@ type QueryParams map[string]QueryParamMatcher
 
 type QueryParamMatcher struct {
 	EqualTo *string `json:"equalTo"`
-	Absent  bool    `json:"absent"`
 }
 
-// Conditions without a literal value must use the recorded request URL instead.
-func (h QueryParams) toQueryString() (string, bool) {
+func (h QueryParams) convertibleToRequest() bool {
+	if len(h) == 0 {
+		return true
+	}
+	for _, v := range h {
+		if v.EqualTo != nil {
+			return true
+		}
+	}
+	return false
+}
+
+func (h QueryParams) toQueryString() string {
 	var queryParams []string
 	for k, v := range h {
-		if v.Absent {
-			continue
-		}
 		if v.EqualTo == nil {
-			return "", false
+			continue
 		}
 		queryParams = append(queryParams, fmt.Sprintf(`%s=%s`, k, *v.EqualTo))
 	}
-
 	if len(queryParams) == 0 {
-		return "", true
+		return ""
 	}
 
 	sort.Strings(queryParams)
-	return "?" + strings.Join(queryParams, "&"), true
+	return "?" + strings.Join(queryParams, "&")
 }
